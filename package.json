@@ -1,7 +1,7 @@
 {
-  "name": "secure-electron-template",
-  "version": "12.1.0",
-  "description": "The best way to build Electron apps with security in mind.",
+  "name": "axicreate",
+  "version": "0.0.1",
+  "description": "A creative coding tool for generating axidraw-compatible svgs.",
   "private": true,
   "main": "app/electron/main.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "test": "mocha"
   },
   "build": {
-    "productName": "YourProductName",
-    "appId": "com.yourcompany|electron.yourproductname",
+    "productName": "Axicreate",
+    "appId": "com.electron.axicreate",
     "directories": {
       "buildResources": "resources"
     },
@@ -58,22 +58,16 @@
   },
   "keywords": [
     "electron",
-    "security",
-    "secure",
-    "template",
+    "axidraw",
     "javascript",
     "react",
     "redux",
     "webpack",
     "i18n",
-    "boilerplate"
+    "typescript"
   ],
-  "author": "reZach",
+  "author": "JBWills",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/reZach/secure-electron-template/issues"
-  },
-  "homepage": "https://github.com/reZach/secure-electron-template#readme",
   "browserslist": [
     "last 2 Chrome versions"
   ],
