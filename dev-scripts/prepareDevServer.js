@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 const fs = require("fs");
-const {
-  exec
-} = require("child_process");
+const { exec } = require("child_process");
+
 const logFilePath = "./dev-scripts/webpack-dev-server.log";
 const errorLogFilePath = "./dev-scripts/webpack-dev-server-error.log";
 
@@ -22,4 +22,4 @@ try {
 }
 
 // Start the webpack development server
-exec("npm run dev-server");
+exec("yarn dev-server");

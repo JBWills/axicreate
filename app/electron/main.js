@@ -1,26 +1,25 @@
+/* eslint-disable no-console */
 const {
   app,
   protocol,
   BrowserWindow,
   session,
   ipcMain,
-  Menu
+  Menu,
 } = require("electron");
 const {
   default: installExtension,
-  REDUX_DEVTOOLS,
-  REACT_DEVELOPER_TOOLS
+  REACT_DEVELOPER_TOOLS,
 } = require("electron-devtools-installer");
 const SecureElectronLicenseKeys = require("secure-electron-license-keys");
-const Protocol = require("./protocol");
-const MenuBuilder = require("./menu");
-const i18nextBackend = require("i18next-electron-fs-backend");
-const i18nextMainBackend = require("../localization/i18n.mainconfig");
 const Store = require("secure-electron-store").default;
 const ContextMenu = require("secure-electron-context-menu").default;
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const MenuBuilder = require("./menu");
+const Protocol = require("./protocol");
+
 const isDev = process.env.NODE_ENV === "development";
 const port = 40992; // Hardcoded; needs to match webpack.development.js and package.json
 const selfHost = `http://localhost:${port}`;
@@ -31,7 +30,6 @@ let win;
 let menuBuilder;
 
 async function createWindow() {
-
   // If you'd like to set up auto-updating for your app,
   // I'd recommend looking at https://github.com/iffy/electron-updater-example
   // to use the method most suitable for you.
@@ -40,18 +38,21 @@ async function createWindow() {
   if (!isDev) {
     // Needs to happen before creating/loading the browser window;
     // protocol is only used in prod
-    protocol.registerBufferProtocol(Protocol.scheme, Protocol.requestHandler); /* eng-disable PROTOCOL_HANDLER_JS_CHECK */
+    protocol.registerBufferProtocol(
+      Protocol.scheme,
+      Protocol.requestHandler
+    ); /* eng-disable PROTOCOL_HANDLER_JS_CHECK */
   }
 
   const store = new Store({
-    path: app.getPath("userData")
+    path: app.getPath("userData"),
   });
 
   // Use saved config values for configuring your
   // BrowserWindow, for instance.
   // NOTE - this config is not passcode protected
   // and stores plaintext values
-  //let savedConfig = store.mainInitialStore(fs);
+  // let savedConfig = store.mainInitialStore(fs);
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -68,17 +69,16 @@ async function createWindow() {
       additionalArguments: [`storePath:${app.getPath("userData")}`],
       preload: path.join(__dirname, "preload.js"),
       /* eng-disable PRELOAD_JS_CHECK */
-      disableBlinkFeatures: "Auxclick"
-    }
+      disableBlinkFeatures: "Auxclick",
+    },
   });
-
-  // Sets up main.js bindings for our i18next backend
-  i18nextBackend.mainBindings(ipcMain, win, fs);
 
   // Sets up main.js bindings for our electron store;
   // callback is optional and allows you to use store in main process
   const callback = function (success, initialStore) {
-    console.log(`${!success ? "Un-s" : "S"}uccessfully retrieved store in main process.`);
+    console.log(
+      `${!success ? "Un-s" : "S"}uccessfully retrieved store in main process.`
+    );
     console.log(initialStore); // {"key1": "value1", ... }
   };
 
@@ -86,20 +86,24 @@ async function createWindow() {
 
   // Sets up bindings for our custom context menu
   ContextMenu.mainBindings(ipcMain, win, Menu, isDev, {
-    "loudAlertTemplate": [{
-      id: "loudAlert",
-      label: "AN ALERT!"
-    }],
-    "softAlertTemplate": [{
-      id: "softAlert",
-      label: "Soft alert"
-    }]
+    loudAlertTemplate: [
+      {
+        id: "loudAlert",
+        label: "AN ALERT!",
+      },
+    ],
+    softAlertTemplate: [
+      {
+        id: "softAlert",
+        label: "Soft alert",
+      },
+    ],
   });
 
   // Setup bindings for offline license verification
   SecureElectronLicenseKeys.mainBindings(ipcMain, win, fs, crypto, {
     root: process.cwd(),
-    version: app.getVersion()
+    version: app.getVersion(),
   });
 
   // Load app
@@ -110,16 +114,17 @@ async function createWindow() {
   }
 
   win.webContents.on("did-finish-load", () => {
-    win.setTitle(`Getting started with secure-electron-template (v${app.getVersion()})`);
+    win.setTitle(
+      `Getting started with secure-electron-template (v${app.getVersion()})`
+    );
   });
 
   // Only do these things when in development
   if (isDev) {
-
     // Errors are thrown if the dev tools are opened
     // before the DOM is ready
     win.webContents.once("dom-ready", async () => {
-      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
+      await installExtension([REACT_DEVELOPER_TOOLS])
         .then((name) => console.log(`Added Extension: ${name}`))
         .catch((err) => console.log("An error occurred: ", err))
         .finally(() => {
@@ -140,7 +145,10 @@ async function createWindow() {
   // https://electronjs.org/docs/tutorial/security#4-handle-session-permission-requests-from-remote-content
   const ses = session;
   const partition = "default";
-  ses.fromPartition(partition) /* eng-disable PERMISSION_REQUEST_HANDLER_JS_CHECK */
+  ses
+    .fromPartition(
+      partition
+    ) /* eng-disable PERMISSION_REQUEST_HANDLER_JS_CHECK */
     .setPermissionRequestHandler((webContents, permission, permCallback) => {
       const allowedPermissions = []; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
@@ -167,30 +175,21 @@ async function createWindow() {
   // });
 
   menuBuilder = MenuBuilder(win, app.name);
-
-  // Set up necessary bindings to update the menu items
-  // based on the current language selected
-  i18nextMainBackend.on("loaded", (loaded) => {
-    i18nextMainBackend.changeLanguage("en");
-    i18nextMainBackend.off("loaded");
-  });
-
-  i18nextMainBackend.on("languageChanged", (lng) => {
-    menuBuilder.buildMenu(i18nextMainBackend);
-  });
 }
 
 // Needs to be called before app is ready;
 // gives our scheme access to load relative files,
 // as well as local storage, cookies, etc.
 // https://electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
-protocol.registerSchemesAsPrivileged([{
-  scheme: Protocol.scheme,
-  privileges: {
-    standard: true,
-    secure: true
-  }
-}]);
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: Protocol.scheme,
+    privileges: {
+      standard: true,
+      secure: true,
+    },
+  },
+]);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -203,10 +202,6 @@ app.on("window-all-closed", () => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
     app.quit();
-  } else {
-    i18nextBackend.clearMainBindings(ipcMain);
-    ContextMenu.clearMainBindings(ipcMain);
-    SecureElectronLicenseKeys.clearMainBindings(ipcMain);
   }
 });
 
@@ -250,21 +245,22 @@ app.on("web-contents-created", (event, contents) => {
   });
 
   // https://electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
-  contents.on("will-attach-webview", (contentsEvent, webPreferences, params) => {
-    // Strip away preload scripts if unused or verify their location is legitimate
-    delete webPreferences.preload;
-    delete webPreferences.preloadURL;
+  contents.on(
+    "will-attach-webview",
+    (contentsEvent, webPreferences, params) => {
+      // Strip away preload scripts if unused or verify their location is legitimate
+      delete webPreferences.preload;
+      delete webPreferences.preloadURL;
 
-    // Disable Node.js integration
-    webPreferences.nodeIntegration = false;
-  });
+      // Disable Node.js integration
+      webPreferences.nodeIntegration = false;
+    }
+  );
 
   // https://electronjs.org/docs/tutorial/security#13-disable-or-limit-creation-of-new-windows
   // This code replaces the old "new-window" event handling;
   // https://github.com/electron/electron/pull/24517#issue-447670981
-  contents.setWindowOpenHandler(({
-    url
-  }) => {
+  contents.setWindowOpenHandler(({ url }) => {
     const parsedUrl = new URL(url);
     const validOrigins = [];
 
@@ -275,12 +271,12 @@ app.on("web-contents-created", (event, contents) => {
       );
 
       return {
-        action: "deny"
+        action: "deny",
       };
     }
 
     return {
-      action: "allow"
+      action: "allow",
     };
   });
 });
