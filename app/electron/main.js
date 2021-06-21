@@ -9,10 +9,6 @@ const {
   ipcMain,
   Menu,
 } = require("electron");
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS,
-} = require("electron-devtools-installer");
 const SecureElectronLicenseKeys = require("secure-electron-license-keys");
 const Store = require("secure-electron-store").default;
 const ContextMenu = require("secure-electron-context-menu").default;
@@ -23,12 +19,14 @@ const MenuBuilder = require("./menu");
 const Protocol = require("./protocol");
 
 const isDev = process.env.NODE_ENV === "development";
+const isTest = process.env.NODE_ENV === "test";
 const port = 40992; // Hardcoded; needs to match webpack.development.js and package.json
 const selfHost = `http://localhost:${port}`;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+let menuBuilder;
 
 async function createWindow() {
   // If you'd like to set up auto-updating for your app,
@@ -76,14 +74,12 @@ async function createWindow() {
 
   // Sets up main.js bindings for our electron store;
   // callback is optional and allows you to use store in main process
-  const callback = function (success, initialStore) {
+  store.mainBindings(ipcMain, win, fs, (success, initialStore) => {
     console.log(
       `${!success ? "Un-s" : "S"}uccessfully retrieved store in main process.`
     );
     console.log(initialStore); // {"key1": "value1", ... }
-  };
-
-  store.mainBindings(ipcMain, win, fs, callback);
+  });
 
   // Sets up bindings for our custom context menu
   ContextMenu.mainBindings(ipcMain, win, Menu, isDev, {
@@ -108,7 +104,7 @@ async function createWindow() {
   });
 
   // Load app
-  if (isDev) {
+  if (isDev || isTest) {
     win.loadURL(selfHost);
   } else {
     win.loadURL(`${Protocol.scheme}://rse/index.html`);
@@ -122,6 +118,11 @@ async function createWindow() {
 
   // Only do these things when in development
   if (isDev) {
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+    } = require("electron-devtools-installer");
+
     // Errors are thrown if the dev tools are opened
     // before the DOM is ready
     win.webContents.once("dom-ready", async () => {
