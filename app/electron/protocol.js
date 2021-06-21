@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /*
 Reasonably Secure Electron
 Copyright (C) 2021  Bishop Fox
@@ -29,18 +30,18 @@ const mimeTypes = {
   ".ico": "image/vnd.microsoft.icon",
   ".png": "image/png",
   ".jpg": "image/jpeg",
-  ".map": "text/plain"
+  ".map": "text/plain",
 };
 
 function charset(mimeType) {
-  return [".html", ".htm", ".js", ".mjs"].some((m) => m === mimeType) ?
-    "utf-8" :
-    null;
+  return [".html", ".htm", ".js", ".mjs"].some((m) => m === mimeType)
+    ? "utf-8"
+    : null;
 }
 
 function mime(filename) {
   const type = mimeTypes[path.extname(`${filename || ""}`).toLowerCase()];
-  return type ? type : null;
+  return type || null;
 }
 
 function requestHandler(req, next) {
@@ -54,9 +55,9 @@ function requestHandler(req, next) {
     const mimeType = mime(reqFilename);
     if (!err && mimeType !== null) {
       next({
-        mimeType: mimeType,
+        mimeType,
         charset: charset(mimeType),
-        data: data
+        data,
       });
     } else {
       console.error(err);
@@ -66,5 +67,5 @@ function requestHandler(req, next) {
 
 module.exports = {
   scheme,
-  requestHandler
+  requestHandler,
 };
