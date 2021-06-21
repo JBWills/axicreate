@@ -20,6 +20,3 @@ try {
 } catch (error) {
   // Existing webpack-dev-server-error log file may not exist
 }
-
-// Start the webpack development server
-exec("yarn dev-server");

@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-extraneous-dependencies */
 const { Menu } = require("electron");
 
 const isMac = process.platform === "darwin";

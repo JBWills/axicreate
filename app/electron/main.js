@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 const {
   app,
@@ -27,7 +29,6 @@ const selfHost = `http://localhost:${port}`;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-let menuBuilder;
 
 async function createWindow() {
   // If you'd like to set up auto-updating for your app,
@@ -124,7 +125,10 @@ async function createWindow() {
     // Errors are thrown if the dev tools are opened
     // before the DOM is ready
     win.webContents.once("dom-ready", async () => {
-      await installExtension([REACT_DEVELOPER_TOOLS])
+      await installExtension([REACT_DEVELOPER_TOOLS], {
+        loadExtensionOptions: { allowFileAccess: true },
+        forceDownload: true,
+      })
         .then((name) => console.log(`Added Extension: ${name}`))
         .catch((err) => console.log("An error occurred: ", err))
         .finally(() => {
@@ -245,17 +249,17 @@ app.on("web-contents-created", (event, contents) => {
   });
 
   // https://electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
-  contents.on(
-    "will-attach-webview",
-    (contentsEvent, webPreferences, params) => {
-      // Strip away preload scripts if unused or verify their location is legitimate
-      delete webPreferences.preload;
-      delete webPreferences.preloadURL;
+  contents.on("will-attach-webview", (contentsEvent, webPreferences, _) => {
+    // Strip away preload scripts if unused or verify their location is legitimate
+    // eslint-disable-next-line no-param-reassign
+    delete webPreferences.preload;
+    // eslint-disable-next-line no-param-reassign
+    delete webPreferences.preloadURL;
 
-      // Disable Node.js integration
-      webPreferences.nodeIntegration = false;
-    }
-  );
+    // Disable Node.js integration
+    // eslint-disable-next-line no-param-reassign
+    webPreferences.nodeIntegration = false;
+  });
 
   // https://electronjs.org/docs/tutorial/security#13-disable-or-limit-creation-of-new-windows
   // This code replaces the old "new-window" event handling;
@@ -284,23 +288,23 @@ app.on("web-contents-created", (event, contents) => {
 // Filter loading any module via remote;
 // you shouldn't be using remote at all, though
 // https://electronjs.org/docs/tutorial/security#16-filter-the-remote-module
-app.on("remote-require", (event, webContents, moduleName) => {
+app.on("remote-require", (event) => {
   event.preventDefault();
 });
 
 // built-ins are modules such as "app"
-app.on("remote-get-builtin", (event, webContents, moduleName) => {
+app.on("remote-get-builtin", (event) => {
   event.preventDefault();
 });
 
-app.on("remote-get-global", (event, webContents, globalName) => {
+app.on("remote-get-global", (event) => {
   event.preventDefault();
 });
 
-app.on("remote-get-current-window", (event, webContents) => {
+app.on("remote-get-current-window", (event) => {
   event.preventDefault();
 });
 
-app.on("remote-get-current-web-contents", (event, webContents) => {
+app.on("remote-get-current-web-contents", (event) => {
   event.preventDefault();
 });

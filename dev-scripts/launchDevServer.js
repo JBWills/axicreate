@@ -41,15 +41,15 @@ const intervalId = setInterval(() => {
             encoding: "utf8",
           });
 
-          console.log(errorLog);
-          console.log(
+          console.error(errorLog);
+          console.error(
             `Webpack failed to compile; this error has also been logged to '${errorLogFilePath}'.`
           );
           clearInterval(intervalId);
 
           return process.exit(1);
         }
-        console.log("Webpack failed to compile, but the error is unknown.");
+        console.error("Webpack failed to compile, but the error is unknown.");
         clearInterval(intervalId);
 
         return process.exit(1);
@@ -58,10 +58,7 @@ const intervalId = setInterval(() => {
           encoding: "utf8",
         });
 
-        console.log(errorLog);
-        console.log(
-          `Webpack failed to compile; this error has also been logged to '${errorLogFilePath}'.`
-        );
+        if (errorLog) console.warn(errorLog);
       }
     }
   } catch (error) {

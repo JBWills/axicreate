@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { contextBridge, ipcRenderer } = require("electron");
 const fs = require("fs");
 const Store = require("secure-electron-store").default;
@@ -12,5 +13,5 @@ const store = new Store();
 contextBridge.exposeInMainWorld("api", {
   store: store.preloadBindings(ipcRenderer, fs),
   contextMenu: ContextMenu.preloadBindings(ipcRenderer),
-  licenseKeys: SecureElectronLicenseKeys.preloadBindings(ipcRenderer)
+  licenseKeys: SecureElectronLicenseKeys.preloadBindings(ipcRenderer),
 });
