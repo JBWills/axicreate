@@ -1,7 +1,8 @@
+const path = require("path");
+
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
-const path = require("path");
 
 module.exports = {
   target: "web", // Our app can run without electron
@@ -11,6 +12,7 @@ module.exports = {
     filename: "bundle.js", // The name of the webpack bundle that's generated
   },
   resolve: {
+    modules: [path.resolve(__dirname, "app/src"), "node_modules"],
     fallback: {
       crypto: require.resolve("crypto-browserify"),
       buffer: require.resolve("buffer/"),
@@ -76,6 +78,9 @@ module.exports = {
     // https://stackoverflow.com/a/64553486/1837080
     new webpack.ProvidePlugin({
       process: "process/browser.js",
+    }),
+    new webpack.ProvidePlugin({
+      React: "react",
     }),
     new CleanWebpackPlugin(),
   ],

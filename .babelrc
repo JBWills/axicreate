@@ -4,12 +4,7 @@
             "module-resolver",
             {
                 "cwd": "babelrc",
-                "alias": {
-                    "Constants": "./app/src/constants",
-                    "Components": "./app/src/components",
-                    "Core": "./app/src/core",
-                    "Pages": "./app/src/pages",
-                }
+                "alias": {}
             },
             "@babel/plugin-syntax-dynamic-import"
         ]

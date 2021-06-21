@@ -21,7 +21,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "rootDir": "src",
+    "baseUrl": "app/src",
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
@@ -32,7 +32,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "app/src"
   ],
   "exclude": [
     "node_modules",

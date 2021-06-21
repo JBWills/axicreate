@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-const fs = require("fs");
 const { exec } = require("child_process");
+const fs = require("fs");
 
 const logFilePath = "./dev-scripts/webpack-dev-server.log";
 const errorLogFilePath = "./dev-scripts/webpack-dev-server-error.log";

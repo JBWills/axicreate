@@ -24,7 +24,8 @@ module.exports = merge(base, {
         "base-uri": ["'self'"],
         "object-src": ["'none'"],
         "script-src": ["'self'"],
-        "style-src": ["'self'"],
+        // required for styled-components
+        "style-src": ["'self'", "'unsafe-inline'"],
         "frame-src": ["'none'"],
         "worker-src": ["'none'"],
       },

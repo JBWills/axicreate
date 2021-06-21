@@ -1,9 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+
 const CspHtmlWebpackPlugin = require("csp-html-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { merge } = require("webpack-merge");
-const path = require("path");
+
 const base = require("./webpack.config");
 
 module.exports = merge(base, {
@@ -30,7 +32,8 @@ module.exports = merge(base, {
       "base-uri": ["'self'"],
       "object-src": ["'none'"],
       "script-src": ["'self'"],
-      "style-src": ["'self'"],
+      // required for styled-components
+      "style-src": ["'self'", "'unsafe-inline'"],
       "frame-src": ["'none'"],
       "worker-src": ["'none'"],
     }),
