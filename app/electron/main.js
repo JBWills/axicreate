@@ -12,9 +12,11 @@ const {
 const SecureElectronLicenseKeys = require("secure-electron-license-keys");
 const Store = require("secure-electron-store").default;
 const ContextMenu = require("secure-electron-context-menu").default;
+
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+
 const MenuBuilder = require("./menu");
 const Protocol = require("./protocol");
 
@@ -26,7 +28,6 @@ const selfHost = `http://localhost:${port}`;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-let menuBuilder;
 
 async function createWindow() {
   // If you'd like to set up auto-updating for your app,
@@ -111,9 +112,7 @@ async function createWindow() {
   }
 
   win.webContents.on("did-finish-load", () => {
-    win.setTitle(
-      `Getting started with secure-electron-template (v${app.getVersion()})`
-    );
+    win.setTitle(`Axicreate (v${app.getVersion()})`);
   });
 
   // Only do these things when in development
@@ -250,7 +249,7 @@ app.on("web-contents-created", (event, contents) => {
   });
 
   // https://electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
-  contents.on("will-attach-webview", (contentsEvent, webPreferences, _) => {
+  contents.on("will-attach-webview", (contentsEvent, webPreferences) => {
     // Strip away preload scripts if unused or verify their location is legitimate
     // eslint-disable-next-line no-param-reassign
     delete webPreferences.preload;

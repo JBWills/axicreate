@@ -1,10 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CspHtmlWebpackPlugin = require("csp-html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const { merge } = require("webpack-merge");
 const path = require("path");
+
+const CspHtmlWebpackPlugin = require("csp-html-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { merge } = require("webpack-merge");
+
 const base = require("./webpack.config");
 
 module.exports = merge(base, {
@@ -24,7 +26,7 @@ module.exports = merge(base, {
         "base-uri": ["'self'"],
         "object-src": ["'none'"],
         "script-src": ["'self'"],
-        // required for styled-components
+        // unsafe-inline required for styled-components, but it is definitely unsafe
         "style-src": ["'self'", "'unsafe-inline'"],
         "frame-src": ["'none'"],
         "worker-src": ["'none'"],

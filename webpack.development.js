@@ -32,7 +32,7 @@ module.exports = merge(base, {
       "base-uri": ["'self'"],
       "object-src": ["'none'"],
       "script-src": ["'self'"],
-      // required for styled-components
+      // unsafe-inline required for styled-components, but it is definitely unsafe
       "style-src": ["'self'", "'unsafe-inline'"],
       "frame-src": ["'none'"],
       "worker-src": ["'none'"],

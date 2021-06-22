@@ -76,12 +76,8 @@ module.exports = {
   plugins: [
     // fix "process is not defined" error;
     // https://stackoverflow.com/a/64553486/1837080
-    new webpack.ProvidePlugin({
-      process: "process/browser.js",
-    }),
-    new webpack.ProvidePlugin({
-      React: "react",
-    }),
+    new webpack.ProvidePlugin({ process: "process/browser.js" }),
+    new webpack.ProvidePlugin({ React: "react" }),
     new CleanWebpackPlugin(),
   ],
 };
