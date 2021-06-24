@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 
 import ReactDOM from "react-dom";
 
-import Root from "./core/routing/Root";
+import Root from "./core/application/Application";
 import "bulma/css/bulma.css";
 
 ReactDOM.render(

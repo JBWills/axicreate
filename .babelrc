@@ -1,13 +1,14 @@
 {
     "plugins": [
-        [
-            "module-resolver",
-            {
-                "cwd": "babelrc",
-                "alias": {}
-            },
-            "@babel/plugin-syntax-dynamic-import"
-        ]
+        ["babel-plugin-styled-components", {
+            "ssr": false,
+            "pure": true
+        }],
+        ["module-resolver", {
+            "cwd": "babelrc",
+            "alias": {}
+        }],
+        "@babel/plugin-syntax-dynamic-import"
     ],
     "presets": [
         "@babel/preset-react",

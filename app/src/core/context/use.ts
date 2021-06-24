@@ -1,5 +1,9 @@
-import { useContext } from "react";
+import { useContext, useContextSelector } from "use-context-selector";
 
-import AppContext from "./AppContext";
+import AppContext, { AppContextType } from "./AppContext";
 
-export default () => useContext(AppContext);
+export const use = () => useContext(AppContext);
+
+export const useSelector = <Selected>(
+  selector: (value: AppContextType) => Selected
+) => useContextSelector(AppContext, selector);

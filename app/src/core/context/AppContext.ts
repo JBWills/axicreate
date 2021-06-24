@@ -14,7 +14,7 @@ type AppActions = {
   decrement2: Callback;
 };
 
-type AppContextType = {
+export type AppContextType = {
   state: AppState;
   actions: AppActions;
 };

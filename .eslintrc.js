@@ -19,7 +19,13 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["autofix", "react", "@typescript-eslint", "prettier"],
+  plugins: [
+    "autofix",
+    "react",
+    "@typescript-eslint",
+    "prettier",
+    "unused-imports",
+  ],
   settings: {
     "import/resolver": {
       node: {
@@ -54,16 +60,9 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": ["error"],
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
-      "warn",
-      {
-        vars: "all",
-        varsIgnorePattern: "^_",
-        args: "after-used",
-        argsIgnorePattern: "^_",
-      },
-    ],
-    "autofix/no-unused-vars": "error",
+    "unused-imports/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "autofix/no-unused-vars": "off",
     "import/order": [
       "error",
       {

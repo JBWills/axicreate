@@ -18,7 +18,11 @@
     "dist-linux": "yarn test && yarn prod-build && electron-builder --linux",
     "dist-windows": "yarn test && yarn prod-build && electron-builder --windows",
     "dist-all": "yarn test && yarn prod-build && electron-builder --mac --linux --windows",
-    "test": "mocha"
+    "test": "mocha",
+    "check-types": "tsc --noemit",
+    "lint:css": "stylelint './app/src/**/*.(tsx|jsx|ts|js)'",
+    "lint": "yarn eslint  -c .eslintrc.js --ext .js,.ts,.tsx,.jsx ./app/src && yarn lint:css && yarn check-types",
+    "lint:fix": "yarn eslint  -c .eslintrc.js --fix './app/src/**' && yarn lint:css && yarn check-types"
   },
   "build": {
     "productName": "Axicreate",
@@ -90,6 +94,7 @@
     "@typescript-eslint/parser": "^4.27.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-styled-components": "^1.12.0",
     "buffer": "^6.0.3",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "concurrently": "^6.2.0",
@@ -125,6 +130,10 @@
     "spectron": "^15.0.0",
     "stream-browserify": "^3.0.0",
     "style-loader": "^2.0.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended": "^5.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-processor-styled-components": "^1.10.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2",
@@ -142,11 +151,13 @@
     "mini-create-react-context": "^0.4.1",
     "process": "^0.11.10",
     "prop-types": "^15.7.2",
+    "re-resizable": "^6.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-use": "^17.2.4",
     "scheduler": "^0.20.2",
     "secure-electron-context-menu": "^1.3.1",
     "secure-electron-license-keys": "^1.1.1",
@@ -155,5 +166,9 @@
     "tslib": "^2.3.0",
     "typescript": "^4.3.4",
     "use-context-selector": "^1.3.7"
+  },
+  "resolutions": {
+    "styled-components": "^5",
+    "@types/react": "^17.0.11"
   }
 }
