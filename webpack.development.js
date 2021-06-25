@@ -28,14 +28,24 @@ module.exports = merge(base, {
       template: path.resolve(__dirname, "app/src/index.html"),
       filename: "index.html",
     }),
-    new CspHtmlWebpackPlugin({
-      "base-uri": ["'self'"],
-      "object-src": ["'none'"],
-      "script-src": ["'self'"],
-      // unsafe-inline required for styled-components, but it is definitely unsafe
-      "style-src": ["'self'", "'unsafe-inline'"],
-      "frame-src": ["'none'"],
-      "worker-src": ["'none'"],
-    }),
+    new CspHtmlWebpackPlugin(
+      {
+        "base-uri": ["'self'"],
+        "object-src": ["'none'"],
+        "script-src": ["'self'"],
+        // unsafe-inline required for styled-components, but it is definitely unsafe
+        // "style-src": ["'self'", "'unsafe-inline'"],
+        "frame-src": ["'none'"],
+        "worker-src": ["'none'"],
+      },
+      {
+        nonceEnabled: {
+          "style-src": false,
+        },
+        hashEnabled: {
+          "style-src": false,
+        },
+      }
+    ),
   ],
 });

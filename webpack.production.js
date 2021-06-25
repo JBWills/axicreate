@@ -32,6 +32,9 @@ module.exports = merge(base, {
         "worker-src": ["'none'"],
       },
       {
+        nonceEnabled: {
+          "style-src": false,
+        },
         hashEnabled: {
           "style-src": false,
         },
