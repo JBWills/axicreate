@@ -1,17 +1,24 @@
 import { createContext } from "use-context-selector";
 
+import AppWindowPlacement from "types/AppWindowPlacement";
+import Canvas from "types/Canvas";
+import Point from "types/Point";
+import Size from "types/Size";
+
 type Callback = () => void;
 
-type AppState = {
-  counter: number;
-  counter2: number;
+export type AppState = {
+  windowPlacement: AppWindowPlacement;
+  canvas: Canvas;
 };
 
-type AppActions = {
-  increment: Callback;
-  decrement: Callback;
-  increment2: Callback;
-  decrement2: Callback;
+export type AppActions = {
+  moveWindow: (offset: Point) => void;
+  movePreview: (offset: Point) => void;
+  scalePreview: (s: Point) => void;
+  resizeWindow: (s: Size) => void;
+  resizeCanvas: (s: Size) => void;
+  resizeDrawer: (percent: number) => void;
 };
 
 export type AppContextType = {
@@ -24,15 +31,25 @@ const UNIMPLEMENTED_ACTION: Callback = () => {
 };
 
 export const defaultAppContextState: AppState = {
-  counter: 0,
-  counter2: 0,
+  windowPlacement: {
+    windowSize: { width: 800, height: 600 },
+    windowOffset: { x: 0, y: 0 },
+    controlDrawerPercent: 0.3,
+    previewScale: { x: 1, y: 1 },
+    previewOffset: { x: 0, y: 0 },
+  },
+  canvas: {
+    size: { width: 100, height: 200 },
+  },
 };
 
 const defaultAppContextActions: AppActions = {
-  increment: UNIMPLEMENTED_ACTION,
-  decrement: UNIMPLEMENTED_ACTION,
-  increment2: UNIMPLEMENTED_ACTION,
-  decrement2: UNIMPLEMENTED_ACTION,
+  moveWindow: UNIMPLEMENTED_ACTION,
+  movePreview: UNIMPLEMENTED_ACTION,
+  scalePreview: UNIMPLEMENTED_ACTION,
+  resizeWindow: UNIMPLEMENTED_ACTION,
+  resizeCanvas: UNIMPLEMENTED_ACTION,
+  resizeDrawer: UNIMPLEMENTED_ACTION,
 };
 
 export default createContext<AppContextType>({

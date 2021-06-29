@@ -1,28 +1,55 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
-import AppContext, { defaultAppContextState } from "./AppContext";
+import AppWindowPlacement from "types/AppWindowPlacement";
+import Canvas from "types/Canvas";
+import Point from "types/Point";
+import Size from "types/Size";
+import useCall from "util/hooks/useCall";
+import applyOverrides from "util/state/applyOverrides";
+
+import AppContext, {
+  AppContextType,
+  defaultAppContextState,
+} from "./AppContext";
 
 type ProviderProps = {
   children: React.ReactNode;
 };
 
 const AppProvider = ({ children }: ProviderProps) => {
-  const [counter, setCounter] = useState(defaultAppContextState.counter);
-  const [counter2, setCounter2] = useState(defaultAppContextState.counter2);
+  const [canvas, setCanvasState] = useState(defaultAppContextState.canvas);
+  const [windowPlacement, setAppWindowPlacement] = useState(
+    defaultAppContextState.windowPlacement
+  );
 
-  const increment = useCallback(() => setCounter((c) => c + 1), []);
-  const decrement = useCallback(() => setCounter((c) => c - 1), []);
+  const setWindow = (overrides: Partial<AppWindowPlacement>) =>
+    applyOverrides(setAppWindowPlacement, overrides);
 
-  const increment2 = useCallback(() => setCounter2((c) => c + 1), []);
-  const decrement2 = useCallback(() => setCounter2((c) => c - 1), []);
+  const setCanvas = (overrides: Partial<Canvas>) =>
+    applyOverrides(setCanvasState, overrides);
 
-  const value = {
-    state: { counter, counter2 },
+  const movePreview = (previewOffset: Point) => setWindow({ previewOffset });
+
+  const moveWindow = (windowOffset: Point) => setWindow({ windowOffset });
+
+  const scalePreview = (previewScale: Point) => setWindow({ previewScale });
+
+  const resizeCanvas = (canvasSize: Size) => setCanvas({ size: canvasSize });
+
+  const resizeWindow = (windowSize: Size) => setWindow({ windowSize });
+
+  const resizeDrawer = (controlDrawerPercent: number) =>
+    setWindow({ controlDrawerPercent });
+
+  const value: AppContextType = {
+    state: { canvas, windowPlacement },
     actions: {
-      increment,
-      decrement,
-      increment2,
-      decrement2,
+      moveWindow: useCall(moveWindow),
+      movePreview: useCall(movePreview),
+      scalePreview: useCall(scalePreview),
+      resizeCanvas: useCall(resizeCanvas),
+      resizeWindow: useCall(resizeWindow),
+      resizeDrawer: useCall(resizeDrawer),
     },
   };
 

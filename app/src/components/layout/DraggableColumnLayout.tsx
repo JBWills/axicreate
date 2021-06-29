@@ -15,6 +15,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: horizontal;
   align-items: stretch;
+  justify-content: flex-start;
 `;
 
 const ResizableLeftPanel = ({ children }: { children: ReactNode }) => (
@@ -31,12 +32,15 @@ const ResizableLeftPanel = ({ children }: { children: ReactNode }) => (
 );
 
 const RightPanel = styled.div`
-  flex-grow: 1;
+  flex: 1;
+  flex-basis: 0%;
+  overflow: hidden;
 `;
 
 const DraggableLayout = ({ leftPanel, rightPanel }: DraggableLayoutProps) => (
   <Container>
     <ResizableLeftPanel>{leftPanel}</ResizableLeftPanel>
+
     <RightPanel>{rightPanel}</RightPanel>
   </Container>
 );

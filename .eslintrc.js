@@ -63,6 +63,9 @@ module.exports = {
     "unused-imports/no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "autofix/no-unused-vars": "off",
+    // note you must disable the base rule as it can report incorrect errors
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"],
     "import/order": [
       "error",
       {
