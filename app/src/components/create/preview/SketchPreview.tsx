@@ -18,7 +18,6 @@ const StageWrapper = styled(Stage)`
   width: ${({ width }) => toPxString(width)};
   height: ${({ height }) => toPxString(height)};
   ${Border({ color: "white" })};
-  margin: auto;
 `;
 
 const SketchPreview = ({ offset, scale, size }: SketchPreviewProps) => (

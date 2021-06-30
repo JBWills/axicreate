@@ -1,11 +1,12 @@
+import MinMax from "types/MinMax";
+
 /**
  * Get x bound between min and max
  *
  * @param x the value to limit
- * @param min the minimum value
- * @param max the maximum value
+ * @param range the minimum and maximum values (inclusive)
  */
-export const boundBetween = (x: number, range: [number, number]): number => {
+export const boundBetween = (x: number, range: MinMax): number => {
   const [min, max] = range;
   if (x < min) return min;
   if (x > max) return max;
@@ -18,10 +19,9 @@ export const boundBetween = (x: number, range: [number, number]): number => {
  *
  * @param x the number between the points. Note that if this is not inside [min, max]
  *   the result may be less than zero or greater than one
- * @param min the minimum value
- * @param max the maximum value
+ * @param range the minimum and maximum values (inclusive)
  */
-export const percentBetween = (x: number, range: [number, number]): number => {
+export const percentBetween = (x: number, range: MinMax): number => {
   const [min, max] = range;
   const length = max - min;
   const lengthToX = x - min;
@@ -38,11 +38,8 @@ export const percentBetween = (x: number, range: [number, number]): number => {
  * @param percent the percent along the range (50% is 0.5)
  * @param minMax the range to get the value from
  */
-export const valueAtPercent = (
-  percent: number,
-  range: [number, number]
-): number => {
-  const [min, max] = range;
+export const valueAtPercent = (percent: number, minMax: MinMax): number => {
+  const [min, max] = minMax;
   const length = max - min;
 
   return min + length * percent;

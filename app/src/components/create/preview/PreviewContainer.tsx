@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-import { useStateSelector } from "core/context/use";
+import { useAction, useStateSelector } from "core/context/use";
+import Vec2 from "models/Vec2";
 import Size from "types/Size";
 import { FillParent } from "util/css/mixins";
 
@@ -23,6 +24,8 @@ const PreviewControls = styled.div`
 `;
 
 const PreviewContainer = () => {
+  const scalePreview = useAction("scalePreview");
+  const movePreview = useAction("movePreview");
   const previewScale = useStateSelector((s) => s.windowPlacement.previewScale);
   const previewOffset = useStateSelector(
     (s) => s.windowPlacement.previewOffset
@@ -38,10 +41,19 @@ const PreviewContainer = () => {
   return (
     <ContainerStyle>
       <PreviewControls />
-      <PanAndZoomContainer childrenSize={scaledCanvasSize}>
+      <PanAndZoomContainer
+        childrenSize={scaledCanvasSize}
+        scaleFactor={previewScale.x}
+        panOffset={Vec2.toVec2(previewOffset)}
+        onZoom={(amount: number) => {
+          scalePreview({ x: amount, y: amount });
+        }}
+        onPan={(amount: Vec2) => {
+          movePreview(amount);
+        }}>
         <SketchPreview
           size={canvasSize}
-          offset={previewOffset}
+          offset={{ x: 0, y: 0 }}
           scale={previewScale}
         />
       </PanAndZoomContainer>
