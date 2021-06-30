@@ -1,6 +1,6 @@
-import { Slider } from "@material-ui/core";
 import styled from "styled-components";
 
+import AxiSlider from "components/controls/AxiSlider";
 import Slider2D from "components/controls/Slider2D";
 import { useAction, useStateSelector } from "core/context/use";
 import Vec2 from "models/Vec2";
@@ -19,13 +19,11 @@ const ControlContainer = () => {
   const movePreview = useAction("movePreview");
   return (
     <ContainerStyle>
-      <Slider
-        value={previewScale.x}
-        min={0.1}
-        max={10}
-        onChange={(_, value) =>
-          scalePreview({ x: value as number, y: value as number })
-        }
+      <AxiSlider
+        label="Scale"
+        value={previewScale}
+        minMax={[0.1, 10]}
+        onChange={scalePreview}
       />
       <Slider2D
         names={["Offset X", "Offset Y"]}

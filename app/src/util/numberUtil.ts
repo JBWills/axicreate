@@ -1,5 +1,7 @@
 import MinMax from "types/MinMax";
 
+export const rangeLength = (range: MinMax) => range[1] - range[0];
+
 /**
  * Get x bound between min and max
  *

@@ -70,8 +70,10 @@ const PanAndZoomContainer = ({
 
   const [debouncedZoomDelta] = useDebounce(zoomDelta, 300);
 
-  const getScaleFactor = (delta: number) =>
-    boundBetween(scaleFactor - delta, scaleMinMax!);
+  const getScaleFactor = (delta: number | undefined) =>
+    delta === undefined
+      ? scaleFactor
+      : boundBetween(scaleFactor - delta, scaleMinMax!);
 
   useEffect(() => {
     if (debouncedZoomDelta === undefined) return;
@@ -86,7 +88,7 @@ const PanAndZoomContainer = ({
         const currentScale = getScaleFactor(oldZoomDelta);
         return oldZoomDelta + e.deltaY * currentScale * 0.01;
       });
-    } else {
+    } else if (e.deltaX != null && e.deltaY != null) {
       onPan(panOffset.minus(new Vec2(e.deltaX, e.deltaY).times(2)));
     }
   };
@@ -95,7 +97,7 @@ const PanAndZoomContainer = ({
 
   const childPxAfterZoom = Vec2.toVec2(childrenSize)
     .div(scaleFactor)
-    .times(getScaleFactor(zoomDelta ?? 0))
+    .times(getScaleFactor(zoomDelta))
     .toSize();
 
   return (

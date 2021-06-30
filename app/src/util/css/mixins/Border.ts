@@ -1,5 +1,7 @@
 import { css, Theme, ThemeColors } from "styled-components";
 
+import { toPxString } from "../cssUtil";
+
 type BorderThickness = "thin" | "thick" | "normal";
 
 type BorderProps = {
@@ -11,15 +13,21 @@ const getBorderThicknessPx = (
   theme: Theme,
   thicknessString: BorderThickness
 ): string => {
+  let radiusPx;
   switch (thicknessString) {
     case "thin":
-      return theme.borderRadiusThin;
+      radiusPx = theme.borderRadiusThin;
+      break;
     case "thick":
-      return theme.borderRadiusThick;
+      radiusPx = theme.borderRadiusThick;
+      break;
     case "normal":
     default:
-      return theme.borderRadius;
+      radiusPx = theme.borderRadius;
+      break;
   }
+
+  return toPxString(radiusPx);
 };
 
 const getBorderString = (theme: Theme, props: BorderProps) => {

@@ -15,7 +15,7 @@ export type AppState = {
 export type AppActions = {
   moveWindow: (offset: Point) => void;
   movePreview: (offset: Point) => void;
-  scalePreview: (s: Point) => void;
+  scalePreview: (s: number) => void;
   resizeWindow: (s: Size) => void;
   resizeCanvas: (s: Size) => void;
   resizeDrawer: (percent: number) => void;
@@ -35,7 +35,7 @@ export const defaultAppContextState: AppState = {
     windowSize: { width: 800, height: 600 },
     windowOffset: { x: 0, y: 0 },
     controlDrawerPercent: 0.3,
-    previewScale: { x: 1, y: 1 },
+    previewScale: 1,
     previewOffset: { x: 0, y: 0 },
   },
   canvas: {

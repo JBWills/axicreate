@@ -34,8 +34,8 @@ const PreviewContainer = () => {
   const canvasSize = useStateSelector((s) => s.canvas.size);
 
   const scaledCanvasSize: Size = {
-    width: canvasSize.width * previewScale.x,
-    height: canvasSize.height * previewScale.y,
+    width: canvasSize.width * previewScale,
+    height: canvasSize.height * previewScale,
   };
 
   return (
@@ -43,18 +43,14 @@ const PreviewContainer = () => {
       <PreviewControls />
       <PanAndZoomContainer
         childrenSize={scaledCanvasSize}
-        scaleFactor={previewScale.x}
+        scaleFactor={previewScale}
         panOffset={Vec2.toVec2(previewOffset)}
-        onZoom={(amount: number) => {
-          scalePreview({ x: amount, y: amount });
-        }}
-        onPan={(amount: Vec2) => {
-          movePreview(amount);
-        }}>
+        onZoom={scalePreview}
+        onPan={movePreview}>
         <SketchPreview
           size={canvasSize}
           offset={{ x: 0, y: 0 }}
-          scale={previewScale}
+          scale={{ x: previewScale, y: previewScale }}
         />
       </PanAndZoomContainer>
     </ContainerStyle>

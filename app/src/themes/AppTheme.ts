@@ -1,5 +1,7 @@
 import { Theme } from "styled-components";
 
+import paddingWithBasePx from "./themeUtil";
+
 const PRIMARY02 = "#115d97";
 const PRIMARY01 = "#1b79c0";
 const PRIMARY = "#47A1E5";
@@ -36,9 +38,11 @@ const TEXT = BLACK;
 const TEXT_INVERTED = WHITE;
 
 const AppTheme: Theme = {
-  borderRadius: "2px",
-  borderRadiusThin: "1px",
-  borderRadiusThick: "3px",
+  borderRadius: 2,
+  borderRadiusThin: 1,
+  borderRadiusThick: 3,
+
+  padding: paddingWithBasePx(16),
 
   colors: {
     primary02: PRIMARY02,

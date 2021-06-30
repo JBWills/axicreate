@@ -5,7 +5,7 @@ type AppWindowPlacement = {
   windowSize: Size;
   windowOffset: Point;
   controlDrawerPercent: number;
-  previewScale: Point;
+  previewScale: number;
   previewOffset: Point;
 };
 

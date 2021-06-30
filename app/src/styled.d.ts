@@ -1,50 +1,61 @@
 // import original module declarations
 import "styled-components";
+import { Hex, Px } from "types/Basic";
 
 // and extend them!
 declare module "styled-components" {
   export type ThemeColors = {
-    primary02: string;
-    primary01: string;
-    primary: string;
-    primary1: string;
-    primary2: string;
-    secondary: string;
-    white: string;
-    gray03: string;
-    gray02: string;
-    gray01: string;
-    gray: string;
-    gray1: string;
-    gray2: string;
-    black: string;
-    error03: string;
-    error02: string;
-    error01: string;
-    error: string;
-    error1: string;
-    error2: string;
-    success03: string;
-    success02: string;
-    success01: string;
-    success: string;
-    success1: string;
-    success2: string;
-    warning03: string;
-    warning02: string;
-    warning01: string;
-    warning: string;
-    warning1: string;
-    warning2: string;
-    text: string;
-    textInverted: string;
+    primary02: Hex;
+    primary01: Hex;
+    primary: Hex;
+    primary1: Hex;
+    primary2: Hex;
+    secondary: Hex;
+    white: Hex;
+    gray03: Hex;
+    gray02: Hex;
+    gray01: Hex;
+    gray: Hex;
+    gray1: Hex;
+    gray2: Hex;
+    black: Hex;
+    error03: Hex;
+    error02: Hex;
+    error01: Hex;
+    error: Hex;
+    error1: Hex;
+    error2: Hex;
+    success03: Hex;
+    success02: Hex;
+    success01: Hex;
+    success: Hex;
+    success1: Hex;
+    success2: Hex;
+    warning03: Hex;
+    warning02: Hex;
+    warning01: Hex;
+    warning: Hex;
+    warning1: Hex;
+    warning2: Hex;
+    text: Hex;
+    textInverted: Hex;
+  };
+
+  export type PaddingPx = {
+    tiny: Px;
+    half: Px;
+    base: Px;
+    double: Px;
+    triple: Px;
+    quad: Px;
   };
 
   export interface Theme {
-    borderRadius: string;
-    borderRadiusThin: string;
-    borderRadiusThick: string;
+    borderRadius: Px;
+    borderRadiusThin: Px;
+    borderRadiusThick: Px;
 
     colors: ThemeColors;
+    padding: PaddingPx;
   }
 }
