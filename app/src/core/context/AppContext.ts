@@ -2,8 +2,8 @@ import { createContext } from "use-context-selector";
 
 import AppWindowPlacement from "types/AppWindowPlacement";
 import Canvas from "types/Canvas";
-import Point from "types/Point";
-import Size from "types/Size";
+import { V2 } from "types/Vec";
+import { v2 } from "util/conversions/createVec";
 
 type Callback = () => void;
 
@@ -13,11 +13,11 @@ export type AppState = {
 };
 
 export type AppActions = {
-  moveWindow: (offset: Point) => void;
-  movePreview: (offset: Point) => void;
+  moveWindow: (offset: V2) => void;
+  movePreview: (offset: V2) => void;
   scalePreview: (s: number) => void;
-  resizeWindow: (s: Size) => void;
-  resizeCanvas: (s: Size) => void;
+  resizeWindow: (s: V2) => void;
+  resizeCanvas: (s: V2) => void;
   resizeDrawer: (percent: number) => void;
 };
 
@@ -32,14 +32,14 @@ const UNIMPLEMENTED_ACTION: Callback = () => {
 
 export const defaultAppContextState: AppState = {
   windowPlacement: {
-    windowSize: { width: 800, height: 600 },
-    windowOffset: { x: 0, y: 0 },
+    windowSize: v2(800, 600),
+    windowOffset: v2(0, 0),
     controlDrawerPercent: 0.3,
     previewScale: 1,
-    previewOffset: { x: 0, y: 0 },
+    previewOffset: v2(0, 0),
   },
   canvas: {
-    size: { width: 100, height: 200 },
+    size: v2(100, 200),
   },
 };
 

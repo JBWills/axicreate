@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 import { useAction, useStateSelector } from "core/context/use";
-import Vec2 from "models/Vec2";
-import Size from "types/Size";
+import { V2 } from "types/Vec";
+import { v2 } from "util/conversions/createVec";
 import { FillParent } from "util/css/mixins";
+import { times } from "util/math/vector/arithmetic";
 
 import PanAndZoomContainer from "./PanAndZoomContainer";
 import SketchPreview from "./SketchPreview";
@@ -33,10 +34,7 @@ const PreviewContainer = () => {
 
   const canvasSize = useStateSelector((s) => s.canvas.size);
 
-  const scaledCanvasSize: Size = {
-    width: canvasSize.width * previewScale,
-    height: canvasSize.height * previewScale,
-  };
+  const scaledCanvasSize: V2 = times(canvasSize, previewScale);
 
   return (
     <ContainerStyle>
@@ -44,13 +42,13 @@ const PreviewContainer = () => {
       <PanAndZoomContainer
         childrenSize={scaledCanvasSize}
         scaleFactor={previewScale}
-        panOffset={Vec2.toVec2(previewOffset)}
+        panOffset={previewOffset}
         onZoom={scalePreview}
         onPan={movePreview}>
         <SketchPreview
           size={canvasSize}
-          offset={{ x: 0, y: 0 }}
-          scale={{ x: previewScale, y: previewScale }}
+          offset={v2(0, 0)}
+          scale={v2(previewScale, previewScale)}
         />
       </PanAndZoomContainer>
     </ContainerStyle>

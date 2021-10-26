@@ -29,17 +29,19 @@ module.exports = {
   settings: {
     "import/resolver": {
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        extensions: [".js", ".jsx", ".d.ts", ".ts", ".tsx"],
         moduleDirectory: ["node_modules", "app/src/"],
       },
     },
   },
   rules: {
+    // This can be turned off because TS handles switch statements gracefully
+    "default-case": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/jsx-filename-extension": [
       2,
-      { extensions: [".js", ".jsx", ".ts", ".tsx"] },
+      { extensions: [".js", ".jsx", ".d.ts", ".ts", ".tsx"] },
     ],
     "import/extensions": [
       "error",

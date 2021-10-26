@@ -1,9 +1,10 @@
+import { useCallback } from "react";
+
 import { Slider } from "@material-ui/core";
 import styled from "styled-components";
 
 import MinMax from "types/MinMax";
 import Padding from "util/css/mixins/Padding";
-import useCall from "util/hooks/useCall";
 import { rangeLength } from "util/numberUtil";
 
 const ContainerStyle = styled.div`
@@ -37,7 +38,7 @@ const AxiSlider = ({
   step,
   onChange,
 }: AxiSliderProps) => {
-  const numberValueFunction = useCall(
+  const numberValueFunction = useCallback(
     (newValue) => {
       const totalSize = rangeLength(minMax);
 

@@ -1,12 +1,11 @@
-import Point from "./Point";
-import Size from "./Size";
+import { V2 } from "./Vec";
 
 type AppWindowPlacement = {
-  windowSize: Size;
-  windowOffset: Point;
+  windowSize: V2;
+  windowOffset: V2;
   controlDrawerPercent: number;
   previewScale: number;
-  previewOffset: Point;
+  previewOffset: V2;
 };
 
 export default AppWindowPlacement;

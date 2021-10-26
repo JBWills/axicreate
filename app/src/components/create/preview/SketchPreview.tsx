@@ -1,48 +1,41 @@
 /* eslint-disable no-param-reassign */
-import { Stage, Layer, Shape } from "react-konva";
+import { Canvas } from "@react-three/fiber";
 import styled from "styled-components";
 
-import Point from "types/Point";
-import Size from "types/Size";
+import { V2 } from "types/Vec";
 import { toPxString } from "util/css/cssUtil";
 import Border from "util/css/mixins/Border";
+import { times } from "util/math/vector/arithmetic";
+
+import Line from "../primitives/Line";
 
 type SketchPreviewProps = {
-  size: Size;
-  scale: Point;
-  offset: Point;
+  size: V2;
+  scale: V2;
+  offset: V2;
 };
 
-const StageWrapper = styled(Stage)`
+const StyledStage = styled.div<{ offset: V2; size: V2 }>`
   overflow: visible;
-  width: ${({ width }) => toPxString(width)};
-  height: ${({ height }) => toPxString(height)};
+  width: ${({ size }) => toPxString(size.x)};
+  height: ${({ size }) => toPxString(size.y)};
   ${Border({ color: "white" })};
 `;
 
 const SketchPreview = ({ offset, scale, size }: SketchPreviewProps) => (
-  <StageWrapper
-    width={size.width * scale.x}
-    height={size.height * scale.y}
-    scale={scale}
-    offset={offset}>
-    <Layer>
-      <Shape
-        sceneFunc={(context, shape) => {
-          context.beginPath();
-          context.moveTo(0, 0);
-          context.lineTo(220, 80);
-          context.quadraticCurveTo(150, 100, 260, 170);
-          context.closePath();
-          // (!) Konva specific method, it is very important
-          context.fillStrokeShape(shape);
-        }}
-        fill="#00D2FF"
-        stroke="black"
-        strokeWidth={4}
+  <StyledStage offset={offset} size={times(size, scale)}>
+    <Canvas>
+      <Line
+        points={[
+          [0, 0],
+          [300, 300],
+          [100, 200],
+          [10, 15],
+          [1, 1.5],
+        ]}
       />
-    </Layer>
-  </StageWrapper>
+    </Canvas>
+  </StyledStage>
 );
 
 export default SketchPreview;

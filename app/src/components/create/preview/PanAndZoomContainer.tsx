@@ -4,10 +4,11 @@ import { useMeasure } from "react-use";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 
-import Vec2 from "models/Vec2";
 import MinMax from "types/MinMax";
-import Size from "types/Size";
+import { Vec, V2 } from "types/Vec";
+import { v2 } from "util/conversions/createVec";
 import Background from "util/css/mixins/Background";
+import { minus, times } from "util/math/vector/arithmetic";
 import { boundBetween } from "util/numberUtil";
 
 const getAreaLength = (containerLength: number, childLength: number): number =>
@@ -15,10 +16,11 @@ const getAreaLength = (containerLength: number, childLength: number): number =>
     ? containerLength
     : childLength + containerLength / 2;
 
-const getAreaSize = (containerPx: Size, childPx: Size): Size => ({
-  width: getAreaLength(containerPx.width, childPx.width),
-  height: getAreaLength(containerPx.height, childPx.height),
-});
+const getAreaSize = (containerPx: V2, childPx: V2): V2 =>
+  v2(
+    getAreaLength(containerPx.x, childPx.x),
+    getAreaLength(containerPx.y, childPx.y)
+  );
 
 const ScrollWrapper = styled.div`
   overflow: scroll;
@@ -26,15 +28,15 @@ const ScrollWrapper = styled.div`
   width: 100%;
 `;
 
-const ZoomPlaceholder = styled.div.attrs<{ childPx: Size }>(({ childPx }) => ({
+const ZoomPlaceholder = styled.div.attrs<{ childPx: Vec }>(({ childPx }) => ({
   style: childPx,
-}))<{ childPx: Size }>`
+}))<{ childPx: Vec }>`
   ${Background("gray1")}
 `;
 
 type ZoomAreaProps = {
-  childPx: Size;
-  containerPx: Size;
+  childPx: V2;
+  containerPx: V2;
 };
 
 const ZoomArea = styled.div.attrs<ZoomAreaProps>(
@@ -48,12 +50,12 @@ const ZoomArea = styled.div.attrs<ZoomAreaProps>(
 
 type PanAndZoomContainerProps = {
   children: ReactNode;
-  childrenSize: Size;
+  childrenSize: V2;
   scaleFactor: number;
-  panOffset: Vec2;
+  panOffset: V2;
   scaleMinMax?: MinMax;
   onZoom: (amount: number) => void;
-  onPan: (amount: Vec2) => void;
+  onPan: (amount: V2) => void;
 };
 
 const PanAndZoomContainer = ({
@@ -89,22 +91,24 @@ const PanAndZoomContainer = ({
         return oldZoomDelta + e.deltaY * currentScale * 0.01;
       });
     } else if (e.deltaX != null && e.deltaY != null) {
-      onPan(panOffset.minus(new Vec2(e.deltaX, e.deltaY).times(2)));
+      const deltaV2 = v2(e.deltaX, e.deltaY);
+      const offsetDelta = minus(deltaV2, panOffset);
+      onPan(times(offsetDelta, 2));
     }
   };
 
   const isZooming = !!zoomDelta;
 
-  const childPxAfterZoom = Vec2.toVec2(childrenSize)
-    .div(scaleFactor)
-    .times(getScaleFactor(zoomDelta))
-    .toSize();
+  const childPxAfterZoom = times(
+    v2(childrenSize),
+    getScaleFactor(zoomDelta) / scaleFactor
+  );
 
   return (
     <ScrollWrapper ref={ref}>
       <ZoomArea
         childPx={childPxAfterZoom}
-        containerPx={{ width, height }}
+        containerPx={v2(width, height)}
         onWheel={handleOnWheel}>
         {isZooming ? <ZoomPlaceholder childPx={childPxAfterZoom} /> : children}
       </ZoomArea>

@@ -1,7 +1,7 @@
-import Size from "./Size";
+import { V2 } from "./Vec";
 
 type Canvas = {
-  size: Size;
+  size: V2;
 };
 
 export default Canvas;

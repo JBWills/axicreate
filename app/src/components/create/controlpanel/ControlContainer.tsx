@@ -3,7 +3,7 @@ import styled from "styled-components";
 import AxiSlider from "components/controls/AxiSlider";
 import Slider2D from "components/controls/Slider2D";
 import { useAction, useStateSelector } from "core/context/use";
-import Vec2 from "models/Vec2";
+import { V2 } from "types/Vec";
 
 const ContainerStyle = styled.div`
   background: ${({ theme }) => theme.colors.white};
@@ -29,7 +29,7 @@ const ControlContainer = () => {
         names={["Offset X", "Offset Y"]}
         minMaxX={[-300, 300]}
         minMaxY={[-300, 300]}
-        onChange={(p: Vec2) => movePreview(p)}
+        onChange={(p: V2) => movePreview(p)}
         value={previewOffset}
       />
     </ContainerStyle>

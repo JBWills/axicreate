@@ -1,12 +1,12 @@
 import { css } from "styled-components";
 
-import Size from "types/Size";
+import { V2 } from "types/Vec";
 
 import { toPxString } from "../cssUtil";
 
-const SizePx = (size: Size) => css`
-  width: ${toPxString(size.width)};
-  height: ${toPxString(size.height)};
+const SizePx = (size: V2) => css`
+  width: ${toPxString(size.x)};
+  height: ${toPxString(size.y)};
 `;
 
 export default SizePx;

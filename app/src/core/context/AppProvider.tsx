@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import AppWindowPlacement from "types/AppWindowPlacement";
 import Canvas from "types/Canvas";
-import useCall from "util/hooks/useCall";
 import applyOverrides from "util/state/applyOverrides";
 
 import AppContext, {
@@ -29,12 +28,24 @@ const AppProvider = ({ children }: ProviderProps) => {
   const value: AppContextType = {
     state: { canvas, windowPlacement },
     actions: {
-      moveWindow: useCall((o) => setWindow({ windowOffset: o })),
-      movePreview: useCall((o) => setWindow({ previewOffset: o })),
-      scalePreview: useCall((s) => setWindow({ previewScale: s })),
-      resizeCanvas: useCall((size) => setCanvas({ size })),
-      resizeWindow: useCall((windowSize) => setWindow({ windowSize })),
-      resizeDrawer: useCall((p) => setWindow({ controlDrawerPercent: p })),
+      moveWindow: useCallback(
+        (windowOffset) => setWindow({ windowOffset }),
+        []
+      ),
+      movePreview: useCallback(
+        (previewOffset) => setWindow({ previewOffset }),
+        []
+      ),
+      scalePreview: useCallback(
+        (previewScale) => setWindow({ previewScale }),
+        []
+      ),
+      resizeCanvas: useCallback((size) => setCanvas({ size }), []),
+      resizeWindow: useCallback((windowSize) => setWindow({ windowSize }), []),
+      resizeDrawer: useCallback(
+        (p) => setWindow({ controlDrawerPercent: p }),
+        []
+      ),
     },
   };
 

@@ -1,11 +1,11 @@
 import { Grid, Slider } from "@material-ui/core";
 
-import Vec2 from "models/Vec2";
-import Point from "types/Point";
+import { Vec, V2 } from "types/Vec";
+import { v2 } from "util/conversions/createVec";
 
 export type Slider2DProps = {
-  onChange: (p: Vec2) => void;
-  value: Point;
+  onChange: (p: V2) => void;
+  value: Vec;
   names: [string, string];
   minMaxX: [number, number];
   minMaxY: [number, number];
@@ -18,10 +18,11 @@ const Slider2D = ({
   onChange,
   value,
 }: Slider2DProps) => {
+  const v2Value = v2(value);
   const handleChange = (p: { x?: number; y?: number }) => {
-    const x = p.x ?? value.x;
-    const y = p.y ?? value.y;
-    onChange(new Vec2(x, y));
+    const x = p.x ?? v2Value.x;
+    const y = p.y ?? v2Value.y;
+    onChange(v2(x, y));
   };
 
   return (
