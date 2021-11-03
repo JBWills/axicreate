@@ -12,6 +12,7 @@ declare module "styled-components" {
     primary2: Hex;
     secondary: Hex;
     white: Hex;
+    gray04: Hex;
     gray03: Hex;
     gray02: Hex;
     gray01: Hex;

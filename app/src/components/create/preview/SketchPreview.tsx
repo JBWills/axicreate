@@ -5,9 +5,11 @@ import styled from "styled-components";
 import { V2 } from "types/Vec";
 import { toPxString } from "util/css/cssUtil";
 import Border from "util/css/mixins/Border";
+import { getBoundRectPoints } from "util/math/geom/boundRect";
 import { times } from "util/math/vector/arithmetic";
 
-import Line from "../primitives/Line";
+import AxiLine from "../primitives/AxiLine";
+import ConcentricCircles from "../primitives/ConcentricCircles";
 
 type SketchPreviewProps = {
   size: V2;
@@ -25,7 +27,8 @@ const StyledStage = styled.div<{ offset: V2; size: V2 }>`
 const SketchPreview = ({ offset, scale, size }: SketchPreviewProps) => (
   <StyledStage offset={offset} size={times(size, scale)}>
     <Canvas>
-      <Line
+      <meshBasicMaterial wireframe />
+      <AxiLine
         points={[
           [0, 0],
           [300, 300],
@@ -34,6 +37,16 @@ const SketchPreview = ({ offset, scale, size }: SketchPreviewProps) => (
           [1, 1.5],
         ]}
       />
+      {getBoundRectPoints(size).map((point) => {
+        return (
+          <ConcentricCircles
+            key={`${point.x}+ ${point.y}`}
+            center={point}
+            numCircles={10}
+            radii={[1, 10]}
+          />
+        );
+      })}
     </Canvas>
   </StyledStage>
 );

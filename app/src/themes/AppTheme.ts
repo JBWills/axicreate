@@ -9,6 +9,7 @@ const PRIMARY1 = "#7cb4de";
 const PRIMARY2 = "#a5c8e3";
 const SECONDARY = "#f381a9";
 const WHITE = "#F5F7F4";
+const GRAY04 = "#181C20";
 const GRAY03 = "#2d2730";
 const GRAY02 = "#483d4d";
 const GRAY01 = "#775f81";
@@ -52,6 +53,7 @@ const AppTheme: Theme = {
     primary2: PRIMARY2,
     secondary: SECONDARY,
     white: WHITE,
+    gray04: GRAY04,
     gray03: GRAY03,
     gray02: GRAY02,
     gray01: GRAY01,

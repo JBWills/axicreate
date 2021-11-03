@@ -37,6 +37,9 @@ module.exports = {
   rules: {
     // This can be turned off because TS handles switch statements gracefully
     "default-case": "off",
+    // turn this off so we can do simpler default props
+    "react/require-default-props": "off",
+    "consistent-return": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/jsx-filename-extension": [

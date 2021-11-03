@@ -1,3 +1,5 @@
+import { Vector3 } from "three";
+
 import { Vec } from "types/Vec";
 
 import { getX, getY, getZ } from "./vecGetters";
@@ -21,3 +23,7 @@ export const toFloatArray = (points: Vec[]): Float32Array => {
 
   return arr;
 };
+
+export const toVector3 = (v: Vec) => new Vector3(getX(v), getY(v), getZ(v));
+
+export const toVector3List = (v: Vec[]) => v.map(toVector3);

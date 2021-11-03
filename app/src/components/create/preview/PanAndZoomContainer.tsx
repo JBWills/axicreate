@@ -6,6 +6,7 @@ import { useDebounce } from "use-debounce";
 
 import MinMax from "types/MinMax";
 import { Vec, V2 } from "types/Vec";
+import useControlValue from "util/controls/hooks/useControlValue";
 import { v2 } from "util/conversions/createVec";
 import Background from "util/css/mixins/Background";
 import { minus, times } from "util/math/vector/arithmetic";
@@ -69,6 +70,8 @@ const PanAndZoomContainer = ({
 }: PanAndZoomContainerProps) => {
   const [ref, { width, height }] = useMeasure<HTMLDivElement>();
   const [zoomDelta, setZoomDelta] = useState<number | undefined>(0);
+  const scalePreview: number = useControlValue("PreviewScale");
+  console.log("rerendeing ", scalePreview);
 
   const [debouncedZoomDelta] = useDebounce(zoomDelta, 300);
 
@@ -110,6 +113,7 @@ const PanAndZoomContainer = ({
         childPx={childPxAfterZoom}
         containerPx={v2(width, height)}
         onWheel={handleOnWheel}>
+        <div>{scalePreview}</div>
         {isZooming ? <ZoomPlaceholder childPx={childPxAfterZoom} /> : children}
       </ZoomArea>
     </ScrollWrapper>
