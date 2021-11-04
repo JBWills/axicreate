@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 import { useAction, useStateSelector } from "core/context/use";
 import { V2 } from "types/Vec";
-import useControlValue from "util/controls/hooks/useControlValue";
 import { v2 } from "util/conversions/createVec";
 import { FillParent } from "util/css/mixins";
 import { times } from "util/math/vector/arithmetic";
@@ -26,7 +25,6 @@ const PreviewControls = styled.div`
 `;
 
 const PreviewContainer = () => {
-  const scalePreview: number = useControlValue("PreviewScale");
   const movePreview = useAction("movePreview");
   const previewScale = useStateSelector((s) => s.windowPlacement.previewScale);
   const previewOffset = useStateSelector(

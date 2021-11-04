@@ -35,6 +35,7 @@ module.exports = {
     },
   },
   rules: {
+    "react/destructuring-assignment": "off",
     // This can be turned off because TS handles switch statements gracefully
     "default-case": "off",
     // turn this off so we can do simpler default props
