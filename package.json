@@ -13,9 +13,13 @@
     "@types/three": "^0.149.0",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
+    "hotkeys-js": "^3.10.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.149.0"
+    "react-hotkeys-hook": "^4.3.4",
+    "three": "^0.149.0",
+    "three-svg-renderer": "^1.0.3",
+    "isect": "https://github.com/JBWills/isect.git"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
@@ -36,5 +40,8 @@
     "typescript": "^4.9.5",
     "vite": "^4.1.1",
     "vite-plugin-eslint": "^1.8.1"
-  }
+  },
+  "pnpm":{"overrides":{
+    "isect": "https://github.com/JBWills/isect.git"
+  }}
 }

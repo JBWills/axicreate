@@ -1,33 +1,78 @@
-import { useState } from "react";
+/* eslint-disable react/no-unknown-property */
+import { Suspense, useCallback, useRef, useState } from "react";
 
-import reactLogo from "./assets/react.svg";
 import "./App.css";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useHotkeys } from "react-hotkeys-hook";
+import { Mesh, PerspectiveCamera, Scene } from "three";
 
-function App() {
-  const [count, setCount] = useState(0);
+import sceneToSvg from "./util/svg/sceneToSvg";
+
+type Vec3 = [number, number, number];
+
+function Box({ position, onClick }: { position: Vec3; onClick: () => void }) {
+  // This reference will give us direct access to the mesh
+  const mesh = useRef<Mesh>(null);
+  // Set up state for the hovered and active state
+  const [hovered, setHover] = useState(false);
+  const [active, setActive] = useState(false);
+  // Subscribe this component to the render-loop, rotate the mesh every frame
+  useFrame((_, delta) => {
+    if (mesh.current) {
+      mesh.current.rotation.x += delta;
+    }
+  });
 
   return (
+    <mesh
+      position={position}
+      ref={mesh}
+      scale={active ? 1.5 : 1}
+      onClick={() => {
+        onClick();
+        setActive(!active);
+      }}
+      onPointerOver={() => setHover(true)}
+      onPointerOut={() => setHover(false)}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
+    </mesh>
+  );
+}
+
+function App() {
+  const scene = useRef<Scene>(null);
+  const divRef = useRef<HTMLDivElement>(null);
+  const camera = useRef<PerspectiveCamera>(null);
+
+  const save = useCallback(() => {
+    if (!scene.current || !divRef.current || !camera.current) {
+      return;
+    }
+
+    sceneToSvg({
+      scene: scene.current,
+      camera: camera.current,
+      ignoreVisibility: false,
+      size: { y: divRef.current.clientHeight, x: divRef.current.clientWidth },
+    });
+  }, []);
+
+  useHotkeys("cmd+e", save, [scene]);
+  return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <Suspense />
+      <div ref={divRef}>
+        <Canvas>
+          <perspectiveCamera ref={camera} />
+          <scene ref={scene}>
+            <ambientLight />
+            <pointLight position={[10, 10, 10]} />
+            <Box position={[-1.2, 0, 0]} onClick={save} />
+            <Box position={[1.2, 0, 0]} onClick={save} />
+          </scene>
+        </Canvas>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((c) => c + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
 }
