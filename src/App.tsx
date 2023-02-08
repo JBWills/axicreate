@@ -1,80 +1,86 @@
 /* eslint-disable react/no-unknown-property */
-import { Suspense, useCallback, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react"
 
-import "./App.css";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useHotkeys } from "react-hotkeys-hook";
-import { Mesh, PerspectiveCamera, Scene } from "three";
+import "./App.css"
+import { PerspectiveCamera as PerspectiveCameraDrei } from "@react-three/drei"
+import { Canvas } from "@react-three/fiber"
+import { useHotkeys } from "react-hotkeys-hook"
+import { PerspectiveCamera, Scene } from "three"
 
-import sceneToSvg from "./util/svg/sceneToSvg";
-
-type Vec3 = [number, number, number];
-
-function Box({ position, onClick }: { position: Vec3; onClick: () => void }) {
-  // This reference will give us direct access to the mesh
-  const mesh = useRef<Mesh>(null);
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame((_, delta) => {
-    if (mesh.current) {
-      mesh.current.rotation.x += delta;
-    }
-  });
-
-  return (
-    <mesh
-      position={position}
-      ref={mesh}
-      scale={active ? 1.5 : 1}
-      onClick={() => {
-        onClick();
-        setActive(!active);
-      }}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
-    </mesh>
-  );
-}
+import Box from "./shape/Box"
 
 function App() {
-  const scene = useRef<Scene>(null);
-  const divRef = useRef<HTMLDivElement>(null);
-  const camera = useRef<PerspectiveCamera>(null);
+  const scene = useRef<Scene>(null)
+  const divRef = useRef<HTMLDivElement>(null)
+  const camera = useRef<PerspectiveCamera>(null)
+  useHotkeys("command+ctrl+y", () => console.log("tesdt"))
 
-  const save = useCallback(() => {
-    if (!scene.current || !divRef.current || !camera.current) {
-      return;
-    }
+  // const save = useCallback(() => {
+  //   if (!scene.current || !divRef.current || !camera.current) {
+  //     return
+  //   }
 
-    sceneToSvg({
-      scene: scene.current,
-      camera: camera.current,
-      ignoreVisibility: false,
-      size: { y: divRef.current.clientHeight, x: divRef.current.clientWidth },
-    });
-  }, []);
+  //   sceneToSvg({
+  //     scene: scene.current,
+  //     camera: camera.current,
+  //     ignoreVisibility: false,
+  //     size: { y: divRef.current.clientHeight, x: divRef.current.clientWidth },
+  //   })
+  // }, [])
 
-  useHotkeys("cmd+e", save, [scene]);
+  // useHotkeys("cmd+6", () => console.log("here"),[]);
+  const [fov, setFov] = useState(45)
+
   return (
-    <div className="App">
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+    <div
+      className="App"
+      onClick={() => {
+        const newFov = Math.random() * 180
+        console.log({ newFov })
+        setFov(newFov)
+      }}>
       <Suspense />
       <div ref={divRef}>
         <Canvas>
-          <perspectiveCamera ref={camera} />
-          <scene ref={scene}>
+          <PerspectiveCameraDrei
+            ref={camera}
+            fov={fov}
+            makeDefault
+            aspect={1200 / 600}
+            onUpdate={(self) => self.updateProjectionMatrix()}
+          />
+          {camera.current && <cameraHelper args={[camera.current]} />}
+          <scene
+            ref={scene}
+            onClick={() => {
+              const newFov = Math.random() * 180
+              console.log({ newFov })
+              setFov(newFov)
+            }}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} onClick={save} />
-            <Box position={[1.2, 0, 0]} onClick={save} />
+            <Box
+              position={[-1.2, 0, 0]}
+              onClick={() => {
+                const newFov = Math.random() * 180
+                console.log({ newFov })
+                setFov(newFov)
+              }}
+            />
+            <Box
+              position={[1.2, 0, 0]}
+              onClick={() => {
+                const newFov = Math.random() * 180
+                console.log({ newFov })
+                setFov(newFov)
+              }}
+            />
           </scene>
         </Canvas>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

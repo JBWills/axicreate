@@ -34,6 +34,12 @@
     }
   },
   "rules": {
+    "no-console": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "semi": ["error", "never"],
+    "@typescript-eslint/semi": "off",
+    "no-unexpected-multiline": "error",
     // This can be turned off because TS handles switch statements gracefully
     "default-case": "off",
     // turn this off so we can do simpler default props
