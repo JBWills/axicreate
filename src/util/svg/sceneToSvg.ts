@@ -1,4 +1,4 @@
-import { Mesh, PerspectiveCamera, Scene } from "three"
+import { Camera, Mesh, PerspectiveCamera, Scene } from "three"
 import {
   HiddenChainPass,
   SVGMesh,
@@ -17,10 +17,17 @@ export default function sceneToSvg({
   size,
 }: {
   scene: Scene
-  camera: PerspectiveCamera
+  camera: Camera
   ignoreVisibility: boolean
   size: Vec2
 }) {
+  if (camera.type !== "PerspectiveCamera") {
+    throw new Error(
+      `You can only save to svg with perspective camera. Sorry. Your camera type: ${camera.type}`
+    )
+  }
+
+  const perspectiveCamera = camera as PerspectiveCamera
   const meshes: SVGMesh[] = []
   scene.traverse((obj) => {
     const meshObj = obj as Mesh
@@ -43,7 +50,9 @@ export default function sceneToSvg({
 
   renderer.viewmap.options.ignoreVisibility = ignoreVisibility
 
-  renderer.generateSVG(meshes, camera, toSize(size), info).then((newSvg) => {
-    console.log(newSvg.svg())
-  })
+  renderer
+    .generateSVG(meshes, perspectiveCamera, toSize(size), info)
+    .then((newSvg) => {
+      console.log(newSvg.svg())
+    })
 }
