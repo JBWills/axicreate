@@ -18,6 +18,22 @@ export type Vec3 =
   | VecSingle
   | Pick<Vec3Object, "x" | "y" | "z">
 
+export function getZ(vec: Vec3): number {
+  if (typeof vec === "number") {
+    return vec
+  }
+
+  if (Array.isArray(vec)) {
+    return vec[2]
+  }
+
+  if (typeof vec === "object") {
+    return vec.z
+  }
+
+  unreachable(vec)
+}
+
 export function formatVec3(vec: Vec3 | Vec2): Vec3Object
 export function formatVec3(vec: undefined): undefined
 export function formatVec3(vec: Vec3 | Vec2 | undefined): Vec3Object | undefined

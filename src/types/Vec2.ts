@@ -19,6 +19,38 @@ export type Vec2 =
   | VecSingle
   | Pick<Vec2Object, "x" | "y">
 
+export function getX(vec: Vec2 | Vec3): number {
+  if (typeof vec === "number") {
+    return vec
+  }
+
+  if (Array.isArray(vec)) {
+    return vec[0]
+  }
+
+  if (typeof vec === "object") {
+    return vec.x
+  }
+
+  unreachable(vec)
+}
+
+export function getY(vec: Vec2 | Vec3): number {
+  if (typeof vec === "number") {
+    return vec
+  }
+
+  if (Array.isArray(vec)) {
+    return vec[1]
+  }
+
+  if (typeof vec === "object") {
+    return vec.y
+  }
+
+  unreachable(vec)
+}
+
 export function formatVec2(vec: Vec3 | Vec2): Vec2Object
 export function formatVec2(vec: undefined): undefined
 export function formatVec2(vec: Vec3 | Vec2 | undefined): Vec2Object | undefined
@@ -46,6 +78,10 @@ export function formatVec2(
   }
 
   if (typeof vec === "object") {
+    if ("isVec2" in vec && vec.isVec2) {
+      return vec
+    }
+
     return {
       x: vec.x,
       y: vec.y,

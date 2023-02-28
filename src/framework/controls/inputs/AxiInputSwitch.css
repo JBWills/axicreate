@@ -1,0 +1,20 @@
+.AxiInputSwitch {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.InputSwitch {
+  margin-left: 8px;
+  height: 20px;
+  width: 43px;
+}
+
+.p-inputswitch-slider:before {
+  margin-top: -8px !important;
+  margin-left: -3.5px !important;
+  height: 16px !important;
+  width: 16px !important;
+}

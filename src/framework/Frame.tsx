@@ -1,6 +1,8 @@
 import { Canvas } from "@react-three/fiber"
-
 import "./Frame.css"
+import { Splitter, SplitterPanel } from "primereact/splitter"
+
+import ControlPanel from "./controls/ControlPanel"
 import SceneContainer from "./SceneContainer"
 import Toolbar from "./Toolbar"
 
@@ -8,13 +10,20 @@ export default function Frame() {
   return (
     <div className="Frame">
       <Toolbar />
-      <div className="CanvasAndBackground">
-        <div className="CanvasWrapper">
-          <Canvas>
-            <SceneContainer />
-          </Canvas>
-        </div>
-      </div>
+      <Splitter style={{ flexGrow: 1, width: "100%", overflow: "hidden" }}>
+        <SplitterPanel style={{ overflow: "scroll" }}>
+          <ControlPanel />
+        </SplitterPanel>
+        <SplitterPanel style={{ overflow: "hidden" }}>
+          <div className="CanvasAndBackground">
+            <div className="CanvasWrapper">
+              <Canvas>
+                <SceneContainer />
+              </Canvas>
+            </div>
+          </div>
+        </SplitterPanel>
+      </Splitter>
     </div>
   )
 }
