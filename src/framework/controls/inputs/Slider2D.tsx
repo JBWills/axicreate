@@ -26,42 +26,6 @@ const gridSizeMin = 100
 
 const handleSize = 20
 
-function getGridSize({ min, max }: { min: Vec2; max: Vec2 }): Vec2 {
-  const aspect = (getX(max) - getX(min)) / (getY(max) - getY(min))
-
-  const gridWidth = gridSizeBase * aspect
-  const gridHeight = gridSizeBase * (1 / aspect)
-
-  return clampVec2([gridWidth, gridHeight], [gridSizeMin, gridSizeMax])
-}
-
-function GridLabel({
-  vec,
-  vertical,
-  horizontal,
-}: {
-  vec: Vec2
-  vertical: "top" | "bottom"
-  horizontal: "left" | "right" | "center"
-}) {
-  const styles = useStyles(
-    () => ({
-      container: {
-        zIndex: -1,
-        position: "absolute",
-        ...(vertical === "top" ? { top: -20 } : { bottom: -5 }),
-        ...(horizontal === "left" ? { left: -10 } : { right: -10 }),
-      },
-    }),
-    []
-  )
-  return (
-    <div style={styles.container}>
-      <Label text={vecString(vec)} />
-    </div>
-  )
-}
-
 function Slider2D({ value, min, max, onChange }: Slider2dProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -177,6 +141,42 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
         <XYCoordInputs value={value} min={min} onChange={onChange} />
       </div>
     </>
+  )
+}
+
+function getGridSize({ min, max }: { min: Vec2; max: Vec2 }): Vec2 {
+  const aspect = (getX(max) - getX(min)) / (getY(max) - getY(min))
+
+  const gridWidth = gridSizeBase * aspect
+  const gridHeight = gridSizeBase * (1 / aspect)
+
+  return clampVec2([gridWidth, gridHeight], [gridSizeMin, gridSizeMax])
+}
+
+function GridLabel({
+  vec,
+  vertical,
+  horizontal,
+}: {
+  vec: Vec2
+  vertical: "top" | "bottom"
+  horizontal: "left" | "right" | "center"
+}) {
+  const styles = useStyles(
+    () => ({
+      container: {
+        zIndex: -1,
+        position: "absolute",
+        ...(vertical === "top" ? { top: -20 } : { bottom: -5 }),
+        ...(horizontal === "left" ? { left: -10 } : { right: -10 }),
+      },
+    }),
+    [vertical, horizontal]
+  )
+  return (
+    <div style={styles.container}>
+      <Label text={vecString(vec)} />
+    </div>
   )
 }
 

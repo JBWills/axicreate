@@ -1,5 +1,8 @@
 export default function getNumberFixedDigits(
-  n: number | undefined
+  n: number | undefined,
+  options?: {
+    roundIfWhole: boolean
+  }
 ): number | undefined {
   if (n === undefined) {
     return undefined
