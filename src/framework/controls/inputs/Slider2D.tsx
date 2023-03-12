@@ -2,9 +2,12 @@ import React, { useCallback, useMemo, useRef } from "react"
 
 import Draggable, { DraggableEventHandler } from "react-draggable"
 
+import Handle from "./base/Handle"
 import XYCoordInputs from "./XYCoordInputs"
+import { useMemoArray } from "../../../hooks/useMemoArray"
+import { useStyles } from "../../../hooks/useStyles"
 import { Vec2, formatVec2, getX, getY } from "../../../types/Vec2"
-import "./Slider2d.css"
+import "./Slider2D.css"
 import { clampVec2 } from "../../../util/clamp"
 import { vec2Mapped } from "../../../util/percentAlong"
 import vecString from "../../../util/vecString"
@@ -41,13 +44,19 @@ function GridLabel({
   vertical: "top" | "bottom"
   horizontal: "left" | "right" | "center"
 }) {
-  return (
-    <div
-      style={{
+  const styles = useStyles(
+    () => ({
+      container: {
+        zIndex: -1,
         position: "absolute",
         ...(vertical === "top" ? { top: -20 } : { bottom: -5 }),
         ...(horizontal === "left" ? { left: -10 } : { right: -10 }),
-      }}>
+      },
+    }),
+    []
+  )
+  return (
+    <div style={styles.container}>
       <Label text={vecString(vec)} />
     </div>
   )
@@ -66,8 +75,8 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
   const left = -handleSize / 2
   const right = left + gridWidth
 
-  const minBound: [number, number] = [left, top]
-  const maxBound: [number, number] = [right, bottom]
+  const minBound: [number, number] = useMemoArray([left, top])
+  const maxBound: [number, number] = useMemoArray([right, bottom])
 
   const screenToValue = useCallback(
     (v: Vec2) =>
@@ -95,19 +104,22 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
       const newValue = screenToValue(data)
       onChange?.(newValue)
     },
-    [screenToValue]
+    [onChange, screenToValue]
   )
 
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    console.log("handleClick")
-    const { left: parentLeft, top: parentTop } =
-      e.currentTarget.getBoundingClientRect()
-    const newValue = screenToValue([
-      e.clientX - parentLeft,
-      e.clientY - parentTop,
-    ])
-    onChange?.(newValue)
-  }, [])
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      console.log("handleClick")
+      const { left: parentLeft, top: parentTop } =
+        e.currentTarget.getBoundingClientRect()
+      const newValue = screenToValue([
+        e.clientX - parentLeft - handleSize / 2,
+        e.clientY - parentTop - handleSize / 2,
+      ])
+      onChange?.(newValue)
+    },
+    [onChange, screenToValue]
+  )
 
   const handleClickOnDragHandle = useCallback((e: React.MouseEvent) => {
     console.log("Fake click")
@@ -129,18 +141,16 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
             height: gridHeight,
             position: "relative",
           }}
-          onClick={handleClick}>
+          onMouseDown={handleClick}>
           <Draggable
             bounds={bounds}
             position={
               value !== undefined ? formatVec2(valueToScreen(value)) : undefined
             }
             onDrag={handleDrag}>
-            <div
-              className="DragHandle"
-              onClick={handleClickOnDragHandle}
-              style={{ width: handleSize, height: handleSize }}
-            />
+            <div>
+              <Handle onClick={handleClickOnDragHandle} />
+            </div>
           </Draggable>
         </div>
 

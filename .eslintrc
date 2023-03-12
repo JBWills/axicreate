@@ -21,6 +21,7 @@
   "plugins": [
     "autofix",
     "react",
+    "react-hooks",
     "@typescript-eslint",
     "prettier",
     "unused-imports"
@@ -34,6 +35,12 @@
     }
   },
   "rules": {
+    "no-use-before-define": "off",
+    // this allows for function hoisting
+    "@typescript-eslint/no-use-before-define": ["error", {"functions": false, "typedefs": false}],
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
     "no-nested-ternary": "off",
     "no-empty-pattern": "off",
     "no-console": 0,
@@ -63,13 +70,10 @@
         "tsx": "never",
         "css": "always",
         "json": "always"
-      },
+      }
     ],
     // suppress errors for missing 'import React' in files
     "react/react-in-jsx-scope": "off",
-    // note you must disable the base rule as it can report incorrect errors
-    "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": "off",

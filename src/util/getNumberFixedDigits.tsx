@@ -5,5 +5,9 @@ export default function getNumberFixedDigits(
     return undefined
   }
 
+  if (typeof n !== "number") {
+    return n
+  }
+
   return Number.parseFloat(n.toFixed(2))
 }

@@ -41,7 +41,7 @@ function AxiSelectButton<T extends string>({
         value: o,
         className: "SelectButton",
       })),
-    options
+    [options]
   )
 
   return (

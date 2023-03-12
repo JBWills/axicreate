@@ -119,7 +119,7 @@ function AxiSlider({
           unreachable(changeType)
       }
     },
-    []
+    [maxNonNull, minNonNull, setValue, value]
   )
 
   const handleChangeMax = useCallback(
