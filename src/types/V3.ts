@@ -1,9 +1,9 @@
 import { MathableFunc, UnaryFunc } from "./V2"
 import { clampNumber } from "../util/clamp"
 import { RangeNum } from "../util/percentAlong"
-import unreachable from "../util/unreachable"
 
 export type RangeV3 = [V3, V3]
+export type Point3 = { x: number; y: number; z: number }
 
 type V3Able = V3 | number
 const F = {
@@ -37,13 +37,8 @@ export class V3 {
   apply(fun: MathableFunc): (other: V3Able) => V3 {
     const { x, y, z } = this
     return (other) => {
-      if (other instanceof V3) {
-        return new V3(fun(x, other.x), fun(y, other.y), fun(z, other.z))
-      }
-      if (typeof other === "number") {
-        return new V3(fun(x, other), fun(y, other), fun(z, other))
-      }
-      unreachable(other)
+      const otherV3 = V3.from(other)
+      return new V3(fun(x, otherV3.x), fun(y, otherV3.y), fun(z, otherV3.z))
     }
   }
 
@@ -114,14 +109,12 @@ export class V3 {
     return this.percentAlongRange(from).getValueAtPercentAlongRange(to)
   }
 
-  static from(arg1: number): V3
-
-  static from(arg1: { x: number; y: number; z: number }): V3
+  static from(arg1: Point3 | number): V3
 
   static from(arg1: number, arg2: number, arg3: number): V3
 
   static from(
-    arg1: number | { x: number; y: number; z: number },
+    arg1: number | Point3,
     arg2?: number | undefined,
     arg3?: number | undefined
   ): V3 {
