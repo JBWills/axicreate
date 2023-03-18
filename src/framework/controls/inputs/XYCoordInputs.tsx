@@ -1,7 +1,7 @@
 import React from "react"
 
 import AxiInputNumber from "./AxiInputNumber"
-import { Vec2Object, Vec2, formatVec2 } from "../../../types/Vec2"
+import { V2 } from "../../../types/V2"
 import getNumberFixedDigits from "../../../util/getNumberFixedDigits"
 
 export default function XYCoordInputs({
@@ -9,25 +9,23 @@ export default function XYCoordInputs({
   min,
   onChange,
 }: {
-  value: Vec2 | undefined
-  min: Vec2
-  onChange?: (v: Vec2Object) => void
+  value: V2 | undefined
+  min: V2
+  onChange?: (v: V2) => void
 }) {
-  const valueObj = formatVec2(value)
-  const minObj = formatVec2(min)
   return (
     <>
       <AxiInputNumber
         label="x"
         labelDir="left"
-        value={getNumberFixedDigits(valueObj?.x)}
-        onChange={(x) => onChange?.(formatVec2([x, valueObj?.y ?? minObj.y]))}
+        value={getNumberFixedDigits(value?.x)}
+        onChange={(x) => onChange?.(new V2(x, value?.y ?? min.y))}
       />
       <AxiInputNumber
         label="y"
         labelDir="left"
-        value={getNumberFixedDigits(valueObj?.y)}
-        onChange={(y) => onChange?.(formatVec2([valueObj?.x ?? minObj.x, y]))}
+        value={getNumberFixedDigits(value?.y)}
+        onChange={(y) => onChange?.(new V2(value?.x ?? min.x, y))}
       />
     </>
   )

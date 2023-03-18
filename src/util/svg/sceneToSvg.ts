@@ -8,7 +8,7 @@ import {
 } from "three-svg-renderer"
 
 import { toSize } from "../../types/Size"
-import { Vec2 } from "../../types/Vec2"
+import { V2 } from "../../types/V2"
 
 export default function sceneToSvg({
   scene,
@@ -19,7 +19,7 @@ export default function sceneToSvg({
   scene: Scene
   camera: Camera
   ignoreVisibility: boolean
-  size: Vec2
+  size: V2
 }) {
   if (camera.type !== "PerspectiveCamera") {
     throw new Error(

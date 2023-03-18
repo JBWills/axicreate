@@ -1,12 +1,10 @@
-import { Vec2, formatVec2 } from "./Vec2"
+import { Point } from "./V2"
 
 export type Size = {
   w: number
   h: number
 }
 
-export function toSize(vec: Vec2): Size {
-  const vecObj = formatVec2(vec)
-
-  return { w: vecObj.x, h: vecObj.y }
+export function toSize(vec: Point): Size {
+  return { w: vec.x, h: vec.y }
 }

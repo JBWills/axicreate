@@ -4,20 +4,16 @@ import Draggable, { DraggableEventHandler } from "react-draggable"
 
 import Handle from "./base/Handle"
 import XYCoordInputs from "./XYCoordInputs"
-import { useMemoArray } from "../../../hooks/useMemoArray"
 import { useStyles } from "../../../hooks/useStyles"
-import { Vec2, formatVec2, getX, getY } from "../../../types/Vec2"
+import { V2 } from "../../../types/V2"
 import "./Slider2D.css"
-import { clampVec2 } from "../../../util/clamp"
-import { vec2Mapped } from "../../../util/percentAlong"
-import vecString from "../../../util/vecString"
 import Label from "../../components/Label"
 
 interface Slider2dProps {
-  value: Vec2 | undefined
-  min: Vec2
-  max: Vec2
-  onChange?: (v: Vec2) => void
+  value: V2 | undefined
+  min: V2
+  max: V2
+  onChange?: (v: V2) => void
 }
 
 const gridSizeMax = 300
@@ -31,21 +27,20 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
 
   const gridSize = getGridSize({ min, max })
 
-  const gridWidth = getX(gridSize)
-  const gridHeight = getY(gridSize)
+  const gridWidth = gridSize.x
+  const gridHeight = gridSize.y
 
   const top = -handleSize / 2
   const bottom = top + gridHeight
   const left = -handleSize / 2
   const right = left + gridWidth
 
-  const minBound: [number, number] = useMemoArray([left, top])
-  const maxBound: [number, number] = useMemoArray([right, bottom])
+  const minBound = useMemo(() => new V2(left, top), [left, top])
+  const maxBound = useMemo(() => new V2(right, bottom), [right, bottom])
 
   const screenToValue = useCallback(
-    (v: Vec2) =>
-      vec2Mapped({
-        num: v,
+    (v: V2) =>
+      v.mapped({
         from: [minBound, maxBound],
         to: [min, max],
       }),
@@ -53,9 +48,8 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
   )
 
   const valueToScreen = useCallback(
-    (v: Vec2) =>
-      vec2Mapped({
-        num: v,
+    (v: V2) =>
+      v.mapped({
         from: [min, max],
         to: [minBound, maxBound],
       }),
@@ -64,8 +58,7 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
 
   const handleDrag: DraggableEventHandler = useCallback(
     (e, data) => {
-      console.log("handleDrag")
-      const newValue = screenToValue(data)
+      const newValue = screenToValue(V2.from(data))
       onChange?.(newValue)
     },
     [onChange, screenToValue]
@@ -73,13 +66,15 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      console.log("handleClick")
       const { left: parentLeft, top: parentTop } =
         e.currentTarget.getBoundingClientRect()
-      const newValue = screenToValue([
-        e.clientX - parentLeft - handleSize / 2,
-        e.clientY - parentTop - handleSize / 2,
-      ])
+
+      const newValue = screenToValue(
+        new V2(
+          e.clientX - parentLeft - handleSize / 2,
+          e.clientY - parentTop - handleSize / 2
+        )
+      )
       onChange?.(newValue)
     },
     [onChange, screenToValue]
@@ -108,9 +103,7 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
           onMouseDown={handleClick}>
           <Draggable
             bounds={bounds}
-            position={
-              value !== undefined ? formatVec2(valueToScreen(value)) : undefined
-            }
+            position={value !== undefined ? valueToScreen(value) : undefined}
             onDrag={handleDrag}>
             <div>
               <Handle onClick={handleClickOnDragHandle} />
@@ -121,12 +114,12 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
         <GridLabel vec={min} vertical="top" horizontal="left" />
         <GridLabel vec={max} vertical="bottom" horizontal="right" />
         <GridLabel
-          vec={[getX(min), getY(max)]}
+          vec={V2.from(min.x, max.y)}
           vertical="bottom"
           horizontal="left"
         />
         <GridLabel
-          vec={[getX(max), getY(min)]}
+          vec={V2.from(max.x, min.y)}
           vertical="top"
           horizontal="right"
         />
@@ -144,13 +137,15 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
   )
 }
 
-function getGridSize({ min, max }: { min: Vec2; max: Vec2 }): Vec2 {
-  const aspect = (getX(max) - getX(min)) / (getY(max) - getY(min))
+function getGridSize({ min, max }: { min: V2; max: V2 }): V2 {
+  const aspect = (max.x - min.x) / (max.y - min.y)
 
   const gridWidth = gridSizeBase * aspect
   const gridHeight = gridSizeBase * (1 / aspect)
 
-  return clampVec2([gridWidth, gridHeight], [gridSizeMin, gridSizeMax])
+  const gridSize = new V2(gridWidth, gridHeight)
+
+  return gridSize.clamp([gridSizeMin, gridSizeMax])
 }
 
 function GridLabel({
@@ -158,7 +153,7 @@ function GridLabel({
   vertical,
   horizontal,
 }: {
-  vec: Vec2
+  vec: V2
   vertical: "top" | "bottom"
   horizontal: "left" | "right" | "center"
 }) {
@@ -175,7 +170,7 @@ function GridLabel({
   )
   return (
     <div style={styles.container}>
-      <Label text={vecString(vec)} />
+      <Label text={vec.toString()} />
     </div>
   )
 }

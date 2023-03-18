@@ -6,6 +6,7 @@ import AxiInputText from "./inputs/AxiInputText"
 import AxiSelectButton from "./inputs/AxiSelectButton"
 import AxiSlider from "./inputs/AxiSlider"
 import AxiSlider2D from "./inputs/AxiSlider2D"
+import { V2 } from "../../types/V2"
 import IconButton from "../components/IconButton"
 
 export default function ControlPanel() {
@@ -34,11 +35,27 @@ export default function ControlPanel() {
         tooltip="Icon button"
       />
       <AxiSlider2D label="2d slider" />
-      <AxiSlider2D label="2d slider 2" min={[1, 2]} max={[3, 4]} />
-      <AxiSlider2D label="2d slider 3" min={[-1, -1]} max={[2, 2]} />
-      <AxiSlider2D label="2d slider 4" min={[-10, -1]} max={[10, 1]} />
-      <AxiSlider2D label="2d slider 5" min={[-10, -1]} max={[10, 1]} />
-      <AxiSlider2D label="2d slider 6" min={[-10, -1]} max={[10, 1]} />
+      <AxiSlider2D label="2d slider 2" min={new V2(1, 2)} max={new V2(3, 4)} />
+      <AxiSlider2D
+        label="2d slider 3"
+        min={new V2(-1, -1)}
+        max={new V2(2, 2)}
+      />
+      <AxiSlider2D
+        label="2d slider 4"
+        min={new V2(-10, -1)}
+        max={new V2(10, 1)}
+      />
+      <AxiSlider2D
+        label="2d slider 5"
+        min={new V2(-10, -1)}
+        max={new V2(10, 1)}
+      />
+      <AxiSlider2D
+        label="2d slider 6"
+        min={new V2(-10, -1)}
+        max={new V2(10, 1)}
+      />
     </div>
   )
 }

@@ -5,50 +5,37 @@ import { OverlayPanel } from "primereact/overlaypanel"
 
 import Slider2D from "./Slider2D"
 import XYCoordInputs from "./XYCoordInputs"
-import { Vec2Object, Vec2, formatVec2 } from "../../../types/Vec2"
-import { clampVec2 } from "../../../util/clamp"
-import { vec2Plus, vec2Minus } from "../../../util/vec/vec2Arithmetic"
+import { V2 } from "../../../types/V2"
 import IconButton from "../../components/IconButton"
 import Label from "../../components/Label"
 
 interface AxiSlider2DProps {
   label: string
-  value?: Vec2Object
-  min?: Vec2
-  max?: Vec2
-  onChange?: (e: Vec2Object) => void
+  value?: V2
+  min?: V2
+  max?: V2
+  onChange?: (e: V2) => void
 }
 
-function getMinMaxDefaults(
-  min: Vec2 | undefined,
-  max: Vec2 | undefined
-): [Vec2, Vec2] {
-  if (min === undefined && max === undefined) {
-    return [
-      [0, 0],
-      [1, 1],
-    ]
+function getMinMaxDefaults(min: V2 | undefined, max: V2 | undefined): [V2, V2] {
+  if (min && max) {
+    return [min, max]
+  } else if (max) {
+    return [max.minus(1), max]
+  } else if (min) {
+    return [min, min.plus(1)]
+  } else {
+    return [new V2(0, 0), new V2(1, 1)]
   }
-
-  if (min === undefined && max !== undefined) {
-    return [vec2Minus(max, 1), max]
-  }
-
-  if (max === undefined && min !== undefined) {
-    return [min, vec2Plus(min, 1)]
-  }
-
-  return [min as Vec2, max as Vec2]
 }
 
 function AxiSlider2D({ label, onChange, value, min, max }: AxiSlider2DProps) {
-  const [local, setLocal] = useState<Vec2Object | undefined>(undefined)
+  const [local, setLocal] = useState<V2 | undefined>(undefined)
   const overlayPanelRef = useRef<OverlayPanel>(null)
   const handleChangeValue = useCallback(
-    (e: Vec2) => {
-      const obj = formatVec2(e)
-      setLocal(obj)
-      onChange?.(obj)
+    (v: V2) => {
+      setLocal(v)
+      onChange?.(v)
     },
     [onChange]
   )
@@ -64,10 +51,7 @@ function AxiSlider2D({ label, onChange, value, min, max }: AxiSlider2DProps) {
 
   const [minNotNull, maxNotNull] = getMinMaxDefaults(min, max)
 
-  const clamped =
-    actual !== undefined
-      ? clampVec2(actual, [minNotNull, maxNotNull])
-      : undefined
+  const clamped = actual?.clamp([minNotNull, maxNotNull])
 
   return (
     <div className="AxiSlider2D">
