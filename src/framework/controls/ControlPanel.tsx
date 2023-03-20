@@ -6,12 +6,25 @@ import AxiInputText from "./inputs/AxiInputText"
 import AxiSelectButton from "./inputs/AxiSelectButton"
 import AxiSlider from "./inputs/AxiSlider"
 import AxiSlider2D from "./inputs/AxiSlider2D"
+import { useStyles } from "../../hooks/useStyles"
 import { V2 } from "../../types/V2"
 import IconButton from "../components/IconButton"
 
 export default function ControlPanel() {
+  const styles = useStyles(
+    () => ({
+      controlPanelContainer: {
+        width: "100%",
+        padding: 10,
+        paddingBottom: 50,
+        minWidth: 200,
+      },
+    }),
+    []
+  )
+
   return (
-    <div className="ControlPanel">
+    <div style={styles.controlPanelContainer}>
       <AxiInputText label="Test label" />
       <AxiSlider label="Slider" type="single" min={0} max={10} step={2.5} />
       <AxiSlider label="DoubleSlider" type="range" min={0} max={10} />

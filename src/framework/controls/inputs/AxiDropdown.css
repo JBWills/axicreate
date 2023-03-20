@@ -1,18 +1,3 @@
-.AxiDropdown {
-  width: 100%;
-}
-
-.Dropdown {
-  width: 100%;
-  min-height: 35px;
-  padding: 0px;
-  margin-bottom: 5px;
-}
-
-.DropdownOption {
-  padding: 5px 10px;
-}
-
 .DropdownOptionWrapper {
   padding: 0px !important;
 }

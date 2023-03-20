@@ -1,5 +1,6 @@
-import "./Label.css"
-import { useMemo } from "react"
+import React from "react"
+
+import { useStyles } from "../../hooks/useStyles"
 
 interface LabelProps {
   text: string
@@ -9,20 +10,25 @@ interface LabelProps {
   marginRight?: number
 }
 
-export default function Label({
+function Label({
   text,
   marginTop,
   marginBottom,
   marginLeft,
   marginRight,
 }: LabelProps) {
-  const style = useMemo(
-    () => ({ marginTop, marginBottom, marginLeft, marginRight }),
+  const styles = useStyles(
+    () => ({
+      labelText: {
+        marginTop: marginTop ?? 20,
+        marginBottom: marginBottom ?? 4,
+        marginLeft,
+        marginRight,
+      },
+    }),
     [marginTop, marginBottom, marginLeft, marginRight]
   )
-  return (
-    <h5 className="Label" style={style}>
-      {text}
-    </h5>
-  )
+  return <h5 style={styles.labelText}>{text}</h5>
 }
+
+export default React.memo(Label)

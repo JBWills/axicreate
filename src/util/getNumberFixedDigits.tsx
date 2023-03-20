@@ -12,5 +12,5 @@ export default function getNumberFixedDigits(
     return n
   }
 
-  return Number.parseFloat(n.toFixed(2))
+  return Number.parseFloat(n.toFixed(3))
 }

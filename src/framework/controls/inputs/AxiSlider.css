@@ -10,16 +10,3 @@
 .p-slider-range {
   border-radius: 6px;
 }
-
-.SliderContainer {
-  display: flex;
-  align-items: center;
-}
-
-.DoubleSliderValues {
-  padding-top: 3px;
-  margin-left: 10px;
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-}

@@ -21,7 +21,7 @@ function Handle({ size, ...rest }: HandleProps) {
         borderRadius: 100,
       },
     }),
-    []
+    [size]
   )
 
   return <div style={styles.handle} {...rest} />

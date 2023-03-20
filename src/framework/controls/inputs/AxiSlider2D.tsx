@@ -1,10 +1,10 @@
 import React, { MouseEvent, useCallback, useRef, useState } from "react"
 
-import "./AxiSlider2D.css"
 import { OverlayPanel } from "primereact/overlaypanel"
 
 import Slider2D from "./Slider2D"
 import XYCoordInputs from "./XYCoordInputs"
+import { useStyles } from "../../../hooks/useStyles"
 import { V2 } from "../../../types/V2"
 import IconButton from "../../components/IconButton"
 import Label from "../../components/Label"
@@ -53,14 +53,29 @@ function AxiSlider2D({ label, onChange, value, min, max }: AxiSlider2DProps) {
 
   const clamped = actual?.clamp([minNotNull, maxNotNull])
 
+  const styles = useStyles(
+    () => ({
+      container: { width: "100%" },
+      inputsContainer: { display: "flex", alignItems: "center" },
+      buttonContainer: { flexShrink: 0, marginRight: 5 },
+    }),
+    []
+  )
+
   return (
-    <div className="AxiSlider2D">
+    <div style={styles.container}>
       <Label text={label} />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ flexShrink: 0, marginRight: 5 }}>
-          <IconButton icon="PLUS_CIRCLE" onClick={handleShowModal} />
-        </div>
-        <XYCoordInputs value={clamped} min={minNotNull} onChange={onChange} />
+      <div style={styles.inputsContainer}>
+        <IconButton
+          style={styles.buttonContainer}
+          icon="PLUS_CIRCLE"
+          onClick={handleShowModal}
+        />
+        <XYCoordInputs
+          value={clamped}
+          min={minNotNull}
+          onChange={handleChangeValue}
+        />
       </div>
       <OverlayPanel ref={overlayPanelRef}>
         <Slider2D

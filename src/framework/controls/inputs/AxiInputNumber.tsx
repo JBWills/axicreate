@@ -1,10 +1,9 @@
-import React, { CSSProperties, useCallback, useMemo } from "react"
+import React, { CSSProperties, useCallback } from "react"
 
 import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber"
 
-import "./AxiInputNumber.css"
-import "./AxiInputText.css"
-import { regularText } from "../../../util/typography"
+import { useInputTextStyles } from "./base/useInputTextStyle"
+import { useStyles } from "../../../hooks/useStyles"
 import Label from "../../components/Label"
 
 interface AxiInputNumberProps {
@@ -25,33 +24,34 @@ function AxiInputNumber({
 }: AxiInputNumberProps) {
   const handleChange = useCallback(
     (e: InputNumberChangeEvent) => {
-      console.log("input is changing things")
       if (e.value !== null) onChange?.(e.value)
     },
     [onChange]
   )
 
-  const style = useMemo(
+  const styles = useStyles(
     () => ({
-      maxWidth,
-      ...(labelDir === "left" && {
-        display: "flex",
-        alignItems: "center",
-        marginLeft: 5,
-        marginRight: 5,
-      }),
+      container: {
+        width: "100%",
+        maxWidth,
+        ...(labelDir === "left" && {
+          display: "flex",
+          alignItems: "center",
+        }),
+      },
     }),
     [maxWidth, labelDir]
   )
 
+  const inputTextStyle = useInputTextStyles()
+
   return (
-    <div className="AxiInputNumber" style={style}>
+    <div style={styles.container}>
       {label && (
         <Label text={label} marginRight={5} marginTop={0} marginBottom={0} />
       )}
       <InputNumber
-        inputClassName="InputText"
-        style={regularText}
+        inputStyle={inputTextStyle}
         onChange={handleChange}
         maxFractionDigits={6}
         value={value}

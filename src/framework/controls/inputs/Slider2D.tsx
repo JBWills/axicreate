@@ -6,7 +6,6 @@ import Handle from "./base/Handle"
 import XYCoordInputs from "./XYCoordInputs"
 import { useStyles } from "../../../hooks/useStyles"
 import { V2 } from "../../../types/V2"
-import "./Slider2D.css"
 import Label from "../../components/Label"
 
 interface Slider2dProps {
@@ -89,18 +88,33 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
     return { top, bottom, left, right }
   }, [top, bottom, left, right])
 
+  const styles = useStyles(
+    () => ({
+      gridContainer: {
+        position: "relative",
+        paddingTop: 20,
+        paddingBottom: 20,
+      },
+      grid: {
+        background: "lightblue",
+        width: gridWidth,
+        height: gridHeight,
+        position: "relative",
+      },
+      gridInputs: {
+        display: "flex",
+        alignItems: "center",
+        width: gridWidth,
+        marginTop: 20,
+      },
+    }),
+    [gridWidth, gridHeight]
+  )
+
   return (
     <>
-      <div style={{ position: "relative", paddingTop: 20, paddingBottom: 20 }}>
-        <div
-          ref={ref}
-          style={{
-            background: "lightblue",
-            width: gridWidth,
-            height: gridHeight,
-            position: "relative",
-          }}
-          onMouseDown={handleClick}>
+      <div style={styles.gridContainer}>
+        <div ref={ref} style={styles.grid} onMouseDown={handleClick}>
           <Draggable
             bounds={bounds}
             position={value !== undefined ? valueToScreen(value) : undefined}
@@ -124,13 +138,7 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
           horizontal="right"
         />
       </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: gridWidth,
-          marginTop: 20,
-        }}>
+      <div style={styles.gridInputs}>
         <XYCoordInputs value={value} min={min} onChange={onChange} />
       </div>
     </>

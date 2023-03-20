@@ -10,7 +10,14 @@ export default function Frame() {
   return (
     <div className="Frame">
       <Toolbar />
-      <Splitter style={{ flexGrow: 1, width: "100%", overflow: "hidden" }}>
+      <Splitter
+        style={{
+          flexGrow: 1,
+          width: "100%",
+          overflow: "hidden",
+          borderRadius: 0,
+          border: 0,
+        }}>
         <SplitterPanel style={{ overflow: "scroll" }}>
           <ControlPanel />
         </SplitterPanel>

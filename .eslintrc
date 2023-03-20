@@ -41,7 +41,9 @@
     "no-use-before-define": "off",
     // this allows for function hoisting
     "@typescript-eslint/no-use-before-define": ["error", {"functions": false, "typedefs": false}],
-    "react-hooks/exhaustive-deps": "error",
+    "react-hooks/exhaustive-deps": ["error", {
+      "additionalHooks": "(useStyles)"
+    }],
     "react/jsx-props-no-spreading": "off",
     "import/prefer-default-export": "off",
     "no-nested-ternary": "off",

@@ -2,8 +2,8 @@ import React, { ChangeEvent, useCallback } from "react"
 
 import { InputText } from "primereact/inputtext"
 
-import "./AxiInputText.css"
-import { regularText } from "../../../util/typography"
+import { useInputTextStyles } from "./base/useInputTextStyle"
+import { useStyles } from "../../../hooks/useStyles"
 import Label from "../../components/Label"
 
 interface AxiInputProps {
@@ -23,13 +23,21 @@ function AxiInputText({
     (e: ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value),
     [onChange]
   )
+
+  const styles = useStyles(
+    () => ({
+      container: { width: "100%" },
+    }),
+    []
+  )
+
+  const inputTextStyle = useInputTextStyles()
   return (
-    <div className="AxiInputText">
+    <div style={styles.container}>
       <Label text={label} />
       <InputText
-        className="InputText"
         tooltip={tooltip}
-        style={regularText}
+        style={inputTextStyle}
         onChange={onChange && onChangeHandler}
         placeholder={placeholder}
       />

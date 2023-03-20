@@ -4,6 +4,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown"
 
 import "./AxiDropdown.css"
 
+import { useStyles } from "../../../hooks/useStyles"
 import { SelectOption } from "../../../types/SelectOption"
 import { regularText } from "../../../util/typography"
 import Label from "../../components/Label"
@@ -41,23 +42,40 @@ function AxiDropdown<T>({
     }))
   }, [options])
 
+  const styles = useStyles(
+    () => ({
+      dropdownOption: {
+        padding: "5px 10px",
+        ...regularText,
+      },
+      axiDropdown: {
+        width: "100%",
+      },
+      dropdown: {
+        width: "100%",
+        minHeight: 35,
+        padding: 0,
+        marginBottom: 5,
+        ...regularText,
+      },
+    }),
+    []
+  )
+
   const renderOption = useCallback(
     (v: SelectOption<T> | undefined) => (
-      <div className="DropdownOption" style={regularText}>
-        {v?.displayName}
-      </div>
+      <div style={styles.dropdownOption}>{v?.displayName}</div>
     ),
-    []
+    [styles.dropdownOption]
   )
 
   const actualValue = value ?? local
 
   return (
-    <div className="AxiDropdown">
+    <div style={styles.axiDropdown}>
       <Label text={label} />
       <Dropdown
-        className="Dropdown"
-        style={regularText}
+        style={styles.dropdown}
         onChange={handleChange}
         value={actualValue}
         options={styledOptions}

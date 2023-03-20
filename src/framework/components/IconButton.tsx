@@ -1,4 +1,4 @@
-import React from "react"
+import React, { CSSProperties } from "react"
 
 import "./IconButton.css"
 import { PrimeIcons, PrimeIconsOptions } from "primereact/api"
@@ -8,9 +8,10 @@ interface IconButtonProps {
   icon: keyof PrimeIconsOptions
   tooltip?: string
   onClick: React.MouseEventHandler<HTMLButtonElement>
+  style?: CSSProperties
 }
 
-function IconButton({ icon, tooltip, onClick }: IconButtonProps) {
+function IconButton({ icon, tooltip, onClick, style }: IconButtonProps) {
   return (
     <Button
       className="IconButton"
@@ -18,6 +19,7 @@ function IconButton({ icon, tooltip, onClick }: IconButtonProps) {
       icon={PrimeIcons[icon]}
       onClick={onClick}
       size="small"
+      style={style}
     />
   )
 }

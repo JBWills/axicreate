@@ -9,6 +9,7 @@ import type { SelectItem } from "primereact/selectitem"
 
 import "./AxiSelectButton.css"
 
+import { useStyles } from "../../../hooks/useStyles"
 import Label from "../../components/Label"
 
 type AxiSelectButtonProps<T extends string> = {
@@ -44,8 +45,19 @@ function AxiSelectButton<T extends string>({
     [options]
   )
 
+  const styles = useStyles(
+    () => ({
+      container: {
+        width: "100%",
+        overflow: "scroll",
+        marginBottom: 5,
+      },
+    }),
+    []
+  )
+
   return (
-    <div className="AxiSelectButton">
+    <div style={styles.container}>
       <Label text={label} />
       <SelectButton
         onChange={handleChange}

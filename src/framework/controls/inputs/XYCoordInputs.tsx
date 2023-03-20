@@ -1,6 +1,7 @@
 import React from "react"
 
 import AxiInputNumber from "./AxiInputNumber"
+import { useStyles } from "../../../hooks/useStyles"
 import { V2 } from "../../../types/V2"
 import getNumberFixedDigits from "../../../util/getNumberFixedDigits"
 
@@ -13,6 +14,12 @@ export default function XYCoordInputs({
   min: V2
   onChange?: (v: V2) => void
 }) {
+  const styles = useStyles(
+    () => ({
+      gap: { padding: 10 },
+    }),
+    []
+  )
   return (
     <>
       <AxiInputNumber
@@ -21,6 +28,7 @@ export default function XYCoordInputs({
         value={getNumberFixedDigits(value?.x)}
         onChange={(x) => onChange?.(new V2(x, value?.y ?? min.y))}
       />
+      <div style={styles.gap} />
       <AxiInputNumber
         label="y"
         labelDir="left"

@@ -1,8 +1,0 @@
-.DragHandle {
-  cursor: grab;
-  cursor: -webkit-grab;
-  background-color: blue;
-  border-radius: 100px;
-  position: absolute;
-
-}

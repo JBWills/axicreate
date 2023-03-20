@@ -4,6 +4,7 @@ import { Slider, SliderChangeEvent } from "primereact/slider"
 
 import "./AxiSlider.css"
 import AxiInputNumber from "./AxiInputNumber"
+import { useStyles } from "../../../hooks/useStyles"
 import { regularText } from "../../../util/typography"
 import unreachable from "../../../util/unreachable"
 import Label from "../../components/Label"
@@ -137,13 +138,35 @@ function AxiSlider({
     [onChangeInput]
   )
 
+  const styles = useStyles(
+    () => ({
+      sliderAndInputContainer: {
+        display: "flex",
+        alignItems: "center",
+        gap: 20,
+      },
+      sliderContainer: {
+        flexGrow: 1,
+        margin: 10,
+        ...regularText,
+      },
+      doubleSliderValues: {
+        width: "100%",
+        paddingTop: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: 20,
+      },
+    }),
+    []
+  )
+
   const slider = (
     <Slider
-      className="Slider"
       step={getStep({ numSteps, step, min: minNonNull, max: maxNonNull })}
       min={minNonNull}
       max={maxNonNull}
-      style={regularText}
+      style={styles.sliderContainer}
       range={type === "range"}
       value={actualValue}
       onChange={onChangeHandler}
@@ -151,11 +174,11 @@ function AxiSlider({
   )
 
   return (
-    <div className="AxiSlider">
+    <div>
       <Label text={label} />
       {!Array.isArray(actualValue) ? (
-        <div className="SliderContainer">
-          <div style={{ flexGrow: 1 }}>{slider}</div>
+        <div style={styles.sliderAndInputContainer}>
+          {slider}
           <AxiInputNumber
             value={actualValue}
             maxWidth="25%"
@@ -165,7 +188,7 @@ function AxiSlider({
       ) : (
         <>
           {slider}
-          <div className="DoubleSliderValues">
+          <div style={styles.doubleSliderValues}>
             <AxiInputNumber value={actualValue[0]} onChange={handleChangeMin} />
             <div style={{ padding: 20 }} />
             <AxiInputNumber value={actualValue[1]} onChange={handleChangeMax} />

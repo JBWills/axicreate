@@ -1,12 +1,12 @@
 import React, { useCallback } from "react"
 
-import "./AxiColorPicker.css"
 import {
   ColorPicker,
   ColorPickerChangeEvent,
   ColorPickerRGBType,
 } from "primereact/colorpicker"
 
+import { useStyles } from "../../../hooks/useStyles"
 import { RgbColor } from "../../../types/color"
 import Label from "../../components/Label"
 
@@ -21,8 +21,15 @@ function AxiColorPicker({ label, onChange }: AxiColorPickerProps) {
       onChange?.({ type: "rgb", ...(e.value as ColorPickerRGBType) }),
     [onChange]
   )
+
+  const styles = useStyles(
+    () => ({
+      container: { width: "100%" },
+    }),
+    []
+  )
   return (
-    <div className="AxiColorPicker">
+    <div style={styles.container}>
       <Label text={label} />
       <ColorPicker onChange={handleChange} type="rgb" />
     </div>
