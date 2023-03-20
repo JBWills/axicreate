@@ -1,3 +1,5 @@
+import { Vector3 } from "three"
+
 import { MathableFunc, UnaryFunc } from "./V2"
 import { clampNumber } from "../util/clamp"
 import { RangeNum } from "../util/percentAlong"
@@ -128,6 +130,11 @@ export class V3 {
   toString() {
     const { x, y, z } = this
     return `(${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)})`
+  }
+
+  toVector3(): Vector3 {
+    const { x, y, z } = this
+    return new Vector3(x, y, z)
   }
 }
 

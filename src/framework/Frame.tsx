@@ -55,7 +55,7 @@ export default function Frame() {
         <SplitterPanel style={styles.splitterDisplayPanel}>
           <div style={styles.canvasAndBackground}>
             <div style={styles.canvasWrapper}>
-              <Canvas>
+              <Canvas linear flat>
                 <SceneContainer />
               </Canvas>
             </div>

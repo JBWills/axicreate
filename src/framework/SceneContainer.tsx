@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { Box, OrbitControls } from "@react-three/drei"
+import { OrbitControls } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
 import { isHotkeyPressed } from "react-hotkeys-hook"
-import { PerspectiveCamera as PerspectiveCameraType, Scene } from "three"
+import { Color, PerspectiveCamera as PerspectiveCameraType, Scene } from "three"
 
 import { Height, Width } from "../AppState"
 import { useShortcutOverride } from "../hooks/useShortcut"
+import AxiBox from "../shape/AxiBox"
+import { Group } from "../shape/rendering/Group"
 import Key from "../types/keys/AllKeys"
+import { V2 } from "../types/V2"
+import { V3 } from "../types/V3"
 import sceneToSvg from "../util/svg/sceneToSvg"
+import { times, timesFlat } from "../util/times"
 
 interface SceneContainerProps {}
 
@@ -32,7 +37,7 @@ export default function SceneContainer(props: SceneContainerProps) {
       scene: scene.current,
       camera: camera.current,
       ignoreVisibility: false,
-      size: { y: Height, x: Width },
+      size: new V2(Width, Height),
     })
   }, [])
 
@@ -63,27 +68,18 @@ export default function SceneContainer(props: SceneContainerProps) {
     renderer.setSize(Width, Height)
   })
 
+  const arr = timesFlat(10, (i) =>
+    timesFlat(10, (j) =>
+      times(10, (k) => <AxiBox position={new V3(i * 1.1, j * 1.1, k * 1.1)} />)
+    )
+  )
+
   return (
     <>
-      {/* <PerspectiveCamera
-        ref={camera}
-        fov={fov}
-        makeDefault
-        aspect={Width / Height}
-      /> */}
-      {/* eslint-disable-next-line react/no-unknown-property */})
-      {/* {camera.current && <cameraHelper args={[camera.current]} />}; */}
       <scene ref={scene}>
-        <ambientLight />
-        {/* eslint-disable-next-line react/no-unknown-property */}
-        <pointLight position={[10, 10, 10]} />
-        <Box position={[-1.2, 0, 0]} />
-        <Box position={[1.2, 0, 0]} />
+        <Group color={new Color(0.5, 0.5, 0.5)}>{arr}</Group>
       </scene>
-      <OrbitControls
-        makeDefault
-        onChange={() => console.log("changing somethig")}
-      />
+      <OrbitControls makeDefault />
     </>
   )
 }
