@@ -6,16 +6,23 @@ import "./App.css"
 import { TypographyStyle, GoogleFont } from "react-typography"
 
 import Frame from "./framework/Frame"
-import useShortcut from "./hooks/useShortcut"
-import Key from "./types/keys/AllKeys"
+import { useStyles } from "./hooks/useStyles"
 import typography from "./util/typography"
 
 function App() {
-  useShortcut([Key.Cmd, Key.Ctrl, "y"], () => console.log("tesdt"))
+  const styles = useStyles(
+    () => ({
+      app: {
+        backgroundColor: "rgb(207, 229, 248)",
+        width: "100%",
+        height: "100%",
+      },
+    }),
+    []
+  )
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-    <div className="App">
+    <div style={styles.app}>
       <TypographyStyle typography={typography} />
       <GoogleFont typography={typography} />
       <Suspense />

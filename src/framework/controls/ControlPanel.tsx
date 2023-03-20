@@ -1,4 +1,3 @@
-import "./ControlPanel.css"
 import AxiColorPicker from "./inputs/AxiColorPicker"
 import AxiDropdown from "./inputs/AxiDropdown"
 import AxiInputSwitch from "./inputs/AxiInputSwitch"
