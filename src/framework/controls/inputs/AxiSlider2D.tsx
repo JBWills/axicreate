@@ -4,6 +4,7 @@ import { OverlayPanel } from "primereact/overlaypanel"
 
 import Slider2D from "./Slider2D"
 import XYCoordInputs from "./XYCoordInputs"
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import { V2 } from "../../../types/V2"
 import IconButton from "../../components/IconButton"
@@ -89,4 +90,4 @@ function AxiSlider2D({ label, onChange, value, min, max }: AxiSlider2DProps) {
   )
 }
 
-export default React.memo(AxiSlider2D)
+export default axiMemo(AxiSlider2D)

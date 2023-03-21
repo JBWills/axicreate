@@ -6,6 +6,7 @@ import {
   ColorPickerRGBType,
 } from "primereact/colorpicker"
 
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import { RgbColor } from "../../../types/color"
 import Label from "../../components/Label"
@@ -36,4 +37,4 @@ function AxiColorPicker({ label, onChange }: AxiColorPickerProps) {
   )
 }
 
-export default React.memo(AxiColorPicker)
+export default axiMemo(AxiColorPicker)

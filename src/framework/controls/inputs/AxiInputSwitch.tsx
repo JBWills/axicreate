@@ -2,9 +2,9 @@ import React, { useCallback, useState } from "react"
 
 import { InputSwitch } from "primereact/inputswitch"
 
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import Label from "../../components/Label"
-
 import "./AxiInputSwitch.css"
 
 interface AxiInputSwitchProps {
@@ -58,4 +58,4 @@ function AxiInputSwitch({
   )
 }
 
-export default React.memo(AxiInputSwitch)
+export default axiMemo(AxiInputSwitch)

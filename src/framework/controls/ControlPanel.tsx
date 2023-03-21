@@ -1,3 +1,5 @@
+import { useMemo } from "react"
+
 import AxiColorPicker from "./inputs/AxiColorPicker"
 import AxiDropdown from "./inputs/AxiDropdown"
 import AxiInputSwitch from "./inputs/AxiInputSwitch"
@@ -6,10 +8,16 @@ import AxiSelectButton from "./inputs/AxiSelectButton"
 import AxiSlider from "./inputs/AxiSlider"
 import AxiSlider2D from "./inputs/AxiSlider2D"
 import { useStyles } from "../../hooks/useStyles"
+import { PaperName, paperNames } from "../../print/Paper"
+import { SelectOption } from "../../types/SelectOption"
 import { V2 } from "../../types/V2"
 import IconButton from "../components/IconButton"
 
-export default function ControlPanel() {
+interface ControlPanelProps {
+  onChangePaper: (newPaper: PaperName) => void
+}
+
+export default function ControlPanel({ onChangePaper }: ControlPanelProps) {
   const styles = useStyles(
     () => ({
       controlPanelContainer: {
@@ -22,8 +30,18 @@ export default function ControlPanel() {
     []
   )
 
+  const paperOptions: SelectOption<PaperName>[] = useMemo(
+    () => paperNames.map((name) => ({ value: name, displayName: name })),
+    []
+  )
+
   return (
     <div style={styles.controlPanelContainer}>
+      <AxiDropdown
+        label="Paper"
+        options={paperOptions}
+        onChange={onChangePaper}
+      />
       <AxiInputText label="Test label" />
       <AxiSlider label="Slider" type="single" min={0} max={10} step={2.5} />
       <AxiSlider label="DoubleSlider" type="range" min={0} max={10} />

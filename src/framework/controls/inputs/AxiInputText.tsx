@@ -3,6 +3,7 @@ import React, { ChangeEvent, useCallback } from "react"
 import { InputText } from "primereact/inputtext"
 
 import { useInputTextStyles } from "./base/useInputTextStyle"
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import Label from "../../components/Label"
 
@@ -45,4 +46,4 @@ function AxiInputText({
   )
 }
 
-export default React.memo(AxiInputText)
+export default axiMemo(AxiInputText)

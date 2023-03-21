@@ -1,3 +1,5 @@
+import { useCallback } from "react"
+
 import { Canvas } from "@react-three/fiber"
 import { Splitter, SplitterPanel } from "primereact/splitter"
 
@@ -5,6 +7,7 @@ import ControlPanel from "./controls/ControlPanel"
 import SceneContainer from "./SceneContainer"
 import Toolbar from "./Toolbar"
 import { useStyles } from "../hooks/useStyles"
+import { PaperName } from "../print/Paper"
 
 export default function Frame() {
   const styles = useStyles(
@@ -45,12 +48,17 @@ export default function Frame() {
     []
   )
 
+  const handleOnChangePaper = useCallback(
+    (paperName: PaperName) => console.log(`Changed paper to: ${paperName}`),
+    []
+  )
+
   return (
     <div style={styles.frame}>
       <Toolbar />
       <Splitter style={styles.splitter}>
         <SplitterPanel style={styles.splitterControlPanel}>
-          <ControlPanel />
+          <ControlPanel onChangePaper={handleOnChangePaper} />
         </SplitterPanel>
         <SplitterPanel style={styles.splitterDisplayPanel}>
           <div style={styles.canvasAndBackground}>

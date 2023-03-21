@@ -4,6 +4,7 @@ import Draggable, { DraggableEventHandler } from "react-draggable"
 
 import Handle from "./base/Handle"
 import XYCoordInputs from "./XYCoordInputs"
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import { V2 } from "../../../types/V2"
 import Label from "../../components/Label"
@@ -183,4 +184,4 @@ function GridLabel({
   )
 }
 
-export default React.memo(Slider2D)
+export default axiMemo(Slider2D)

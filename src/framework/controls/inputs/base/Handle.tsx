@@ -1,5 +1,6 @@
 import React from "react"
 
+import { axiMemo } from "../../../../hooks/genericMemo"
 import { useStyles } from "../../../../hooks/useStyles"
 import { DragProps } from "../../../../types/DragProps"
 import { MouseProps } from "../../../../types/MouseProps"
@@ -27,4 +28,4 @@ function Handle({ size, ...rest }: HandleProps) {
   return <div style={styles.handle} {...rest} />
 }
 
-export default React.memo(Handle)
+export default axiMemo(Handle)

@@ -1,5 +1,6 @@
 import React from "react"
 
+import { axiMemo } from "../../hooks/genericMemo"
 import { useStyles } from "../../hooks/useStyles"
 
 interface LabelProps {
@@ -31,4 +32,4 @@ function Label({
   return <h5 style={styles.labelText}>{text}</h5>
 }
 
-export default React.memo(Label)
+export default axiMemo(Label)

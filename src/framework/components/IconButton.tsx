@@ -4,6 +4,8 @@ import "./IconButton.css"
 import { PrimeIcons, PrimeIconsOptions } from "primereact/api"
 import { Button } from "primereact/button"
 
+import { axiMemo } from "../../hooks/genericMemo"
+
 interface IconButtonProps {
   icon: keyof PrimeIconsOptions
   tooltip?: string
@@ -24,4 +26,4 @@ function IconButton({ icon, tooltip, onClick, style }: IconButtonProps) {
   )
 }
 
-export default React.memo(IconButton)
+export default axiMemo(IconButton)

@@ -4,6 +4,7 @@ import { Slider, SliderChangeEvent } from "primereact/slider"
 
 import "./AxiSlider.css"
 import AxiInputNumber from "./AxiInputNumber"
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import { regularText } from "../../../util/typography"
 import unreachable from "../../../util/unreachable"
@@ -199,4 +200,4 @@ function AxiSlider({
   )
 }
 
-export default React.memo(AxiSlider)
+export default axiMemo(AxiSlider)

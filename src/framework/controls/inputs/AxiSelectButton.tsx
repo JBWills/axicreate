@@ -9,6 +9,7 @@ import type { SelectItem } from "primereact/selectitem"
 
 import "./AxiSelectButton.css"
 
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import Label from "../../components/Label"
 
@@ -72,4 +73,4 @@ function AxiSelectButton<T extends string>({
   )
 }
 
-export default React.memo(AxiSelectButton)
+export default axiMemo(AxiSelectButton)

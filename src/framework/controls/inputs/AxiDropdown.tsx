@@ -4,6 +4,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown"
 
 import "./AxiDropdown.css"
 
+import { axiMemo } from "../../../hooks/genericMemo"
 import { useStyles } from "../../../hooks/useStyles"
 import { SelectOption } from "../../../types/SelectOption"
 import { regularText } from "../../../util/typography"
@@ -16,10 +17,10 @@ interface AxiDropdownProps<T> {
   onChange?: (e: T) => void
 }
 
-const optionLabel: keyof SelectOption<any> = "displayName"
-const optionValue: keyof SelectOption<any> = "value"
+const optionLabel: keyof SelectOption<unknown> = "displayName"
+const optionValue: keyof SelectOption<unknown> = "value"
 
-function AxiDropdown<T>({
+function AxiDropdown<T extends unknown>({
   label,
   onChange,
   options,
@@ -88,4 +89,4 @@ function AxiDropdown<T>({
   )
 }
 
-export default React.memo(AxiDropdown)
+export default axiMemo(AxiDropdown)

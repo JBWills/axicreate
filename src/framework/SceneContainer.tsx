@@ -18,10 +18,6 @@ import { times, timesFlat } from "../util/times"
 interface SceneContainerProps {}
 
 export default function SceneContainer(props: SceneContainerProps) {
-  if (props) {
-    // pass
-  }
-
   const scene = useRef<Scene>(null)
 
   const camera = useRef<PerspectiveCameraType>(null)
