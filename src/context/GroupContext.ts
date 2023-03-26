@@ -3,15 +3,15 @@ import { createContext } from "react"
 import { Color } from "three"
 
 export interface GroupContextState {
-  color: Color
-  fillColor: Color
-  strokeWidth: number
+  strokeColor: Color | undefined
+  fillColor: Color | undefined
+  strokeWidth: number | undefined
 }
 
 const defaultState: GroupContextState = {
-  color: new Color(0, 0, 0), // black
-  fillColor: new Color(1, 1, 1), // white
-  strokeWidth: 2,
+  strokeColor: undefined, // black
+  fillColor: undefined, // white
+  strokeWidth: undefined,
 }
 
 export function getContext(

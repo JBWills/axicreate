@@ -3,9 +3,12 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { OrbitControls } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
 import { isHotkeyPressed } from "react-hotkeys-hook"
-import { Color, PerspectiveCamera as PerspectiveCameraType, Scene } from "three"
+import { useRecoilValue } from "recoil"
+import { Scene } from "three"
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib"
 
-import { Height, Width } from "../AppState"
+import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
+import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
 import AxiBox from "../shape/AxiBox"
 import { Group } from "../shape/rendering/Group"
@@ -18,26 +21,30 @@ import { times, timesFlat } from "../util/times"
 interface SceneContainerProps {}
 
 export default function SceneContainer(props: SceneContainerProps) {
+  const { width, height } = useRecoilValue(WidthHeightState)
+  const zoomLevel = useRecoilValue(ZoomLevelState)
+  const paperColor = useRecoilValue(PaperColorState)
   const scene = useRef<Scene>(null)
+  const orbitControls = useRef<OrbitControlsImpl>(null)
 
-  const camera = useRef<PerspectiveCameraType>(null)
   const [, setFov] = useState(45)
   const { gl: renderer } = useThree()
 
   const save = useCallback(() => {
-    if (!scene.current || !camera.current) {
+    const camera = orbitControls.current?.object
+    if (!scene.current || !camera) {
       return
     }
 
     sceneToSvg({
       scene: scene.current,
-      camera: camera.current,
+      camera,
       ignoreVisibility: false,
-      size: new V2(Width, Height),
+      size: new V2(width, height),
     })
-  }, [])
+  }, [height, width, scene])
 
-  useShortcutOverride([Key.Cmd, "s"], save)
+  useShortcutOverride([Key.Cmd, Key.Alt, "s"], save)
   useShortcutOverride(
     [
       [Key.Cmd, Key.Up],
@@ -61,21 +68,25 @@ export default function SceneContainer(props: SceneContainerProps) {
   )
 
   useEffect(() => {
-    renderer.setSize(Width, Height)
-  })
+    renderer.setSize(width * zoomLevel, height * zoomLevel)
+  }, [renderer, width, height, zoomLevel])
 
-  const arr = timesFlat(10, (i) =>
-    timesFlat(10, (j) =>
-      times(10, (k) => <AxiBox position={new V3(i * 1.1, j * 1.1, k * 1.1)} />)
+  const arr = timesFlat(5, (i) =>
+    timesFlat(5, (j) =>
+      times(5, (k) => <AxiBox position={new V3(i * 1.5, j * 1.5, k * 1.5)} />)
     )
   )
 
   return (
-    <>
+    <Group
+      isDefaultGroup
+      strokeColor={paperColor.strokeColor}
+      fillColor={paperColor.backgroundColor}
+      strokeWidth={2}>
       <scene ref={scene}>
-        <Group color={new Color(0.5, 0.5, 0.5)}>{arr}</Group>
+        <Group>{arr}</Group>
       </scene>
-      <OrbitControls makeDefault />
-    </>
+      <OrbitControls makeDefault ref={orbitControls} />
+    </Group>
   )
 }

@@ -1,4 +1,6 @@
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
+
+import { useRecoilState } from "recoil"
 
 import AxiColorPicker from "./inputs/AxiColorPicker"
 import AxiDropdown from "./inputs/AxiDropdown"
@@ -7,17 +9,19 @@ import AxiInputText from "./inputs/AxiInputText"
 import AxiSelectButton from "./inputs/AxiSelectButton"
 import AxiSlider from "./inputs/AxiSlider"
 import AxiSlider2D from "./inputs/AxiSlider2D"
+import { PaperState } from "../../context/recoil/PaperState"
+import { ZoomLevelState } from "../../context/recoil/VirtualCanvasState"
 import { useStyles } from "../../hooks/useStyles"
 import { PaperName, paperNames } from "../../print/Paper"
 import { SelectOption } from "../../types/SelectOption"
 import { V2 } from "../../types/V2"
 import IconButton from "../components/IconButton"
 
-interface ControlPanelProps {
-  onChangePaper: (newPaper: PaperName) => void
-}
+interface ControlPanelProps {}
 
-export default function ControlPanel({ onChangePaper }: ControlPanelProps) {
+export default function ControlPanel({}: ControlPanelProps) {
+  const [{ name: paperName }, setPaperState] = useRecoilState(PaperState)
+  const [zoomLevel, setZoomLevelState] = useRecoilState(ZoomLevelState)
   const styles = useStyles(
     () => ({
       controlPanelContainer: {
@@ -35,12 +39,32 @@ export default function ControlPanel({ onChangePaper }: ControlPanelProps) {
     []
   )
 
+  const handleChangePaper = useCallback(
+    (newPaper: PaperName) =>
+      setPaperState((oldState) => ({ ...oldState, name: newPaper })),
+    [setPaperState]
+  )
+
+  const handleChangeZoom = useCallback(
+    (value: number) => setZoomLevelState(value),
+    [setZoomLevelState]
+  )
+
   return (
     <div style={styles.controlPanelContainer}>
       <AxiDropdown
         label="Paper"
+        value={paperName}
         options={paperOptions}
-        onChange={onChangePaper}
+        onChange={handleChangePaper}
+      />
+      <AxiSlider
+        label="Zoom level"
+        type="single"
+        min={0.1}
+        max={2.0}
+        value={zoomLevel}
+        onChange={handleChangeZoom}
       />
       <AxiInputText label="Test label" />
       <AxiSlider label="Slider" type="single" min={0} max={10} step={2.5} />

@@ -1,15 +1,15 @@
-import { useCallback } from "react"
-
 import { Canvas } from "@react-three/fiber"
 import { Splitter, SplitterPanel } from "primereact/splitter"
+import { useRecoilValue } from "recoil"
 
 import ControlPanel from "./controls/ControlPanel"
 import SceneContainer from "./SceneContainer"
 import Toolbar from "./Toolbar"
+import { PaperColorState } from "../context/recoil/PaperState"
 import { useStyles } from "../hooks/useStyles"
-import { PaperName } from "../print/Paper"
 
 export default function Frame() {
+  const { backgroundColor } = useRecoilValue(PaperColorState)
   const styles = useStyles(
     () => ({
       splitter: {
@@ -31,7 +31,7 @@ export default function Frame() {
       },
       canvasWrapper: {
         width: "fit-content",
-        backgroundColor: "aliceblue",
+        backgroundColor: `#${backgroundColor.getHexString()}`,
         boxShadow: "6px 6px 10px rgba(44, 73, 119, 0.405)",
       },
       canvasAndBackground: {
@@ -45,12 +45,7 @@ export default function Frame() {
         justifyContent: "center",
       },
     }),
-    []
-  )
-
-  const handleOnChangePaper = useCallback(
-    (paperName: PaperName) => console.log(`Changed paper to: ${paperName}`),
-    []
+    [backgroundColor]
   )
 
   return (
@@ -58,7 +53,7 @@ export default function Frame() {
       <Toolbar />
       <Splitter style={styles.splitter}>
         <SplitterPanel style={styles.splitterControlPanel}>
-          <ControlPanel onChangePaper={handleOnChangePaper} />
+          <ControlPanel />
         </SplitterPanel>
         <SplitterPanel style={styles.splitterDisplayPanel}>
           <div style={styles.canvasAndBackground}>

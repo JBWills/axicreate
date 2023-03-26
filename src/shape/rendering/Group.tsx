@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react"
+import { ReactNode, useContext, useMemo } from "react"
 
 import { Color } from "three"
 
@@ -9,12 +9,42 @@ import {
 } from "../../context/GroupContext"
 
 export function Group({
-  color,
+  strokeColor,
+  fillColor,
+  strokeWidth,
+  isDefaultGroup,
   children,
-}: {
-  color: Color
-  children: ReactNode
-}) {
-  const value = useMemo<GroupContextState>(() => getContext({ color }), [color])
+}:
+  | {
+      strokeColor?: Color
+      fillColor?: Color
+      strokeWidth?: number
+      isDefaultGroup?: false
+      children: ReactNode
+    }
+  | {
+      strokeColor: Color
+      fillColor: Color
+      strokeWidth: number
+      isDefaultGroup: true
+      children: ReactNode
+    }) {
+  const parentContext = useContext(GroupContext)
+  const value = useMemo<GroupContextState>(
+    () =>
+      getContext(
+        isDefaultGroup
+          ? { strokeColor, fillColor, strokeWidth }
+          : {
+              ...parentContext,
+              ...(strokeColor && { strokeColor }),
+              ...(fillColor && { fillColor }),
+              ...(strokeWidth && { strokeWidth }),
+            }
+      ),
+    [fillColor, isDefaultGroup, parentContext, strokeColor, strokeWidth]
+  )
+
+  console.log({ parentContext, isDefaultGroup, value })
   return <GroupContext.Provider value={value}>{children}</GroupContext.Provider>
 }

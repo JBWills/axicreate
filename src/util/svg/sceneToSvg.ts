@@ -44,7 +44,9 @@ export default function sceneToSvg({
   hiddenChainPass.enabled = !ignoreVisibility
 
   renderer.addPass(visibleChainPass)
-  renderer.addPass(hiddenChainPass)
+  if (ignoreVisibility) {
+    renderer.addPass(hiddenChainPass)
+  }
 
   const info = new SVGRenderInfo()
 

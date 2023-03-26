@@ -23,7 +23,9 @@
     "react-draggable": "^4.4.5",
     "react-hotkeys-hook": "^4.3.4",
     "react-typography": "^0.16.23",
+    "recoil": "^0.7.7",
     "three": "^0.149.0",
+    "three-stdlib": "^2.21.8",
     "three-svg-renderer": "^1.0.3",
     "typography": "^0.16.21",
     "typography-theme-noriega": "^0.16.19"

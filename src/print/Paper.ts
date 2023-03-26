@@ -1,8 +1,18 @@
 import { Color } from "three"
 
+import { Size } from "../types/Size"
+import unreachable from "../util/unreachable"
+
 const BLACK = new Color(0, 0, 0)
 const WHITE = new Color(1, 1, 1)
 const RED = new Color(1, 0, 0)
+
+const InkscapeDpi = 96
+
+const MAX_VERTICAL_IN = 13.75
+
+// not so sure about max horizontal in
+const MAX_HORIZONTAL_IN = 17.0
 
 type PaperType = {
   longSideIn: number
@@ -65,3 +75,29 @@ export function getPaper<T extends PaperName>(
 ): (typeof papers)[T] {
   return papers[paperName]
 }
+
+function longSidePx(paper: PaperType) {
+  return paper.longSideIn * InkscapeDpi
+}
+
+function shortSidePx(paper: PaperType) {
+  return paper.longSideIn * InkscapeDpi
+}
+
+export function getPaperSizePx(
+  paperName: PaperName,
+  orientation: Orientation
+): Size {
+  const paper = getPaper(paperName)
+  switch (orientation) {
+    case "landscape":
+      return { w: longSidePx(paper), h: shortSidePx(paper) }
+    case "portrait":
+      return { w: shortSidePx(paper), h: longSidePx(paper) }
+    default:
+      unreachable(orientation)
+  }
+}
+
+export type Orientation = "landscape" | "portrait"
+export const DefaultPaper: PaperName = "SquareBlack"
