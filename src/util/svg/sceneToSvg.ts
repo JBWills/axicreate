@@ -1,60 +1,118 @@
-import { Camera, Mesh, PerspectiveCamera, Scene } from "three"
+import * as ln from "@lnjs/core"
 import {
-  HiddenChainPass,
-  SVGMesh,
-  SVGRenderInfo,
-  SVGRenderer,
-  VisibleChainPass,
-} from "three-svg-renderer"
+  Scene,
+  Mesh,
+  LineSegments,
+  PerspectiveCamera,
+  BoxGeometry,
+  Float32BufferAttribute,
+} from "three"
 
-import { toSize } from "../../types/Size"
-import { V2 } from "../../types/V2"
+import { Size } from "../../types/Size"
+import { V3 } from "../../types/V3"
+import { toLnVec } from "../vec/toLnVec"
 
-export default function sceneToSvg({
+export function sceneToSvg({
   scene,
   camera,
-  ignoreVisibility,
-  size,
+  canvasSize,
+  target,
 }: {
   scene: Scene
-  camera: Camera
-  ignoreVisibility: boolean
-  size: V2
+  camera: PerspectiveCamera
+  canvasSize: Size
+  target: V3
 }) {
-  if (camera.type !== "PerspectiveCamera") {
-    throw new Error(
-      `You can only save to svg with perspective camera. Sorry. Your camera type: ${camera.type}`
-    )
-  }
+  const meshes: Mesh[] = []
 
-  const perspectiveCamera = camera as PerspectiveCamera
-  const meshes: SVGMesh[] = []
-  scene.traverse((obj) => {
-    const meshObj = obj as Mesh
-    if (meshObj.isMesh) {
-      meshes.push(new SVGMesh(meshObj))
+  scene?.traverseVisible((child) => {
+    const m = child as Mesh
+    if (m.isMesh) {
+      const mClone = m.clone()
+      mClone.children = mClone.children.filter((i) => {
+        const iLineSegments = i as LineSegments | undefined
+
+        return !iLineSegments?.isLineSegments
+      })
+      meshes.push(mClone)
     }
   })
 
-  // Setup the svg renderer and add pass to it
-  const renderer = new SVGRenderer()
+  const lnScene = new ln.Scene()
 
-  const visibleChainPass = new VisibleChainPass()
-  const hiddenChainPass = new HiddenChainPass()
-  hiddenChainPass.enabled = !ignoreVisibility
+  meshes.forEach((o3d) => {
+    if ("geometry" in o3d && o3d.geometry instanceof BoxGeometry) {
+      addBox(toLnVec(o3d.position), o3d.geometry, lnScene)
+    }
+  })
 
-  renderer.addPass(visibleChainPass)
-  if (ignoreVisibility) {
-    renderer.addPass(hiddenChainPass)
+  const paths = lnScene.render(
+    toLnVec(camera.position),
+    toLnVec(target),
+    toLnVec(camera.up),
+    canvasSize.w,
+    canvasSize.h,
+    camera.fov,
+    0.1,
+    100,
+    0.1
+  )
+
+  console.log("svg", ln.toSVG(paths, canvasSize.w, canvasSize.h))
+}
+
+function addBox(position: ln.Vector, box: BoxGeometry, scene: ln.Scene) {
+  console.log(box)
+  if ("position" in box.attributes) {
+    const points = arrayToV3s(
+      (box.attributes.position as Float32BufferAttribute).array
+    )
+    let min = new ln.Vector(1_000_000, 1_000_000, 1_000_000)
+    let max = new ln.Vector(-1_000_000, -1_000_000, -1_000_000)
+
+    points.forEach((point) => {
+      if (min.x === point.x) {
+        if (min.y === point.y) {
+          if (min.z > point.z) {
+            min = point
+          }
+        } else if (min.y > point.y) {
+          min = point
+        }
+      } else if (min.x > point.x) {
+        min = point
+      }
+
+      if (max.x === point.x) {
+        if (max.y === point.y) {
+          if (max.z < point.z) {
+            max = point
+          }
+        } else if (max.y < point.y) {
+          max = point
+        }
+      } else if (max.x < point.x) {
+        max = point
+      }
+    })
+
+    console.log({ min: min.x, max: max.x })
+
+    scene.add(new ln.Cube(min.add(position), max.add(position)))
+  }
+}
+
+function arrayToV3s(arr: ArrayLike<number>): ln.Vector[] {
+  if (arr.length % 3 !== 0) {
+    throw new Error(
+      `Trying to convert an array to vector 3, but the array isn't divisible by three. ${arr.length}`
+    )
   }
 
-  const info = new SVGRenderInfo()
+  const result: ln.Vector[] = []
+  for (let i = 0; i < arr.length - 2; i += 3) {
+    result.push(new ln.Vector(arr[i], arr[i + 1], arr[i + 2]))
+  }
 
-  renderer.viewmap.options.ignoreVisibility = ignoreVisibility
-
-  renderer
-    .generateSVG(meshes, perspectiveCamera, toSize(size), info)
-    .then((newSvg) => {
-      console.log(newSvg.svg())
-    })
+  return result
 }

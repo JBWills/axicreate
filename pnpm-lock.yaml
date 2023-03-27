@@ -4,6 +4,7 @@ overrides:
   isect: https://github.com/JBWills/isect.git
 
 specifiers:
+  '@lnjs/core': ^0.5.0
   '@react-three/drei': ^9.56.22
   '@react-three/fiber': ^8.10.4
   '@types/react': ^18.0.27
@@ -45,6 +46,7 @@ specifiers:
   vite-plugin-eslint: ^1.8.1
 
 dependencies:
+  '@lnjs/core': 0.5.0
   '@react-three/drei': 9.56.22_5uchuvk6p5l7cuc5shezogvpz4
   '@react-three/fiber': 8.10.4_xor7byvqlg4baqj6ymfbcmaax4
   '@types/three': 0.149.0
@@ -613,6 +615,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@lnjs/core/0.5.0:
+    resolution: {integrity: sha512-bJmtKhbSs3AMprzK51Q9VPpozOthsGgpElaxvCuUYOBICEd1TmJyYyOXg1xDiZU/qu5Xbfw1o7zQ4tg0sbUHCQ==}
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

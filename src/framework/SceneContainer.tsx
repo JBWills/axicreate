@@ -13,9 +13,9 @@ import { useShortcutOverride } from "../hooks/useShortcut"
 import AxiBox from "../shape/AxiBox"
 import { Group } from "../shape/rendering/Group"
 import Key from "../types/keys/AllKeys"
-import { V2 } from "../types/V2"
 import { V3 } from "../types/V3"
-import sceneToSvg from "../util/svg/sceneToSvg"
+import { sceneToSvg } from "../util/svg/sceneToSvg"
+import { coercePerspectiveCamera } from "../util/threeutils/coercePerspectiveCamera"
 import { times, timesFlat } from "../util/times"
 
 interface SceneContainerProps {}
@@ -31,16 +31,19 @@ export default function SceneContainer(props: SceneContainerProps) {
   const { gl: renderer } = useThree()
 
   const save = useCallback(() => {
-    const camera = orbitControls.current?.object
-    if (!scene.current || !camera) {
+    const { object: camera, target } = orbitControls.current ?? {}
+
+    const currentScene = scene.current
+
+    if (!currentScene || !camera || !target) {
       return
     }
 
     sceneToSvg({
-      scene: scene.current,
-      camera,
-      ignoreVisibility: false,
-      size: new V2(width, height),
+      scene: currentScene,
+      camera: coercePerspectiveCamera(camera),
+      canvasSize: { w: width, h: height },
+      target: V3.from(target),
     })
   }, [height, width, scene])
 

@@ -11,7 +11,6 @@ export interface AxiMeshProps extends Partial<MeshProps> {
 
 export default function AxiMesh({ children, ...rest }: AxiMeshProps) {
   const { fillColor } = useContext(GroupContext)
-  console.log({ fillColor })
 
   return (
     <mesh {...rest}>
