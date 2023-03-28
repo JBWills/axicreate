@@ -22,7 +22,7 @@ export function sceneToSvg({
   camera: PerspectiveCamera
   canvasSize: Size
   target: V3
-}) {
+}): string {
   const meshes: Mesh[] = []
 
   scene?.traverseVisible((child) => {
@@ -42,7 +42,7 @@ export function sceneToSvg({
 
   meshes.forEach((o3d) => {
     if ("geometry" in o3d && o3d.geometry instanceof BoxGeometry) {
-      addBox(toLnVec(o3d.position), o3d.geometry, lnScene)
+      addBox(o3d, o3d.geometry, lnScene)
     }
   })
 
@@ -55,18 +55,24 @@ export function sceneToSvg({
     camera.fov,
     0.1,
     100,
-    0.1
+    0.01
   )
 
-  console.log("svg", ln.toSVG(paths, canvasSize.w, canvasSize.h))
+  const svg = ln.toSVG(paths, canvasSize.w, canvasSize.h)
+  console.log("svg", svg)
+  return svg
 }
 
-function addBox(position: ln.Vector, box: BoxGeometry, scene: ln.Scene) {
+function addBox(mesh: Mesh, box: BoxGeometry, scene: ln.Scene) {
   console.log(box)
+  const meshScale = toLnVec(mesh.scale)
+  const meshPosition = toLnVec(mesh.position)
+  const meshRotation = toLnVec(mesh.rotation)
+
   if ("position" in box.attributes) {
     const points = arrayToV3s(
       (box.attributes.position as Float32BufferAttribute).array
-    )
+    ).map((p) => p.mul(meshScale))
     let min = new ln.Vector(1_000_000, 1_000_000, 1_000_000)
     let max = new ln.Vector(-1_000_000, -1_000_000, -1_000_000)
 
@@ -96,10 +102,31 @@ function addBox(position: ln.Vector, box: BoxGeometry, scene: ln.Scene) {
       }
     })
 
-    console.log({ min: min.x, max: max.x })
+    const rotatedCube = transform(
+      new ln.Cube(min, max),
+      // Why do I have to divide this by 2? no idea
+      ln.translate(meshPosition.divScalar(2)),
+      // Why are these values negative? no idea
+      ln.rotate(new ln.Vector(1, 0, 0), -mesh.rotation.x),
+      ln.rotate(new ln.Vector(0, 1, 0), -mesh.rotation.y),
+      ln.rotate(new ln.Vector(0, 0, 1), -mesh.rotation.z)
+    )
 
-    scene.add(new ln.Cube(min.add(position), max.add(position)))
+    scene.add(rotatedCube)
   }
+}
+
+function transform(shape: ln.ShapeT, ...matrices: ln.Matrix[]): ln.ShapeT {
+  if (matrices.length === 0) {
+    return shape
+  }
+
+  let newMatrix: ln.Matrix = matrices[0]
+
+  matrices.forEach((matrix) => {
+    newMatrix = newMatrix.mul(matrix)
+  })
+  return new ln.TransformedShape(shape, newMatrix)
 }
 
 function arrayToV3s(arr: ArrayLike<number>): ln.Vector[] {

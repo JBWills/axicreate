@@ -4,9 +4,10 @@ import { OrbitControls } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
 import { isHotkeyPressed } from "react-hotkeys-hook"
 import { useRecoilValue } from "recoil"
-import { Scene } from "three"
+import { Euler, Scene } from "three"
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib"
 
+import { DrawState } from "../context/recoil/DrawState"
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
@@ -14,6 +15,7 @@ import AxiBox from "../shape/AxiBox"
 import { Group } from "../shape/rendering/Group"
 import Key from "../types/keys/AllKeys"
 import { V3 } from "../types/V3"
+import { AxiRandom } from "../util/random/AxiRandom"
 import { sceneToSvg } from "../util/svg/sceneToSvg"
 import { coercePerspectiveCamera } from "../util/threeutils/coercePerspectiveCamera"
 import { times, timesFlat } from "../util/times"
@@ -24,8 +26,11 @@ export default function SceneContainer(props: SceneContainerProps) {
   const { width, height } = useRecoilValue(WidthHeightState)
   const zoomLevel = useRecoilValue(ZoomLevelState)
   const paperColor = useRecoilValue(PaperColorState)
+  const drawState = useRecoilValue(DrawState)
   const scene = useRef<Scene>(null)
   const orbitControls = useRef<OrbitControlsImpl>(null)
+
+  const random = new AxiRandom(drawState.randomSeed)
 
   const [, setFov] = useState(45)
   const { gl: renderer } = useThree()
@@ -74,9 +79,27 @@ export default function SceneContainer(props: SceneContainerProps) {
     renderer.setSize(width * zoomLevel, height * zoomLevel)
   }, [renderer, width, height, zoomLevel])
 
-  const arr = timesFlat(5, (i) =>
-    timesFlat(5, (j) =>
-      times(5, (k) => <AxiBox position={new V3(i * 1.5, j * 1.5, k * 1.5)} />)
+  const getRandomScale = (): V3 => {
+    const getRandom = () =>
+      random.nextFloat([1 - drawState.randomizeBoxSize, 1])
+    return new V3(getRandom(), getRandom(), getRandom())
+  }
+
+  const getRandomRotation = (): Euler => {
+    const getRandom = () =>
+      random.nextFloat([0, drawState.randomizeBoxRotation])
+    return new Euler(getRandom(), getRandom(), getRandom())
+  }
+
+  const arr = timesFlat(drawState.numBoxes, (i) =>
+    timesFlat(drawState.numBoxes, (j) =>
+      times(drawState.numBoxes, (k) => (
+        <AxiBox
+          position={new V3(i, j, k).times(1 + drawState.boxSpacing)}
+          scale={getRandomScale()}
+          rotation={getRandomRotation()}
+        />
+      ))
     )
   )
 

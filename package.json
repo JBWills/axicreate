@@ -19,6 +19,7 @@
     "isect": "https://github.com/JBWills/isect.git",
     "primeicons": "^6.0.1",
     "primereact": "^9.2.0",
+    "random-js": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
