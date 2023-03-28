@@ -12,6 +12,18 @@ import { Size } from "../../types/Size"
 import { V3 } from "../../types/V3"
 import { toLnVec } from "../vec/toLnVec"
 
+const MAX = new ln.Vector(
+  Number.MAX_SAFE_INTEGER,
+  Number.MAX_SAFE_INTEGER,
+  Number.MAX_SAFE_INTEGER
+)
+
+const MIN = new ln.Vector(
+  Number.MIN_SAFE_INTEGER,
+  Number.MIN_SAFE_INTEGER,
+  Number.MIN_SAFE_INTEGER
+)
+
 export function sceneToSvg({
   scene,
   camera,
@@ -64,40 +76,20 @@ export function sceneToSvg({
 }
 
 function addBox(mesh: Mesh, box: BoxGeometry, scene: ln.Scene) {
-  console.log(box)
   const meshScale = toLnVec(mesh.scale)
   const meshPosition = toLnVec(mesh.position)
-  const meshRotation = toLnVec(mesh.rotation)
 
   if ("position" in box.attributes) {
     const points = arrayToV3s(
       (box.attributes.position as Float32BufferAttribute).array
     ).map((p) => p.mul(meshScale))
-    let min = new ln.Vector(1_000_000, 1_000_000, 1_000_000)
-    let max = new ln.Vector(-1_000_000, -1_000_000, -1_000_000)
-
+    let min = MAX
+    let max = MIN
     points.forEach((point) => {
-      if (min.x === point.x) {
-        if (min.y === point.y) {
-          if (min.z > point.z) {
-            min = point
-          }
-        } else if (min.y > point.y) {
-          min = point
-        }
-      } else if (min.x > point.x) {
+      if (compare(min, point) > 0) {
         min = point
       }
-
-      if (max.x === point.x) {
-        if (max.y === point.y) {
-          if (max.z < point.z) {
-            max = point
-          }
-        } else if (max.y < point.y) {
-          max = point
-        }
-      } else if (max.x < point.x) {
+      if (compare(max, point) < 0) {
         max = point
       }
     })
@@ -142,4 +134,26 @@ function arrayToV3s(arr: ArrayLike<number>): ln.Vector[] {
   }
 
   return result
+}
+
+function compare(v1: ln.Vector, v2: ln.Vector): number {
+  if (v1.x === v2.x) {
+    if (v1.y === v2.y) {
+      if (v1.z === v2.z) {
+        return 0
+      } else if (v1.z > v2.z) {
+        return 1
+      } else {
+        return -1
+      }
+    } else if (v1.y > v2.y) {
+      return 1
+    } else {
+      return -1
+    }
+  } else if (v1.x > v2.x) {
+    return 1
+  } else {
+    return -1
+  }
 }
