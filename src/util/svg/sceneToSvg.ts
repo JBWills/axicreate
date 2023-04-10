@@ -70,7 +70,11 @@ export function sceneToSvg({
     0.01
   )
 
-  const svg = ln.toSVG(paths, canvasSize.w, canvasSize.h)
+  const svg = ln.toSVG(
+    ln.simplify(paths, 5),
+    canvasSize.w * 2,
+    canvasSize.h * 2
+  )
   console.log("svg", svg)
   return svg
 }

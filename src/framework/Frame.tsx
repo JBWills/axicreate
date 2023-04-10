@@ -51,8 +51,8 @@ export default function Frame() {
   return (
     <div style={styles.frame}>
       <Toolbar />
-      <Splitter style={styles.splitter}>
-        <SplitterPanel style={styles.splitterControlPanel}>
+      <Splitter style={styles.splitter} stateStorage="local">
+        <SplitterPanel style={styles.splitterControlPanel} size={10}>
           <ControlPanel />
         </SplitterPanel>
         <SplitterPanel style={styles.splitterDisplayPanel}>

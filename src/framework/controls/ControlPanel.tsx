@@ -115,7 +115,7 @@ export default function ControlPanel({}: ControlPanelProps) {
         label="Num boxes"
         type="single"
         min={1}
-        max={10}
+        max={50}
         step={1}
         value={numBoxes}
         onChange={handleChangeNumBoxes}
