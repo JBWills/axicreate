@@ -45,6 +45,5 @@ export function Group({
     [fillColor, isDefaultGroup, parentContext, strokeColor, strokeWidth]
   )
 
-  console.log({ parentContext, isDefaultGroup, value })
   return <GroupContext.Provider value={value}>{children}</GroupContext.Provider>
 }

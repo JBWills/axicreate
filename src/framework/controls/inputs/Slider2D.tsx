@@ -81,7 +81,6 @@ function Slider2D({ value, min, max, onChange }: Slider2dProps) {
   )
 
   const handleClickOnDragHandle = useCallback((e: React.MouseEvent) => {
-    console.log("Fake click")
     e.stopPropagation()
   }, [])
 

@@ -42,9 +42,7 @@ function AxiSlider2D({ label, onChange, value, min, max }: AxiSlider2DProps) {
   )
 
   const handleShowModal = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      overlayPanelRef.current?.toggle(e)
-    },
+    (e: MouseEvent) => overlayPanelRef.current?.toggle(e),
     [overlayPanelRef]
   )
 

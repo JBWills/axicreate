@@ -136,6 +136,21 @@ export class V3 {
     const { x, y, z } = this
     return new Vector3(x, y, z)
   }
+
+  equals(other: any): boolean {
+    if (!other) {
+      return false
+    }
+    if (typeof other !== "object") {
+      return false
+    }
+
+    if (!("x" in other && "y" in other && "z" in other)) {
+      return false
+    }
+
+    return this.x === other.x && this.y === other.y && this.z === other.z
+  }
 }
 
 function toRangeV3(minMax: RangeV3 | RangeNum): RangeV3 {

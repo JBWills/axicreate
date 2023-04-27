@@ -9,6 +9,7 @@ import AxiInputText from "./inputs/AxiInputText"
 import AxiSelectButton from "./inputs/AxiSelectButton"
 import AxiSlider from "./inputs/AxiSlider"
 import AxiSlider2D from "./inputs/AxiSlider2D"
+import { CameraState } from "../../context/recoil/CameraState"
 import { DrawState } from "../../context/recoil/DrawState"
 import { PaperState } from "../../context/recoil/PaperState"
 import { ZoomLevelState } from "../../context/recoil/VirtualCanvasState"
@@ -23,6 +24,8 @@ interface ControlPanelProps {}
 export default function ControlPanel({}: ControlPanelProps) {
   const [{ name: paperName }, setPaperState] = useRecoilState(PaperState)
   const [zoomLevel, setZoomLevelState] = useRecoilState(ZoomLevelState)
+  const [cameraState, setCameraState] = useRecoilState(CameraState)
+
   const [
     {
       randomSeed,
@@ -54,6 +57,13 @@ export default function ControlPanel({}: ControlPanelProps) {
     (newPaper: PaperName) =>
       setPaperState((oldState) => ({ ...oldState, name: newPaper })),
     [setPaperState]
+  )
+
+  const handleChangeFov = useCallback(
+    (fov: number) => {
+      setCameraState((oldState) => ({ ...oldState, focalLength: fov }))
+    },
+    [setCameraState]
   )
 
   const handleChangeZoom = useCallback(
@@ -110,6 +120,16 @@ export default function ControlPanel({}: ControlPanelProps) {
         value={zoomLevel}
         onChange={handleChangeZoom}
       />
+      {cameraState.type === "perspective" && (
+        <AxiSlider
+          label="FOV"
+          type="single"
+          min={1}
+          max={360}
+          value={cameraState.focalLength}
+          onChange={handleChangeFov}
+        />
+      )}
 
       <AxiSlider
         label="Num boxes"

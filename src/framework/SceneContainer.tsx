@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-import { OrbitControls } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
 import { isHotkeyPressed } from "react-hotkeys-hook"
 import { useRecoilValue } from "recoil"
 import { Euler, Scene } from "three"
-import { OrbitControls as OrbitControlsImpl } from "three-stdlib"
 
+import AxiOrbitControls from "./controls/AxiOrbitControls"
+import { CameraState } from "../context/recoil/CameraState"
 import { DrawState } from "../context/recoil/DrawState"
+import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndControls"
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
@@ -22,23 +23,33 @@ import { times, timesFlat } from "../util/times"
 
 interface SceneContainerProps {}
 
+let z = 0
+
 export default function SceneContainer(props: SceneContainerProps) {
   const { width, height } = useRecoilValue(WidthHeightState)
   const zoomLevel = useRecoilValue(ZoomLevelState)
   const paperColor = useRecoilValue(PaperColorState)
+  const cameraState = useRecoilValue(CameraState)
   const drawState = useRecoilValue(DrawState)
   const scene = useRef<Scene>(null)
-  const orbitControls = useRef<OrbitControlsImpl>(null)
 
   const random = new AxiRandom(drawState.randomSeed)
 
   const [, setFov] = useState(45)
   const { gl: renderer } = useThree()
+  const { camera, controls } = useRecoilValue(GlobalCameraAndControlsState)
+  console.log("rerendering!!!", { camera, controls })
 
-  const save = useCallback(() => {
-    const { object: camera, target } = orbitControls.current ?? {}
+  z += 1
+  console.log({ z })
+  const x = z
+  const save = () => {
+    console.log("saving svg")
+    const target = controls?.target
 
     const currentScene = scene.current
+
+    console.log({ currentScene, camera, target, x })
 
     if (!currentScene || !camera || !target) {
       return
@@ -50,8 +61,7 @@ export default function SceneContainer(props: SceneContainerProps) {
       canvasSize: { w: width, h: height },
       target: V3.from(target),
     })
-  }, [height, width, scene])
-
+  }
   useShortcutOverride([Key.Cmd, Key.Alt, "s"], save)
   useShortcutOverride(
     [
@@ -112,7 +122,7 @@ export default function SceneContainer(props: SceneContainerProps) {
       <scene ref={scene}>
         <Group>{arr}</Group>
       </scene>
-      <OrbitControls makeDefault ref={orbitControls} />
+      <AxiOrbitControls />
     </Group>
   )
 }

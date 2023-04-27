@@ -37,6 +37,7 @@ export function sceneToSvg({
 }): string {
   const meshes: Mesh[] = []
 
+  console.log("1: traversing the scene")
   scene?.traverseVisible((child) => {
     const m = child as Mesh
     if (m.isMesh) {
@@ -52,12 +53,14 @@ export function sceneToSvg({
 
   const lnScene = new ln.Scene()
 
+  console.log("2: adding geometry to the lnScene")
   meshes.forEach((o3d) => {
     if ("geometry" in o3d && o3d.geometry instanceof BoxGeometry) {
       addBox(o3d, o3d.geometry, lnScene)
     }
   })
 
+  console.log("3: rendering to ln")
   const paths = lnScene.render(
     toLnVec(camera.position),
     toLnVec(target),
@@ -70,6 +73,7 @@ export function sceneToSvg({
     0.01
   )
 
+  console.log("4: Creating the SVG")
   const svg = ln.toSVG(
     ln.simplify(paths, 5),
     canvasSize.w * 2,

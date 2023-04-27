@@ -9,6 +9,7 @@ import {
 
 import { toSize } from "../../types/Size"
 import { V2 } from "../../types/V2"
+import { isPerspectiveCamera } from "../threeutils/coercePerspectiveCamera"
 
 export default function sceneToSvg({
   scene,
@@ -21,7 +22,7 @@ export default function sceneToSvg({
   ignoreVisibility: boolean
   size: V2
 }) {
-  if (camera.type !== "PerspectiveCamera") {
+  if (!isPerspectiveCamera(camera)) {
     throw new Error(
       `You can only save to svg with perspective camera. Sorry. Your camera type: ${camera.type}`
     )
