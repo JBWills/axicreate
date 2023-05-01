@@ -7,10 +7,11 @@ export default function Toolbar() {
         width: "100%",
         height: 45,
         backgroundColor: "rgb(7, 0, 78)",
+        flexShrink: 0,
       },
     }),
     []
   )
 
-  return <div style={styles.toolbar} />
+  return <div className="drag" style={styles.toolbar} />
 }

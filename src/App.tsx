@@ -8,8 +8,11 @@ import { TypographyStyle, GoogleFont } from "react-typography"
 import Frame from "./framework/Frame"
 import { useStyles } from "./hooks/useStyles"
 import typography from "./util/typography"
+import appIcons from "../images/icons/app.png"
 
 function App() {
+  // eslint-disable-next-line no-unused-expressions
+  console.log(appIcons)
   const styles = useStyles(
     () => ({
       app: {
