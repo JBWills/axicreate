@@ -40,6 +40,8 @@ function createWindow() {
       preload: path.join(__dirname, "preload.cjs"),
       nodeIntegration: true,
     },
+    // TODO: this doesn't work
+    icon: "/images/icons/app",
   })
 
   mainWindowState.manage(mainWindow)

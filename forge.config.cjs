@@ -1,5 +1,8 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    // TODO: this doesn't work
+    icon: "/images/icons/app",
+  },
   rebuildConfig: {},
   makers: [
     {

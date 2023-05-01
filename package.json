@@ -11,6 +11,7 @@
     "dev": "concurrently -k \"vite\" \"pnpm run electron:dev\"",
     "build": "vite build",
     "preview": "vite preview",
+    "fullbuild": "pnpm run build && pnpm run electron:build && pnpm run electron:package",
     "electron:dev": "cross-env IS_DEV=true electron-forge start",
     "electron:build": "electron-forge make",
     "electron:package": "electron-forge package"
