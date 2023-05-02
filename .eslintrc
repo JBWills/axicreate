@@ -18,6 +18,7 @@
     },
     "ecmaVersion": 13
   },
+  "ignorePatterns": ["node_modules/**", "**/dist/**"],
   "plugins": [
     "autofix",
     "react",
@@ -28,7 +29,11 @@
   ],
   "settings": {
     "import/resolver": {
+      "typescript": {
+        "project": "packages/*/tsconfig.json"
+      }, // this loads <rootdir>/tsconfig.json to eslint
       "node": {
+        "project": "packages/*/tsconfig.json",
         "extensions": [".js", ".jsx", ".d.ts", ".ts", ".tsx"],
         "moduleDirectory": ["node_modules", "src/"]
       }
