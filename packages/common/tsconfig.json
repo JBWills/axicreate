@@ -9,6 +9,9 @@
     "isolatedModules": true,
     "types": ["node"],
     "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "importsNotUsedAsValues": "error",
     "allowSyntheticDefaultImports": true
   },

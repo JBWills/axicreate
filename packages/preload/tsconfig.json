@@ -10,6 +10,9 @@
     "types": ["node"],
     "baseUrl": ".",
     "importsNotUsedAsValues": "error",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "paths": {
       "#common": ["../common/src/index"]
     }

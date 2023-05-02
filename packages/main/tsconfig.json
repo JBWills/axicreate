@@ -9,6 +9,9 @@
     "isolatedModules": true,
     "types": ["node"],
     "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "paths": {
       "#common": ["../common/src/index"],
       "/@/*": ["./src/*"]
