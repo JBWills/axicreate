@@ -5,6 +5,7 @@ export default function Count() {
   return (
     <div>
       <button
+        type="button"
         onClick={() => {
           setCount(prev => prev + 1);
         }}

@@ -1,0 +1,115 @@
+{
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "mocha": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:import/typescript",
+    // prettier/recommended must come last
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 13
+  },
+  "ignorePatterns": ["node_modules/**", "**/dist/**"],
+  "plugins": [
+    "autofix",
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier",
+    "unused-imports"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "packages/*/tsconfig.json"
+      }, // this loads <rootdir>/tsconfig.json to eslint
+      "node": {
+        "project": "packages/*/tsconfig.json",
+        "extensions": [".js", ".jsx", ".d.ts", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  },
+  "rules": {
+    // This one breaks in TS because of function overloading methods
+    "no-dupe-class-members": "off",
+    "no-else-return": "off",
+    "no-use-before-define": "off",
+    // this allows for function hoisting
+    "@typescript-eslint/no-use-before-define": ["error", {"functions": false, "typedefs": false}],
+    "react-hooks/exhaustive-deps": ["error", {
+      "additionalHooks": "(useStyles)"
+    }],
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "no-nested-ternary": "off",
+    "no-empty-pattern": "off",
+    "no-console": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "semi": ["error", "never"],
+    "@typescript-eslint/semi": "off",
+    "no-unexpected-multiline": "error",
+    // This can be turned off because TS handles switch statements gracefully
+    "default-case": "off",
+    // turn this off so we can do simpler default props
+    "react/require-default-props": "off",
+    "consistent-return": "off",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/jsx-filename-extension": [
+      2,
+      { "extensions": [".js", ".jsx", ".d.ts", ".ts", ".tsx"] }
+    ],
+    "import/extensions": [
+      "error",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "ts.model": "never",
+        "tsx": "never",
+        "css": "always",
+        "json": "always"
+      }
+    ],
+    // suppress errors for missing 'import React' in files
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "autofix/no-unused-vars": "off",
+    // note you must disable the base rule as it can report incorrect errors
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  }
+}
