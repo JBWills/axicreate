@@ -1,7 +1,24 @@
-import * as ReactDOM from 'react-dom/client';
-import App from './App';
+import React from "react"
 
-import './index.css';
+import ReactDOM from "react-dom/client"
+import { RecoilRoot } from "recoil"
+// theme
+import "primereact/resources/themes/lara-light-indigo/theme.css"
 
-const root = ReactDOM.createRoot(document.getElementById('app') as Element);
-root.render(<App />);
+// core
+import "primereact/resources/primereact.min.css"
+
+// icons
+import "primeicons/primeicons.css"
+
+import App from "./App"
+
+import "./index.css"
+
+ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(
+  <React.StrictMode>
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
+  </React.StrictMode>
+)

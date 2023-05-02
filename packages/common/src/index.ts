@@ -1,1 +1,1 @@
-export const sum = 1 + 2;
+export const sum = 1 + 2

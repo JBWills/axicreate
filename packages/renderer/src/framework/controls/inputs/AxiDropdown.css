@@ -1,0 +1,11 @@
+.DropdownOptionWrapper {
+  padding: 0px !important;
+}
+
+.p-dropdown-trigger {
+  width: 2rem !important;
+}
+
+.p-dropdown-label {
+  padding: 0px;
+}

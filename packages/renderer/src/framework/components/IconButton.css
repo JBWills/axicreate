@@ -1,0 +1,12 @@
+.IconButton {
+  padding: 0px !important;
+  width: 25px !important;
+  height: 25px !important;
+  background: rgb(207	212	217);
+  border: rgb(207	212	217);
+}
+
+.IconButton:hover {
+  background: rgb(164, 168, 173) !important;
+  border: rgb(164, 168, 173)!important;
+}

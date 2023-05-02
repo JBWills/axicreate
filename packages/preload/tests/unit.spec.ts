@@ -1,15 +1,18 @@
-import {createHash} from 'crypto';
-import {expect, test} from 'vitest';
-import {sha256sum, versions} from '../src';
+/* eslint-disable import/no-extraneous-dependencies */
+import { createHash } from "crypto"
 
-test('versions', async () => {
-  expect(versions).toBe(process.versions);
-});
+import { expect, test } from "vitest"
 
-test('nodeCrypto', async () => {
+import { sha256sum, versions } from "../src"
+
+test("versions", async () => {
+  expect(versions).toBe(process.versions)
+})
+
+test("nodeCrypto", async () => {
   // Test hashing a random string.
-  const testString = Math.random().toString(36).slice(2, 7);
-  const expectedHash = createHash('sha256').update(testString).digest('hex');
+  const testString = Math.random().toString(36).slice(2, 7)
+  const expectedHash = createHash("sha256").update(testString).digest("hex")
 
-  expect(sha256sum(testString)).toBe(expectedHash);
-});
+  expect(sha256sum(testString)).toBe(expectedHash)
+})

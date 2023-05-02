@@ -9,6 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "types": ["node"],
