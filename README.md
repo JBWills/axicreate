@@ -8,7 +8,6 @@
 
 1. Port to React
 2. Use PNPM
-3. Use Tailwind
 
 TODO:
 
@@ -101,11 +100,11 @@ See [examples of web pages for different frameworks](https://github.com/vitejs/v
 
 ### Publishing
 
-- Each time you push changes to the `main` branch, the [`release`](.github/workflows/release.yml) workflow starts, which creates a new draft release. For each next commit will be created and replaced artifacts. That way you will always have draft with latest artifacts, and the release can be published once it is ready. 
+- Each time you push changes to the `main` branch, the [`release`](.github/workflows/release.yml) workflow starts, which creates a new draft release. For each next commit will be created and replaced artifacts. That way you will always have draft with latest artifacts, and the release can be published once it is ready.
   - Code signing supported. See [`release` workflow](.github/workflows/release.yml).
   - **Auto-update is supported**. After the release is published, all client applications will download the new version
   and install updates silently.
-  
+
 This template configured for GitHub, but electron-builder supports multiple auto-update servers. See [docs](https://www.electron.build/configuration/publish).
 
 ## How it works
