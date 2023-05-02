@@ -3,10 +3,28 @@ import { join } from "path"
 import { URL } from "url"
 
 import { app, BrowserWindow } from "electron"
+import electronWindowState from "electron-window-state"
+
+const DefaultWidth = 1_200
+const DefaultHeight = 1_000
 
 async function createWindow() {
+  // Load the previous state with fallback to defaults
+  const mainWindowState = electronWindowState({
+    defaultWidth: DefaultWidth,
+    defaultHeight: DefaultHeight,
+  })
+
+  const { x, y, isFullScreen, width, height } = mainWindowState
+
   const browserWindow = new BrowserWindow({
+    titleBarStyle: "hidden",
     show: false, // Use the 'ready-to-show' event to show the instantiated BrowserWindow.
+    x,
+    y,
+    fullscreen: isFullScreen,
+    width,
+    height,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -15,6 +33,8 @@ async function createWindow() {
       preload: join(app.getAppPath(), "packages/preload/dist/index.cjs"),
     },
   })
+
+  mainWindowState.manage(browserWindow)
 
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
@@ -26,10 +46,6 @@ async function createWindow() {
    */
   browserWindow.on("ready-to-show", () => {
     browserWindow?.show()
-
-    if (import.meta.env.DEV) {
-      browserWindow?.webContents.openDevTools()
-    }
   })
 
   /**
