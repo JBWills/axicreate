@@ -39,7 +39,7 @@ async function createWindow() {
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
    * it then defaults to 'true'. This can cause flickering as the window loads the html content,
-   * and it also has show problematic behaviour with the closing of the window.
+   * and it also has show problematic behavior with the closing of the window.
    * Use `show: false` and listen to the  `ready-to-show` event to show the window.
    *
    * @see https://github.com/electron/electron/issues/25012 for the afford mentioned issue.

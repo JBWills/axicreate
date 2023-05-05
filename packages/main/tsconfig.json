@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "#common": ["../common/src/index"],
       "/@/*": ["./src/*"]
