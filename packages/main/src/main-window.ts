@@ -3,14 +3,14 @@ import { join } from "path"
 import { URL } from "url"
 
 import { app, BrowserWindow } from "electron"
-import electronWindowState from "electron-window-state"
+import * as electronWindowState from "electron-window-state"
 
 const DefaultWidth = 1_200
 const DefaultHeight = 1_000
 
 async function createWindow() {
   // Load the previous state with fallback to defaults
-  const mainWindowState = electronWindowState({
+  const mainWindowState = (electronWindowState as any).default({
     defaultWidth: DefaultWidth,
     defaultHeight: DefaultHeight,
   })
@@ -62,6 +62,21 @@ async function createWindow() {
 
   return browserWindow
 }
+
+app.whenReady().then(async () => {
+  if (import.meta.env.DEV) {
+    const electronDevToolsInstaller = ((await import("electron-devtools-installer")) as any).default
+
+    electronDevToolsInstaller
+      .default(electronDevToolsInstaller.REACT_DEVELOPER_TOOLS)
+      .then((name: string) => console.log(`Added Extension:  ${name}`))
+      .catch((err: string) => console.log("An error occurred: ", err))
+  }
+})
+
+app.on("gpu-info-update", () => {
+  console.log(app.getGPUFeatureStatus())
+})
 
 /**
  * Restore an existing BrowserWindow or Create a new BrowserWindow.

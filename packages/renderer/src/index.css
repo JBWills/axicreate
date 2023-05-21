@@ -14,6 +14,11 @@
   -webkit-text-size-adjust: 100%;
 }
 
+#app {
+  width: 100%;
+  height: 100%;
+}
+
 .Root {
   width: 100%;
   height: 100%;
