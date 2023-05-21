@@ -7,11 +7,11 @@
   "extends": [
     "plugin:react/recommended",
     "airbnb",
-    "plugin:import/typescript",
     // prettier/recommended must come last
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
+
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -25,18 +25,21 @@
     "react-hooks",
     "@typescript-eslint",
     "prettier",
-    "unused-imports"
+    "unused-imports",
+    "import"
   ],
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": "packages/*/tsconfig.json"
-      }, // this loads <rootdir>/tsconfig.json to eslint
+      "project": {}
+      },
       "node": {
-        "project": "packages/*/tsconfig.json",
         "extensions": [".js", ".jsx", ".d.ts", ".ts", ".tsx"],
-        "moduleDirectory": ["node_modules", "src/"]
+        "moduleDirectory": ["node_modules"]
       }
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
     }
   },
   "rules": {
