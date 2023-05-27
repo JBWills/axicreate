@@ -7,15 +7,17 @@ import { GroupContext } from "src/client/context/GroupContext"
 
 import { AxiEdges } from "./AxiEdges"
 import { V3 } from "../../types/V3"
+import { Ones, Zeros } from "../../util/constants/AxiArrays"
 
 export type AxiMeshProps = Partial<Omit<MeshProps, "position" | "scale" | "rotation">> & {
   children?: ReactNode
   position?: V3
   scale?: V3
   rotation?: V3
+  skipEdges?: boolean
 }
 
-function AxiMesh({ children, position, scale, rotation, ...rest }: AxiMeshProps) {
+function AxiMesh({ children, position, scale, rotation, skipEdges, ...rest }: AxiMeshProps) {
   const ref = useRef()
 
   const { fillColor: color } = useContext(GroupContext)
@@ -29,16 +31,16 @@ function AxiMesh({ children, position, scale, rotation, ...rest }: AxiMeshProps)
        */
 
       // eslint-disable-next-line react/no-unknown-property
-      position={position?.toArray()}
+      position={position?.toArray() ?? Ones}
       // eslint-disable-next-line react/no-unknown-property
-      rotation={rotation?.toArray()}
+      rotation={rotation?.toArray() ?? Zeros}
       // eslint-disable-next-line react/no-unknown-property
-      scale={scale?.toArray()}
+      scale={scale?.toArray() ?? Ones}
       {...rest}>
       {children}
 
       <meshBasicMaterial color={color} />
-      <AxiEdges />
+      {!skipEdges && <AxiEdges />}
     </mesh>
   )
 }

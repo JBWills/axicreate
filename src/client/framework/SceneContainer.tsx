@@ -11,7 +11,7 @@ import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndC
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
-import AxiBox from "../shape/AxiBox"
+import AxiLine from "../shape/AxiLine"
 import { Group } from "../shape/rendering/Group"
 import Key from "../types/keys/AllKeys"
 import { V3 } from "../types/V3"
@@ -94,12 +94,25 @@ export default function SceneContainer(props: SceneContainerProps) {
   const arr = timesFlat(drawState.numBoxes, (i) =>
     timesFlat(drawState.numBoxes, (j) =>
       times(drawState.numBoxes, (k) => (
-        <AxiBox
-          key={`${i}+${j}+${k}`}
-          position={new V3(i, j, k).times(1 + drawState.boxSpacing)}
-          scale={getRandomScale()}
-          rotation={getRandomRotation()}
-        />
+        <>
+          <AxiLine
+            polyline={[
+              new V3(0.123, 0.456, 0.789),
+              new V3(i, j, k).times(1 + drawState.boxSpacing),
+              new V3(i, k, j).times(10 + drawState.boxSpacing),
+              new V3(k, k, j).times(10 + drawState.boxSpacing),
+              new V3(k, j, j).times(10 + drawState.boxSpacing),
+              new V3(k, j, j).times(11 + drawState.boxSpacing),
+              new V3(0.789, 0.101112, 0.131415),
+            ]}
+          />
+          {/* <AxiBox
+            key={`Box: ${i}+${j}+${k}`}
+            position={new V3(i, j, k).times(1 + drawState.boxSpacing)}
+            scale={getRandomScale()}
+            rotation={getRandomRotation()}
+          /> */}
+        </>
       ))
     )
   )

@@ -128,7 +128,6 @@ export class V3 {
 
   toVector3(): Vector3 {
     const { x, y, z } = this
-    console.log("Converting to vector3", x, y, z, new Vector3(x, y, z))
     return new Vector3(x, y, z)
   }
 
