@@ -1,7 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable class-methods-use-this */
+
 import { app, BrowserWindow } from "electron"
 
+import { saveSvg } from "./fileInOut/saveSvg"
+import { listenToIpcFunction } from "./ipc/listenToIpcFunction"
 import { restoreOrCreateWindow } from "./mainWindow"
 
 class Application {
@@ -40,6 +43,8 @@ class Application {
         })
       )
       .catch((e) => console.error("Failed install extension:", e))
+
+    listenToIpcFunction("save-svg", (filePath, svgString) => saveSvg(filePath, svgString))
   }
 
   private onActivate(): void {
@@ -55,4 +60,6 @@ class Application {
   }
 }
 
-new Application().init()
+export const AxicreateApp = new Application()
+
+AxicreateApp.init()

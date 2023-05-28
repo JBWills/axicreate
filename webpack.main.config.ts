@@ -14,9 +14,14 @@ export const mainConfig: Configuration = {
   module: {
     rules,
   },
+  target: "electron-renderer",
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
     modules: [path.resolve("./node_modules"), path.resolve(".")],
+    fallback: {
+      util: require.resolve("util/"),
+      assert: require.resolve("assert/"),
+    },
   },
   plugins: [],
 }

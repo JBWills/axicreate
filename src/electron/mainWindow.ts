@@ -10,13 +10,17 @@ const DefaultHeight = 1_000
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
-export async function restoreOrCreateWindow() {
+export async function getOrCreateWindow(): Promise<BrowserWindow> {
   let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed())
 
   if (window === undefined) {
     window = await createMainWindow()
   }
+  return window
+}
 
+export async function restoreOrCreateWindow() {
+  const window = await getOrCreateWindow()
   if (window.isMinimized()) {
     window.restore()
   }
@@ -33,7 +37,6 @@ export async function createMainWindow() {
 
   const { x, y, isFullScreen, width, height } = mainWindowState
 
-  console.log("dirname", __dirname)
   const mainWindow: BrowserWindow = new BrowserWindow({
     titleBarStyle: "hidden",
     show: false, // Use the 'ready-to-show' event to show the instantiated BrowserWindow.

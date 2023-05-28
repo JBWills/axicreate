@@ -1,6 +1,7 @@
 import * as ln from "@lnjs/core"
 import Hit from "@lnjs/core/lib/hit"
 import { Path } from "@lnjs/core/lib/path"
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {
   Scene,
   Mesh,
@@ -14,6 +15,8 @@ import {
 } from "three"
 import { LineGeometry } from "three-stdlib"
 
+import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
+
 import { Size } from "../../types/Size"
 import { V3 } from "../../types/V3"
 import { toLnVec } from "../vec/toLnVec"
@@ -22,7 +25,7 @@ const MAX = new ln.Vector(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Numb
 
 const MIN = new ln.Vector(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
 
-export function sceneToSvg({
+export async function sceneToSvg({
   scene,
   camera,
   canvasSize,
@@ -32,7 +35,7 @@ export function sceneToSvg({
   camera: PerspectiveCamera
   canvasSize: Size
   target: V3
-}): string {
+}): Promise<string> {
   const meshes: Mesh[] = []
 
   console.log("1: traversing the scene")
@@ -83,7 +86,10 @@ export function sceneToSvg({
 
   console.log("4: Creating the SVG")
   const svg = ln.toSVG(ln.simplify(paths, 5), canvasSize.w * 2, canvasSize.h * 2)
-  console.log("svg", svg)
+
+  const result = await triggerIpcFunction("save-svg", ["test", "s.svg"], svg)
+
+  console.log("svg", { result })
   return svg
 }
 
