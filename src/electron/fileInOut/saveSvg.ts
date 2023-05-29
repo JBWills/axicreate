@@ -9,13 +9,16 @@ const { dialog } = electron
 
 type Filename = `${string}.svg`
 
-export async function saveSvg(savePath: [...string[], Filename], svg: string): Promise<boolean> {
+export async function saveSvg(
+  savePath: [...string[], Filename],
+  svg: string
+): Promise<{ success: true; path: string } | { success: false }> {
   let saveFolder = ConfigStore.get("outputSaveFolder")
 
   if (!saveFolder || !fs.existsSync(saveFolder)) {
     saveFolder = await selectExportFolder()
     if (!saveFolder || !fs.existsSync(saveFolder)) {
-      return false
+      return { success: false }
     }
 
     ConfigStore.set("outputSaveFolder", saveFolder)
@@ -31,7 +34,7 @@ export async function saveSvg(savePath: [...string[], Filename], svg: string): P
   const validFilePath = getValidFilePath(finalFolderPath, filename)
   await writeFileAsync(validFilePath, svg)
 
-  return true
+  return { success: true, path: validFilePath }
 }
 
 function getValidFilePath(path: fs.PathLike, filename: string): string | undefined {

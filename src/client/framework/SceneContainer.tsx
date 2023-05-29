@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react"
 
 import { useThree } from "@react-three/fiber"
 import { isHotkeyPressed } from "react-hotkeys-hook"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Scene } from "three"
 
 import AxiOrbitControls from "./controls/AxiOrbitControls"
 import { DrawState } from "../context/recoil/DrawState"
 import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndControls"
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
+import { SavingState } from "../context/recoil/SavingState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
 import AxiLine from "../shape/AxiLine"
@@ -27,6 +28,7 @@ export default function SceneContainer(props: SceneContainerProps) {
   const zoomLevel = useRecoilValue(ZoomLevelState)
   const paperColor = useRecoilValue(PaperColorState)
   const drawState = useRecoilValue(DrawState)
+  const setSavingState = useSetRecoilState(SavingState)
   const scene = useRef<Scene>(null)
 
   const random = new AxiRandom(drawState.randomSeed)
@@ -35,7 +37,7 @@ export default function SceneContainer(props: SceneContainerProps) {
   const { gl: renderer } = useThree()
   const { camera, controls } = useRecoilValue(GlobalCameraAndControlsState)
 
-  const save = () => {
+  const save = async () => {
     console.log("saving svg")
     const target = controls?.target
 
@@ -47,14 +49,21 @@ export default function SceneContainer(props: SceneContainerProps) {
       return
     }
 
-    sceneToSvg({
+    setSavingState(true)
+
+    await sceneToSvg({
       scene: currentScene,
       camera: coercePerspectiveCamera(camera),
       canvasSize: { w: width, h: height },
       target: V3.from(target),
     })
+
+    setSavingState(false)
   }
-  useShortcutOverride([Key.Cmd, Key.Alt, "s"], save)
+
+  useShortcutOverride([Key.Cmd, Key.Alt, "s"], () => {
+    save()
+  })
   useShortcutOverride(
     [
       [Key.Cmd, Key.Up],

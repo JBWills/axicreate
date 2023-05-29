@@ -89,7 +89,10 @@ export async function sceneToSvg({
 
   const result = await triggerIpcFunction("save-svg", ["test", "s.svg"], svg)
 
-  console.log("svg", { result })
+  if (result.success) {
+    await triggerIpcFunction("open-file", result.path)
+  }
+
   return svg
 }
 

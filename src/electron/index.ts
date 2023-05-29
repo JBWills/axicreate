@@ -3,9 +3,20 @@
 
 import { app, BrowserWindow } from "electron"
 
+import { IpcFunction, IpcFunctions } from "src/shared/types/IpcFunctions"
+import { objectKeys } from "src/shared/util/objectKeys"
+
 import { saveSvg } from "./fileInOut/saveSvg"
 import { listenToIpcFunction } from "./ipc/listenToIpcFunction"
 import { restoreOrCreateWindow } from "./mainWindow"
+import { openFile } from "./util/openFile"
+
+const IpcFunctionHandlers = {
+  "open-file": (file) => openFile(file),
+  "save-svg": (filePath, svgString) => saveSvg(filePath, svgString),
+} satisfies {
+  [k in keyof IpcFunctions]: IpcFunction<k>
+}
 
 class Application {
   public init(): void {
@@ -44,7 +55,10 @@ class Application {
       )
       .catch((e) => console.error("Failed install extension:", e))
 
-    listenToIpcFunction("save-svg", (filePath, svgString) => saveSvg(filePath, svgString))
+    for (const key of objectKeys(IpcFunctionHandlers)) {
+      const value = IpcFunctionHandlers[key]
+      listenToIpcFunction(key, value)
+    }
   }
 
   private onActivate(): void {

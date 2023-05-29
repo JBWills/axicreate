@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ipcRenderer } from "electron"
 
-import type { IpcFunctions } from "src/electron/types/IpcFunctions"
+import type { IpcFunction, IpcFunctions } from "src/shared/types/IpcFunctions"
 
 export function triggerIpcFunction<T extends keyof IpcFunctions>(
   key: T,
-  ...args: IpcFunctions[T]["args"]
-): Promise<IpcFunctions[T]["response"]> {
+  ...args: Parameters<IpcFunction<T>>
+): ReturnType<IpcFunction<T>> {
   return ipcRenderer.invoke(key, ...args)
 }
