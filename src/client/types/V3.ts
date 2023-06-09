@@ -1,6 +1,6 @@
 import { Vector3 } from "three"
 
-import { MathableFunc, UnaryFunc } from "./V2"
+import { F, MathableFunc, UF, UnaryFunc } from "./MathableFunc"
 import { clampNumber } from "../util/clamp"
 import { RangeNum } from "../util/percentAlong"
 
@@ -8,18 +8,7 @@ export type RangeV3 = [V3, V3]
 export type ArrV3 = [number, number, number]
 export type Point3 = { x: number; y: number; z: number }
 
-type V3Able = V3 | number
-const F = {
-  plus: (a, b) => a + b,
-  minus: (a, b) => a - b,
-  times: (a, b) => a * b,
-  div: (a, b) => a / b,
-  pow: (a, b) => a ** b,
-} satisfies { [k in string]: MathableFunc }
-
-const UF = {
-  squared: (a) => a * a,
-} satisfies { [k in string]: UnaryFunc }
+type V3Able = Point3 | number
 
 export class V3 {
   private readonly v: { x: number; y: number; z: number }
@@ -40,12 +29,44 @@ export class V3 {
     this.z = zInput
   }
 
+  public get magnitude(): number {
+    return Math.sqrt(this.squared().sum())
+  }
+
+  public get magnitudeSquared(): number {
+    return this.squared().sum()
+  }
+
+  applyUnary(fun: UnaryFunc): V3 {
+    return new V3(fun(this.x), fun(this.y), fun(this.z))
+  }
+
   apply(fun: MathableFunc): (other: V3Able) => V3 {
     const { x, y, z } = this
     return (other) => {
+      if (!other) {
+        return new V3(fun(x, undefined), fun(y, undefined), fun(z, undefined))
+      }
+
       const otherV3 = V3.from(other)
       return new V3(fun(x, otherV3.x), fun(y, otherV3.y), fun(z, otherV3.z))
     }
+  }
+
+  sum(): number {
+    return this.x + this.y + this.x
+  }
+
+  dot(o: Point3): number {
+    return this.times(o).sum()
+  }
+
+  cross(o: Point3): V3 {
+    return new V3(
+      this.y * o.z - this.z * o.y,
+      this.z * o.x - this.x * o.z,
+      this.x * o.y - this.y * o.x
+    )
   }
 
   plus(other: V3Able) {
@@ -54,6 +75,14 @@ export class V3 {
 
   minus(other: V3Able) {
     return this.apply(F.minus)(other)
+  }
+
+  dist(other: V3Able) {
+    return this.minus(other).magnitude
+  }
+
+  distSquared(other: V3Able) {
+    return this.minus(other).magnitudeSquared
   }
 
   times(other: V3Able) {
@@ -67,7 +96,11 @@ export class V3 {
   unaryMinus = () => new V3(-this.x, -this.y, -this.z)
 
   squared() {
-    return this.apply(F.pow)(2)
+    return this.applyUnary(UF.squared)
+  }
+
+  abs() {
+    return this.applyUnary(UF.squared)
   }
 
   pow(other: V3Able) {

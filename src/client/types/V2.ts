@@ -1,3 +1,4 @@
+import { F, MathableFunc, UF, UnaryFunc } from "./MathableFunc"
 import { clampNumber } from "../util/clamp"
 import { RangeNum } from "../util/percentAlong"
 
@@ -6,19 +7,6 @@ export type RangeV2 = [V2, V2]
 export type Point = { x: number; y: number }
 
 type V2Able = { x: number; y: number } | number
-export type MathableFunc = (a: number, b: number) => number
-export type UnaryFunc = (a: number) => number
-const F = {
-  plus: (a, b) => a + b,
-  minus: (a, b) => a - b,
-  times: (a, b) => a * b,
-  div: (a, b) => a / b,
-  pow: (a, b) => a ** b,
-} satisfies { [k in string]: MathableFunc }
-
-const UF = {
-  squared: (a) => a * a,
-} satisfies { [k in string]: UnaryFunc }
 
 export class V2 {
   private readonly v: { x: number; y: number }
@@ -31,6 +19,12 @@ export class V2 {
     this.v = { x: xInput, y: yInput }
     this.x = xInput
     this.y = yInput
+  }
+
+  applyUnary(fun: UnaryFunc): () => V2 {
+    return () => {
+      return new V2(fun(this.x), fun(this.y))
+    }
   }
 
   apply(fun: MathableFunc): (other: V2Able) => V2 {
@@ -59,7 +53,7 @@ export class V2 {
   unaryMinus = () => this.times(-1)
 
   squared() {
-    return this.apply(F.pow)(2)
+    return this.apply(UF.squared)(2)
   }
 
   pow(other: V2Able) {

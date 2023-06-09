@@ -1,6 +1,5 @@
-import * as ln from "@lnjs/core"
 import Hit from "@lnjs/core/lib/hit"
-import { Path } from "@lnjs/core/lib/path"
+import * as ln from "ln.js-fork"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
   Scene,
@@ -17,6 +16,7 @@ import { LineGeometry } from "three-stdlib"
 
 import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
 
+import { rayIntersectsPolyline } from "./rayIntersectsPolyline"
 import { Size } from "../../types/Size"
 import { V3 } from "../../types/V3"
 import { toLnVec } from "../vec/toLnVec"
@@ -139,7 +139,7 @@ function addLine(mesh: Mesh, line: LineGeometry, scene: ln.Scene) {
 
   const box = line.boundingBox
 
-  scene.add(pathToShape(transformed, line.boundingBox))
+  scene.add(ln.Polyline(transformed, line.boundingBox))
 }
 
 function matrix4ToLnMatrix(matrix4: Matrix4) {
@@ -228,20 +228,29 @@ function toPaths(path: Path | Path[]): Path[] {
 function pathToShape(path: Path | Path[], bounds: Box3): ln.ShapeT {
   let shape: ln.ShapeT
 
-  function pathIntersect(): Hit {
-    return new Hit(shape, 0)
+  const paths = toPaths(path)
+
+  const lnBounds = new ln.Box(
+    new ln.Vector(bounds.min.x, bounds.min.y, bounds.min.z),
+    new ln.Vector(bounds.max.x, bounds.max.y, bounds.max.z)
+  )
+
+  function pathIntersect(ray: ln.Ray): Hit {
+    return ln.NoHit
+    const rayIntersects = rayIntersectsPolyline(ray, paths, lnBounds)
+    if (rayIntersects.hit === false) {
+      return ln.NoHit
+    } else {
+      return new Hit(shape, rayIntersects.hitDistance)
+    }
   }
 
   shape = {
     compile: () => {},
-    boundingBox: () =>
-      new ln.Box(
-        new ln.Vector(bounds.min.x, bounds.min.y, bounds.min.z),
-        new ln.Vector(bounds.max.x, bounds.max.y, bounds.max.z)
-      ),
+    boundingBox: () => lnBounds,
     contains: pathContains,
     intersect: pathIntersect,
-    paths: () => toPaths(path),
+    paths: () => paths,
   }
 
   return shape

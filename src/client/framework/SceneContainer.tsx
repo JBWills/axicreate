@@ -12,6 +12,7 @@ import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
 import { SavingState } from "../context/recoil/SavingState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
+import AxiBox from "../shape/AxiBox"
 import AxiLine from "../shape/AxiLine"
 import { Group } from "../shape/rendering/Group"
 import Key from "../types/keys/AllKeys"
@@ -115,12 +116,12 @@ export default function SceneContainer(props: SceneContainerProps) {
               new V3(0.789, 0.101112, 0.131415),
             ]}
           />
-          {/* <AxiBox
+          <AxiBox
             key={`Box: ${i}+${j}+${k}`}
             position={new V3(i, j, k).times(1 + drawState.boxSpacing)}
             scale={getRandomScale()}
             rotation={getRandomRotation()}
-          /> */}
+          />
         </>
       ))
     )

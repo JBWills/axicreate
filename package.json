@@ -67,7 +67,7 @@
     },
     "dependencies": {
         "@babel/core": "^7.21.8",
-        "@lnjs/core": "^0.5.0",
+        "@lnjs/core": "github:JBWills/ln.js-fork",
         "@react-three/drei": "^9.66.0",
         "@react-three/fiber": "^8.12.2",
         "@types/three": "^0.149.0",
