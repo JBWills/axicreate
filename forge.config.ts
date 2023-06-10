@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { MakerDeb } from "@electron-forge/maker-deb"
 import { MakerRpm } from "@electron-forge/maker-rpm"
 import { MakerSquirrel } from "@electron-forge/maker-squirrel"
@@ -8,7 +9,6 @@ import type { ForgeConfig } from "@electron-forge/shared-types"
 import { mainConfig } from "./webpack.main.config"
 import { rendererConfig } from "./webpack.renderer.config"
 
-console.log("DIRNAME!!!!", __dirname)
 const config: ForgeConfig = {
   packagerConfig: {
     icon: `${__dirname}/images/icon`,

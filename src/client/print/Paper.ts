@@ -79,7 +79,7 @@ function longSidePx(paper: PaperType) {
 }
 
 function shortSidePx(paper: PaperType) {
-  return paper.longSideIn * InkscapeDpi
+  return paper.shortSideIn * InkscapeDpi
 }
 
 export function getPaperSizePx(paperName: PaperName, orientation: Orientation): Size {

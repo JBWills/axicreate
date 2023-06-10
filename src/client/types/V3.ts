@@ -22,6 +22,10 @@ export class V3 {
   z: number
 
   constructor(xInput: number, yInput: number, zInput: number) {
+    if (Number.isNaN(xInput) || Number.isNaN(yInput) || Number.isNaN(zInput)) {
+      throw new Error(`One or more V3 inputs is NaN. x=${xInput}, y=${yInput}, z=${zInput}`)
+    }
+
     this.v = { x: xInput, y: yInput, z: zInput }
     this.a = [xInput, yInput, zInput]
     this.x = xInput
@@ -181,6 +185,18 @@ export class V3 {
     }
 
     return this.x === other.x && this.y === other.y && this.z === other.z
+  }
+
+  withX(x: number): V3 {
+    return new V3(x, this.y, this.z)
+  }
+
+  withY(y: number): V3 {
+    return new V3(this.x, y, this.z)
+  }
+
+  withZ(z: number): V3 {
+    return new V3(this.x, this.y, z)
   }
 }
 

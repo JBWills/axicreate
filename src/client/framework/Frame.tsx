@@ -5,11 +5,12 @@ import { useRecoilValue } from "recoil"
 import ControlPanel from "./controls/ControlPanel"
 import SceneContainer from "./SceneContainer"
 import Toolbar from "./Toolbar"
-import { PaperColorState } from "../context/recoil/PaperState"
+import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
 import { useStyles } from "../hooks/useStyles"
 
 export default function Frame() {
   const { backgroundColor } = useRecoilValue(PaperColorState)
+  const { width, height } = useRecoilValue(WidthHeightState)
   const styles = useStyles(
     () => ({
       splitter: {
@@ -45,7 +46,7 @@ export default function Frame() {
         justifyContent: "center",
       },
     }),
-    [backgroundColor]
+    [backgroundColor, height, width]
   )
 
   return (

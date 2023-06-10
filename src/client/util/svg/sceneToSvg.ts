@@ -1,6 +1,6 @@
-import Hit from "@lnjs/core/lib/hit"
-import * as ln from "ln.js-fork"
+import * as ln from "@lnjs/core"
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { Path } from "@lnjs/core/lib/path"
 import {
   Scene,
   Mesh,
@@ -16,7 +16,6 @@ import { LineGeometry } from "three-stdlib"
 
 import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
 
-import { rayIntersectsPolyline } from "./rayIntersectsPolyline"
 import { Size } from "../../types/Size"
 import { V3 } from "../../types/V3"
 import { toLnVec } from "../vec/toLnVec"
@@ -71,7 +70,7 @@ export async function sceneToSvg({
     }
   })
 
-  console.log("3: rendering to ln")
+  console.log("3: rendering to ln", canvasSize)
   const paths = lnScene.render(
     toLnVec(camera.position),
     toLnVec(target),
@@ -81,11 +80,11 @@ export async function sceneToSvg({
     camera.fov,
     0.1,
     100,
-    0.01
+    0.1
   )
 
   console.log("4: Creating the SVG")
-  const svg = ln.toSVG(ln.simplify(paths, 5), canvasSize.w * 2, canvasSize.h * 2)
+  const svg = ln.toSVG(ln.simplify(paths, 5), canvasSize.w, canvasSize.h)
 
   const result = await triggerIpcFunction("save-svg", ["test", "s.svg"], svg)
 
@@ -135,11 +134,14 @@ function addLine(mesh: Mesh, line: LineGeometry, scene: ln.Scene) {
   const path = arrayToV3s((line.attributes.instanceStart as InterleavedBufferAttribute).array)
   const transformed = transformPath([path], matrix4ToLnMatrix(mesh.matrixWorld))
 
-  console.log(transformed[0].map((it) => ({ x: it.x, y: it.y, z: it.z })))
+  const box = box3ToBox(line.boundingBox)
+  scene.add(new ln.Polyline(transformed, box))
+}
 
-  const box = line.boundingBox
-
-  scene.add(ln.Polyline(transformed, line.boundingBox))
+function box3ToBox(box3: Box3): ln.Box {
+  const { x: minX, y: minY, z: minZ } = box3.min
+  const { x: maxX, y: maxY, z: maxZ } = box3.max
+  return new ln.Box(new ln.Vector(minX, minY, minZ), new ln.Vector(maxX, maxY, maxZ))
 }
 
 function matrix4ToLnMatrix(matrix4: Matrix4) {
@@ -209,49 +211,4 @@ function compare(v1: ln.Vector, v2: ln.Vector): number {
   } else {
     return -1
   }
-}
-
-function pathContains(): boolean {
-  return true
-}
-
-function toPaths(path: Path | Path[]): Path[] {
-  if (path.length === 0) {
-    return []
-  }
-  if (path[0] instanceof ln.Vector) {
-    return [path as Path]
-  }
-  return path as Path[]
-}
-
-function pathToShape(path: Path | Path[], bounds: Box3): ln.ShapeT {
-  let shape: ln.ShapeT
-
-  const paths = toPaths(path)
-
-  const lnBounds = new ln.Box(
-    new ln.Vector(bounds.min.x, bounds.min.y, bounds.min.z),
-    new ln.Vector(bounds.max.x, bounds.max.y, bounds.max.z)
-  )
-
-  function pathIntersect(ray: ln.Ray): Hit {
-    return ln.NoHit
-    const rayIntersects = rayIntersectsPolyline(ray, paths, lnBounds)
-    if (rayIntersects.hit === false) {
-      return ln.NoHit
-    } else {
-      return new Hit(shape, rayIntersects.hitDistance)
-    }
-  }
-
-  shape = {
-    compile: () => {},
-    boundingBox: () => lnBounds,
-    contains: pathContains,
-    intersect: pathIntersect,
-    paths: () => paths,
-  }
-
-  return shape
 }

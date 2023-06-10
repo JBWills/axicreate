@@ -18,11 +18,12 @@ import { PaperName, paperNames } from "../../print/Paper"
 import { SelectOption } from "../../types/SelectOption"
 import { V2 } from "../../types/V2"
 import IconButton from "../components/IconButton"
+import { WaveSceneControls } from "../scenes/WaveScene"
 
 interface ControlPanelProps {}
 
 export default function ControlPanel({}: ControlPanelProps) {
-  const [{ name: paperName }, setPaperState] = useRecoilState(PaperState)
+  const [{ name: paperName, orientation }, setPaperState] = useRecoilState(PaperState)
   const [zoomLevel, setZoomLevelState] = useRecoilState(ZoomLevelState)
   const [cameraState, setCameraState] = useRecoilState(CameraState)
 
@@ -49,6 +50,11 @@ export default function ControlPanel({}: ControlPanelProps) {
 
   const handleChangePaper = useCallback(
     (newPaper: PaperName) => setPaperState((oldState) => ({ ...oldState, name: newPaper })),
+    [setPaperState]
+  )
+
+  const handleChangePaperOrientation = useCallback(
+    (o: "landscape" | "portrait") => setPaperState((oldState) => ({ ...oldState, orientation: o })),
     [setPaperState]
   )
 
@@ -101,6 +107,12 @@ export default function ControlPanel({}: ControlPanelProps) {
         options={paperOptions}
         onChange={handleChangePaper}
       />
+      <AxiSelectButton
+        label="Orientation"
+        value={orientation}
+        onChange={handleChangePaperOrientation}
+        options={["portrait", "landscape"]}
+      />
       <AxiSlider
         label="Zoom level"
         type="single"
@@ -119,6 +131,8 @@ export default function ControlPanel({}: ControlPanelProps) {
           onChange={handleChangeFov}
         />
       )}
+
+      <WaveSceneControls />
 
       <AxiSlider
         label="Num boxes"

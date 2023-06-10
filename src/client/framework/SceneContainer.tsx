@@ -6,6 +6,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Scene } from "three"
 
 import AxiOrbitControls from "./controls/AxiOrbitControls"
+import WaveScene from "./scenes/WaveScene"
 import { DrawState } from "../context/recoil/DrawState"
 import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndControls"
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
@@ -24,7 +25,7 @@ import { times, timesFlat } from "../util/times"
 
 interface SceneContainerProps {}
 
-export default function SceneContainer(props: SceneContainerProps) {
+export default function SceneContainer({}: SceneContainerProps) {
   const { width, height } = useRecoilValue(WidthHeightState)
   const zoomLevel = useRecoilValue(ZoomLevelState)
   const paperColor = useRecoilValue(PaperColorState)
@@ -44,8 +45,6 @@ export default function SceneContainer(props: SceneContainerProps) {
 
     const currentScene = scene.current
 
-    console.log({ currentScene, camera, target })
-
     if (!currentScene || !camera || !target) {
       return
     }
@@ -62,9 +61,10 @@ export default function SceneContainer(props: SceneContainerProps) {
     setSavingState(false)
   }
 
-  useShortcutOverride([Key.Cmd, Key.Alt, "s"], () => {
+  useShortcutOverride([Key.Cmd, "s"], () => {
     save()
   })
+
   useShortcutOverride(
     [
       [Key.Cmd, Key.Up],
@@ -88,6 +88,7 @@ export default function SceneContainer(props: SceneContainerProps) {
   )
 
   useEffect(() => {
+    console.log("Setting size", width * zoomLevel, height * zoomLevel)
     renderer.setSize(width * zoomLevel, height * zoomLevel)
   }, [renderer, width, height, zoomLevel])
 
@@ -134,7 +135,9 @@ export default function SceneContainer(props: SceneContainerProps) {
       fillColor={paperColor.backgroundColor}
       strokeWidth={2}>
       <scene ref={scene}>
-        <Group>{arr}</Group>
+        <Group>
+          <WaveScene />
+        </Group>
       </scene>
       <AxiOrbitControls />
     </Group>

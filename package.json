@@ -96,7 +96,6 @@
         "recoil": "^0.7.7",
         "three": "^0.149.0",
         "three-stdlib": "^2.21.9",
-        "three-svg-renderer": "^1.0.3",
         "typography": "^0.16.21",
         "typography-theme-noriega": "^0.16.19",
         "universalify": "^2.0.0",
