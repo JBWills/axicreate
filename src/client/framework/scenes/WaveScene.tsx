@@ -9,6 +9,7 @@ import { V3 } from "src/client/types/V3"
 import { times } from "src/client/util/times"
 
 import { useSetSubRecoilState } from "../../context/recoil/hooks/useSubRecoilState"
+import AxiBox from "../../shape/AxiBox"
 import AxiSlider from "../controls/inputs/AxiSlider"
 
 export const WaveState = atom({
@@ -170,7 +171,10 @@ function WaveScene({}: WaveSceneProps) {
   return (
     <>
       {waves.map((wave) => (
-        <AxiLine polyline={wave} />
+        <>
+          <AxiLine polyline={wave} />
+          <AxiBox position={wave[0]} />
+        </>
       ))}
     </>
   )

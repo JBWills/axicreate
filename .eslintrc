@@ -43,6 +43,7 @@
     }
   },
   "rules": {
+    "no-continue": "off",
     "no-restricted-syntax": "off",
     // This one breaks in TS because of function overloading methods
     "no-dupe-class-members": "off",

@@ -1,18 +1,21 @@
 import { atom, selector } from "recoil"
 
+import { SerializableState } from "./SerializableState"
 import { DefaultPaper, Orientation, PaperName, getPaper, getPaperSizePx } from "../../print/Paper"
 
-type PaperStateType = {
+export type PaperStateType = {
   name: PaperName
   orientation: Orientation
 }
 
+export const DefaultPaperState: PaperStateType = {
+  name: DefaultPaper,
+  orientation: "landscape",
+}
+
 export const PaperState = atom<PaperStateType>({
   key: "PaperState",
-  default: {
-    name: DefaultPaper,
-    orientation: "landscape",
-  },
+  default: DefaultPaperState,
 })
 
 export const WidthHeightState = selector({
@@ -34,3 +37,12 @@ export const PaperColorState = selector({
     return { backgroundColor, strokeColor }
   },
 })
+
+export const serializablePaperState: SerializableState<PaperStateType> = {
+  key: "PaperState",
+  defaultValue: DefaultPaperState,
+  recoilState: PaperState,
+  toJson: (data: PaperStateType) => JSON.stringify(data),
+  fromJson: (s: string | undefined, defaultValue: PaperStateType) =>
+    s ? { ...defaultValue, ...JSON.parse(s) } : defaultValue,
+}

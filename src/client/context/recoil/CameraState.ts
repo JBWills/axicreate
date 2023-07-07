@@ -1,6 +1,7 @@
 import { atom } from "recoil"
 
-import { V3 } from "../../types/V3"
+import { SerializableState } from "./SerializableState"
+import { Point3, V3 } from "../../types/V3"
 
 export type CameraStateType =
   | {
@@ -17,12 +18,56 @@ export type CameraStateType =
 
 export const DefaultFov = 75
 
+export const DefaultCameraState: CameraStateType = {
+  type: "perspective",
+  focalLength: DefaultFov,
+  position: new V3(0, 0, 0),
+  rotation: new V3(0, 0, 0),
+}
+
+const KEY = "Camera"
 export const CameraState = atom<CameraStateType>({
-  key: "Camera",
-  default: {
-    type: "perspective",
-    focalLength: DefaultFov,
-    position: new V3(0, 0, 0),
-    rotation: new V3(0, 0, 0),
-  },
+  key: KEY,
+  default: DefaultCameraState,
 })
+
+export type SerializableCameraStateType =
+  | {
+      type: "perspective"
+      focalLength: number
+      position: Point3
+      rotation: Point3
+    }
+  | {
+      type: "isometric"
+      position: Point3
+      rotation: Point3
+    }
+
+export function serializeCameraState(state: CameraStateType): string {
+  const serialzableState: SerializableCameraStateType = {
+    ...state,
+    position: state.position.toPoint3(),
+    rotation: state.position.toPoint3(),
+  }
+
+  return JSON.stringify(serialzableState)
+}
+
+export function deserializeCameraState(json: string | undefined): CameraStateType | undefined {
+  const serializableState = JSON.parse(json)
+
+  return {
+    ...serializableState,
+    position: V3.from(serializableState.position),
+    rotation: V3.from(serializableState.rotation),
+  }
+}
+
+export const serializableCameraState: SerializableState<CameraStateType> = {
+  key: KEY,
+  defaultValue: DefaultCameraState,
+  recoilState: CameraState,
+  toJson: serializeCameraState,
+  fromJson: deserializeCameraState,
+}

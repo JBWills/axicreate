@@ -21,13 +21,22 @@ function AxiOrbitControls({}: AxiOrbitControlsProps) {
   useEffect(() => {
     const camera = orbitControls.current?.object as PerspectiveCamera | undefined
 
-    if (!camera || state.type !== "perspective") {
+    if (!camera) {
       return
     }
 
-    if (camera.getFocalLength() !== state.focalLength) {
+    if (state.type === "perspective" && camera.getFocalLength() !== state.focalLength) {
       camera.setFocalLength(state.focalLength)
       orbitControls.current?.update()
+    }
+
+    for (const fieldName of ["position", "rotation"] as const) {
+      if (state[fieldName].equals(camera[fieldName])) {
+        continue
+      }
+
+      const { x, y, z } = state[fieldName]
+      camera[fieldName].set(x, y, z)
     }
   }, [state])
 

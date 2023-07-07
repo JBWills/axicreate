@@ -168,6 +168,11 @@ export class V3 {
     return new Vector3(x, y, z)
   }
 
+  toPoint3(): Point3 {
+    const { x, y, z } = this
+    return { x, y, z }
+  }
+
   toArray(): ArrV3 {
     return this.a
   }

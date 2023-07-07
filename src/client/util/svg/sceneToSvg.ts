@@ -11,6 +11,7 @@ import {
   Matrix4,
   InterleavedBufferAttribute,
   Box3,
+  Vector3,
 } from "three"
 import { LineGeometry } from "three-stdlib"
 
@@ -131,11 +132,13 @@ function addBox(mesh: Mesh, box: BoxGeometry, scene: ln.Scene) {
 function addLine(mesh: Mesh, line: LineGeometry, scene: ln.Scene) {
   console.log({ mesh, line })
 
-  const path = arrayToV3s((line.attributes.instanceStart as InterleavedBufferAttribute).array)
-  const transformed = transformPath([path], matrix4ToLnMatrix(mesh.matrixWorld))
+  const path = arrayToVectors(
+    (line.attributes.instanceStart as InterleavedBufferAttribute).array,
+    mesh.matrixWorld
+  )
 
   const box = box3ToBox(line.boundingBox)
-  scene.add(new ln.Polyline(transformed, box))
+  scene.add(new ln.Polyline([path], box))
 }
 
 function box3ToBox(box3: Box3): ln.Box {
@@ -174,6 +177,23 @@ function transformPath(paths: Path[], ...matrices: ln.Matrix[]): Path[] {
 
   const newMatrix = mergeMatrices(...matrices)
   return ln.transform(paths, newMatrix)
+}
+
+function arrayToVectors(arr: ArrayLike<number>, transformMatrix: Matrix4): ln.Vector[] {
+  if (arr.length % 3 !== 0) {
+    throw new Error(
+      `Trying to convert an array to vector 3, but the array isn't divisible by three. ${arr.length}`
+    )
+  }
+
+  const result: ln.Vector[] = []
+  for (let i = 0; i < arr.length - 2; i += 3) {
+    const v = new Vector3(arr[i], arr[i + 1], arr[i + 2])
+    const { x, y, z } = v.applyMatrix4(transformMatrix)
+    result.push(new ln.Vector(x, y, z))
+  }
+
+  return result
 }
 
 function arrayToV3s(arr: ArrayLike<number>): ln.Vector[] {

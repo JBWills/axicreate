@@ -4,6 +4,7 @@ import { Suspense } from "react"
 import "./App.css"
 
 import { TypographyStyle, GoogleFont } from "react-typography"
+import RecoilNexus from "recoil-nexus"
 
 import Frame from "./framework/Frame"
 import { useStyles } from "./hooks/useStyles"
@@ -25,6 +26,7 @@ function App() {
     <div style={styles.app}>
       <TypographyStyle typography={typography} />
       <GoogleFont typography={typography} />
+      <RecoilNexus />
       <Suspense />
       <Frame />
     </div>

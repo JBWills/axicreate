@@ -1,5 +1,7 @@
 export type Filename = `${string}.svg`
 
+export type SimpleSerializableValue = string | number | null
+
 export type IpcFunctions = {
   "save-svg": {
     args: [[...string[], Filename], svg: string]
@@ -8,6 +10,14 @@ export type IpcFunctions = {
   "open-file": {
     args: [file: string]
     response: boolean
+  }
+  "save-settings": {
+    args: [settingsJson: Record<string, SimpleSerializableValue>]
+    response: boolean
+  }
+  "load-settings": {
+    args: [null]
+    response: Record<string, SimpleSerializableValue>
   }
 }
 

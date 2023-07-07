@@ -5,12 +5,11 @@ import { useRecoilValue } from "recoil"
 import ControlPanel from "./controls/ControlPanel"
 import SceneContainer from "./SceneContainer"
 import Toolbar from "./Toolbar"
-import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
+import { PaperColorState } from "../context/recoil/PaperState"
 import { useStyles } from "../hooks/useStyles"
 
 export default function Frame() {
   const { backgroundColor } = useRecoilValue(PaperColorState)
-  const { width, height } = useRecoilValue(WidthHeightState)
   const styles = useStyles(
     () => ({
       splitter: {
@@ -31,10 +30,12 @@ export default function Frame() {
         justifyContent: "center",
       },
       canvasWrapper: {
+        position: "relative",
         width: "fit-content",
         backgroundColor: `#${backgroundColor.getHexString()}`,
         boxShadow: "6px 6px 10px rgba(44, 73, 119, 0.405)",
       },
+      sceneWrapper: {},
       canvasAndBackground: {
         width: "100%",
         height: "100%",
@@ -46,7 +47,7 @@ export default function Frame() {
         justifyContent: "center",
       },
     }),
-    [backgroundColor, height, width]
+    [backgroundColor]
   )
 
   return (

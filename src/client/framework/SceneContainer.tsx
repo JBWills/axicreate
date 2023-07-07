@@ -7,12 +7,14 @@ import { Scene } from "three"
 
 import AxiOrbitControls from "./controls/AxiOrbitControls"
 import WaveScene from "./scenes/WaveScene"
+import { BoundRectBoundsState } from "../context/recoil/BoundRectState"
 import { DrawState } from "../context/recoil/DrawState"
 import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndControls"
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
 import { SavingState } from "../context/recoil/SavingState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
+import { loadSettings, saveSettings } from "../saveload/saveSettings"
 import AxiBox from "../shape/AxiBox"
 import AxiLine from "../shape/AxiLine"
 import { Group } from "../shape/rendering/Group"
@@ -39,6 +41,8 @@ export default function SceneContainer({}: SceneContainerProps) {
   const { gl: renderer } = useThree()
   const { camera, controls } = useRecoilValue(GlobalCameraAndControlsState)
 
+  const { drawBounds, bounds } = useRecoilValue(BoundRectBoundsState)
+
   const save = async () => {
     console.log("saving svg")
     const target = controls?.target
@@ -61,9 +65,23 @@ export default function SceneContainer({}: SceneContainerProps) {
     setSavingState(false)
   }
 
-  useShortcutOverride([Key.Cmd, "s"], () => {
+  useShortcutOverride([Key.Cmd, Key.Shift, "s"], () => {
     save()
   })
+
+  useShortcutOverride([Key.Cmd, "s"], () => {
+    console.log("Saving settings")
+    saveSettings()
+  })
+
+  useShortcutOverride([Key.Cmd, "l"], () => {
+    console.log("Loading settings")
+    loadSettings()
+  })
+
+  useEffect(() => {
+    loadSettings()
+  }, [])
 
   useShortcutOverride(
     [
@@ -88,9 +106,14 @@ export default function SceneContainer({}: SceneContainerProps) {
   )
 
   useEffect(() => {
-    console.log("Setting size", width * zoomLevel, height * zoomLevel)
     renderer.setSize(width * zoomLevel, height * zoomLevel)
-  }, [renderer, width, height, zoomLevel])
+    // renderer.setViewport(
+    //   bounds.x * zoomLevel,
+    //   bounds.y * zoomLevel,
+    //   bounds.width * zoomLevel,
+    //   bounds.height * zoomLevel
+    // )
+  }, [renderer, width, height, zoomLevel, bounds.x, bounds.y, bounds.width, bounds.height])
 
   const getRandomScale = (): V3 => {
     const getRandom = () => random.nextFloat([1 - drawState.randomizeBoxSize, 1])

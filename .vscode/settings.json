@@ -8,7 +8,11 @@
     "polylines",
     "primeicons",
     "primereact",
+    "saveload",
+    "serialzable",
+    "threeutils",
     "typecheck",
+    "typedefs",
     "universalify",
     "unplugin"
   ],

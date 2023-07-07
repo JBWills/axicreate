@@ -6,6 +6,7 @@ import { app, BrowserWindow } from "electron"
 import { IpcFunction, IpcFunctions } from "src/shared/types/IpcFunctions"
 import { objectKeys } from "src/shared/util/objectKeys"
 
+import { loadSettingsJson, saveSettingsJson } from "./fileInOut/saveSettingsJson"
 import { saveSvg } from "./fileInOut/saveSvg"
 import { listenToIpcFunction } from "./ipc/listenToIpcFunction"
 import { restoreOrCreateWindow } from "./mainWindow"
@@ -14,6 +15,8 @@ import { openFile } from "./util/openFile"
 const IpcFunctionHandlers = {
   "open-file": (file) => openFile(file),
   "save-svg": (filePath, svgString) => saveSvg(filePath, svgString),
+  "save-settings": (json) => saveSettingsJson(json),
+  "load-settings": () => loadSettingsJson(),
 } satisfies {
   [k in keyof IpcFunctions]: IpcFunction<k>
 }
