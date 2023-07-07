@@ -6,6 +6,7 @@ import "./App.css"
 import { TypographyStyle, GoogleFont } from "react-typography"
 import RecoilNexus from "recoil-nexus"
 
+import Toaster from "./framework/components/Toaster"
 import Frame from "./framework/Frame"
 import { useStyles } from "./hooks/useStyles"
 import typography from "./util/typography"
@@ -29,6 +30,7 @@ function App() {
       <RecoilNexus />
       <Suspense />
       <Frame />
+      <Toaster />
     </div>
   )
 }

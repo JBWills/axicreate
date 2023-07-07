@@ -7,6 +7,7 @@ import { Scene } from "three"
 
 import AxiOrbitControls from "./controls/AxiOrbitControls"
 import WaveScene from "./scenes/WaveScene"
+import { showToast } from "./toasts/showToast"
 import { BoundRectBoundsState } from "../context/recoil/BoundRectState"
 import { DrawState } from "../context/recoil/DrawState"
 import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndControls"
@@ -70,12 +71,12 @@ export default function SceneContainer({}: SceneContainerProps) {
   })
 
   useShortcutOverride([Key.Cmd, "s"], () => {
-    console.log("Saving settings")
+    showToast("Saving settings")
     saveSettings()
   })
 
   useShortcutOverride([Key.Cmd, "l"], () => {
-    console.log("Loading settings")
+    showToast("Loading settings")
     loadSettings()
   })
 
