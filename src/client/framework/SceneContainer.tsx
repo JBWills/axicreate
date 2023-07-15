@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
 import { useThree } from "@react-three/fiber"
-import { isHotkeyPressed } from "react-hotkeys-hook"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Scene } from "three"
 
@@ -16,15 +15,12 @@ import { SavingState } from "../context/recoil/SavingState"
 import { ZoomLevelState } from "../context/recoil/VirtualCanvasState"
 import { useShortcutOverride } from "../hooks/useShortcut"
 import { loadSettings, saveSettings } from "../saveload/saveSettings"
-import AxiBox from "../shape/AxiBox"
-import AxiLine from "../shape/AxiLine"
 import { Group } from "../shape/rendering/Group"
 import Key from "../types/keys/AllKeys"
 import { V3 } from "../types/V3"
 import { AxiRandom } from "../util/random/AxiRandom"
 import { sceneToSvg } from "../util/svg/sceneToSvg"
 import { coercePerspectiveCamera } from "../util/threeutils/coercePerspectiveCamera"
-import { times, timesFlat } from "../util/times"
 
 interface SceneContainerProps {}
 
@@ -45,7 +41,6 @@ export default function SceneContainer({}: SceneContainerProps) {
   const { drawBounds, bounds } = useRecoilValue(BoundRectBoundsState)
 
   const save = async () => {
-    console.log("saving svg")
     const target = controls?.target
 
     const currentScene = scene.current
@@ -67,6 +62,7 @@ export default function SceneContainer({}: SceneContainerProps) {
   }
 
   useShortcutOverride([Key.Cmd, Key.Shift, "s"], () => {
+    showToast("Saving svg")
     save()
   })
 
@@ -84,73 +80,11 @@ export default function SceneContainer({}: SceneContainerProps) {
     loadSettings()
   }, [])
 
-  useShortcutOverride(
-    [
-      [Key.Cmd, Key.Up],
-      [Key.Shift, Key.Cmd, Key.Up],
-    ],
-    () => {
-      const shiftDown = isHotkeyPressed(Key.Shift)
-      return setFov((oldFov) => (shiftDown ? oldFov + 10 : oldFov + 1))
-    }
-  )
-
-  useShortcutOverride(
-    [
-      [Key.Cmd, Key.Down],
-      [Key.Shift, Key.Cmd, Key.Down],
-    ],
-    () => {
-      const shiftDown = isHotkeyPressed(Key.Shift)
-      return setFov((oldFov) => (shiftDown ? oldFov - 10 : oldFov - 1))
-    }
-  )
-
   useEffect(() => {
     renderer.setSize(width * zoomLevel, height * zoomLevel)
-    // renderer.setViewport(
-    //   bounds.x * zoomLevel,
-    //   bounds.y * zoomLevel,
-    //   bounds.width * zoomLevel,
-    //   bounds.height * zoomLevel
-    // )
-  }, [renderer, width, height, zoomLevel, bounds.x, bounds.y, bounds.width, bounds.height])
 
-  const getRandomScale = (): V3 => {
-    const getRandom = () => random.nextFloat([1 - drawState.randomizeBoxSize, 1])
-    return new V3(getRandom(), getRandom(), getRandom())
-  }
-
-  const getRandomRotation = (): V3 => {
-    const getRandom = () => random.nextFloat([0, drawState.randomizeBoxRotation])
-    return new V3(getRandom(), getRandom(), getRandom())
-  }
-
-  const arr = timesFlat(drawState.numBoxes, (i) =>
-    timesFlat(drawState.numBoxes, (j) =>
-      times(drawState.numBoxes, (k) => (
-        <>
-          <AxiLine
-            polyline={[
-              new V3(0.123, 0.456, 0.789),
-              new V3(i, j, k).times(1 + drawState.boxSpacing),
-              new V3(i, k, j).times(10 + drawState.boxSpacing),
-              new V3(k, k, j).times(10 + drawState.boxSpacing),
-              new V3(k, j, j).times(10 + drawState.boxSpacing),
-              new V3(k, j, j).times(11 + drawState.boxSpacing),
-              new V3(0.789, 0.101112, 0.131415),
-            ]}
-          />
-          <AxiBox
-            key={`Box: ${i}+${j}+${k}`}
-            position={new V3(i, j, k).times(1 + drawState.boxSpacing)}
-            scale={getRandomScale()}
-            rotation={getRandomRotation()}
-          />
-        </>
-      ))
-    )
-  )
+    renderer.setViewport(bounds.x, bounds.y, bounds.width, bounds.height)
+  }, [bounds.height, bounds.width, bounds.x, bounds.y, height, renderer, width, zoomLevel])
 
   return (
     <Group

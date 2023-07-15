@@ -4,7 +4,7 @@ import { axiMemo } from "../../hooks/genericMemo"
 import { useStyles } from "../../hooks/useStyles"
 
 interface LabelProps {
-  text: string
+  text: React.ReactNode
   marginTop?: number
   marginBottom?: number
   marginLeft?: number

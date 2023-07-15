@@ -18,6 +18,9 @@ function IconButton({ icon, tooltip, onClick, style }: IconButtonProps) {
     <Button
       className="IconButton"
       tooltip={tooltip}
+      tooltipOptions={{
+        showDelay: 200,
+      }}
       icon={PrimeIcons[icon]}
       onClick={onClick}
       size="small"

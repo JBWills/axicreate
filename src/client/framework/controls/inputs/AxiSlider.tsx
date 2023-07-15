@@ -14,6 +14,10 @@ interface AxiSliderPropsBase {
   label: string
   min?: number
   max?: number
+
+  // Pixel gap between the input and the slider.
+  gapPx?: 20 | 10 | 5
+  maxFractionDigits?: number
 }
 
 type AxiSliderOnChange =
@@ -62,7 +66,18 @@ function getStep({
   return (max - min) / 100
 }
 
-function AxiSlider({ label, min, max, onChange, type, value, step, numSteps }: AxiSliderProps) {
+function AxiSlider({
+  label,
+  min,
+  max,
+  onChange,
+  type,
+  value,
+  step,
+  numSteps,
+  gapPx,
+  maxFractionDigits,
+}: AxiSliderProps) {
   const minNonNull = min ?? 0
   const maxNonNull = max ?? minNonNull + 1
 
@@ -132,7 +147,7 @@ function AxiSlider({ label, min, max, onChange, type, value, step, numSteps }: A
       sliderAndInputContainer: {
         display: "flex",
         alignItems: "center",
-        gap: 20,
+        gap: gapPx ?? 20,
       },
       sliderContainer: {
         flexGrow: 1,
@@ -144,10 +159,10 @@ function AxiSlider({ label, min, max, onChange, type, value, step, numSteps }: A
         paddingTop: 10,
         display: "flex",
         alignItems: "center",
-        gap: 20,
+        gap: gapPx ?? 20,
       },
     }),
-    []
+    [gapPx]
   )
 
   const slider = (
@@ -168,15 +183,28 @@ function AxiSlider({ label, min, max, onChange, type, value, step, numSteps }: A
       {!Array.isArray(actualValue) ? (
         <div style={styles.sliderAndInputContainer}>
           {slider}
-          <AxiInputNumber value={actualValue} maxWidth="25%" onChange={handleChangeValueInput} />
+          <AxiInputNumber
+            value={actualValue}
+            maxWidth="25%"
+            onChange={handleChangeValueInput}
+            maxFractionDigits={maxFractionDigits}
+          />
         </div>
       ) : (
         <>
           {slider}
           <div style={styles.doubleSliderValues}>
-            <AxiInputNumber value={actualValue[0]} onChange={handleChangeMin} />
+            <AxiInputNumber
+              value={actualValue[0]}
+              onChange={handleChangeMin}
+              maxFractionDigits={maxFractionDigits}
+            />
             <div style={{ padding: 20 }} />
-            <AxiInputNumber value={actualValue[1]} onChange={handleChangeMax} />
+            <AxiInputNumber
+              value={actualValue[1]}
+              onChange={handleChangeMax}
+              maxFractionDigits={maxFractionDigits}
+            />
           </div>
         </>
       )}

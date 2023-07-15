@@ -14,9 +14,17 @@ interface AxiInputNumberProps {
   labelDir?: "top" | "left"
   maxWidth?: CSSProperties["maxWidth"]
   onChange?: (e: number) => void
+  maxFractionDigits?: number
 }
 
-function AxiInputNumber({ label, onChange, maxWidth, labelDir, value }: AxiInputNumberProps) {
+function AxiInputNumber({
+  label,
+  onChange,
+  maxWidth,
+  labelDir,
+  value,
+  maxFractionDigits,
+}: AxiInputNumberProps) {
   const handleChange = useCallback(
     (e: InputNumberChangeEvent) => {
       if (e.value !== null) onChange?.(e.value)
@@ -46,7 +54,7 @@ function AxiInputNumber({ label, onChange, maxWidth, labelDir, value }: AxiInput
       <InputNumber
         inputStyle={inputTextStyle}
         onChange={handleChange}
-        maxFractionDigits={6}
+        maxFractionDigits={maxFractionDigits ?? 6}
         value={value}
       />
     </div>

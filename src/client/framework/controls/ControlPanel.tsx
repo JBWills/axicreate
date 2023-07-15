@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react"
 
 import { useRecoilState } from "recoil"
 
+import BoundRectControls from "./frameControls/BoundRectControls"
 import AxiColorPicker from "./inputs/AxiColorPicker"
 import AxiDropdown from "./inputs/AxiDropdown"
 import AxiInputSwitch from "./inputs/AxiInputSwitch"
@@ -9,10 +10,11 @@ import AxiInputText from "./inputs/AxiInputText"
 import AxiSelectButton from "./inputs/AxiSelectButton"
 import AxiSlider from "./inputs/AxiSlider"
 import AxiSlider2D from "./inputs/AxiSlider2D"
+import { BoundRectState } from "../../context/recoil/BoundRectState"
 import { CameraState } from "../../context/recoil/CameraState"
-import { DrawState } from "../../context/recoil/DrawState"
 import { PaperState } from "../../context/recoil/PaperState"
 import { ZoomLevelState } from "../../context/recoil/VirtualCanvasState"
+import { useAtomUpdater } from "../../hooks/useAtomUpdater"
 import { useStyles } from "../../hooks/useStyles"
 import { PaperName, paperNames } from "../../print/Paper"
 import { SelectOption } from "../../types/SelectOption"
@@ -26,11 +28,8 @@ export default function ControlPanel({}: ControlPanelProps) {
   const [{ name: paperName, orientation }, setPaperState] = useRecoilState(PaperState)
   const [zoomLevel, setZoomLevelState] = useRecoilState(ZoomLevelState)
   const [cameraState, setCameraState] = useRecoilState(CameraState)
+  const [boundsState, setBoundsState] = useRecoilState(BoundRectState)
 
-  const [
-    { randomSeed, numBoxes, boxSpacing, randomizeBoxRotation, randomizeBoxSize },
-    setDrawState,
-  ] = useRecoilState(DrawState)
   const styles = useStyles(
     () => ({
       controlPanelContainer: {
@@ -48,56 +47,10 @@ export default function ControlPanel({}: ControlPanelProps) {
     []
   )
 
-  const handleChangePaper = useCallback(
-    (newPaper: PaperName) => setPaperState((oldState) => ({ ...oldState, name: newPaper })),
-    [setPaperState]
-  )
-
-  const handleChangePaperOrientation = useCallback(
-    (o: "landscape" | "portrait") => setPaperState((oldState) => ({ ...oldState, orientation: o })),
-    [setPaperState]
-  )
-
-  const handleChangeFov = useCallback(
-    (fov: number) => {
-      setCameraState((oldState) => ({ ...oldState, focalLength: fov }))
-    },
-    [setCameraState]
-  )
-
-  const handleChangeZoom = useCallback(
-    (value: number) => setZoomLevelState(value),
-    [setZoomLevelState]
-  )
-
-  const handleChangeNumBoxes = useCallback(
-    (value: number) => setDrawState((oldState) => ({ ...oldState, numBoxes: value })),
-    [setDrawState]
-  )
-
-  const handleChangeBoxSpacing = useCallback(
-    (value: number) => setDrawState((oldState) => ({ ...oldState, boxSpacing: value })),
-    [setDrawState]
-  )
-
-  const handleChangeRandomSeed = useCallback(
-    (value: number) => setDrawState((oldState) => ({ ...oldState, randomSeed: value })),
-    [setDrawState]
-  )
-
-  const handleChangeRandomizeSize = useCallback(
-    (value: number) => setDrawState((oldState) => ({ ...oldState, randomizeBoxSize: value })),
-    [setDrawState]
-  )
-
-  const handleChangeRandomizeRotation = useCallback(
-    (value: number) =>
-      setDrawState((oldState) => ({
-        ...oldState,
-        randomizeBoxRotation: value,
-      })),
-    [setDrawState]
-  )
+  const handleChangePaper = useAtomUpdater(setPaperState, "name")
+  const handleChangePaperOrientation = useAtomUpdater(setPaperState, "orientation")
+  const handleChangeFov = useAtomUpdater(setCameraState, "focalLength")
+  const handleChangeBoundsX = useCallback(() => {}, [])
 
   return (
     <div style={styles.controlPanelContainer}>
@@ -119,7 +72,7 @@ export default function ControlPanel({}: ControlPanelProps) {
         min={0.1}
         max={2.0}
         value={zoomLevel}
-        onChange={handleChangeZoom}
+        onChange={setZoomLevelState}
       />
       {cameraState.type === "perspective" && (
         <AxiSlider
@@ -133,54 +86,7 @@ export default function ControlPanel({}: ControlPanelProps) {
       )}
 
       <WaveSceneControls />
-
-      <AxiSlider
-        label="Num boxes"
-        type="single"
-        min={1}
-        max={50}
-        step={1}
-        value={numBoxes}
-        onChange={handleChangeNumBoxes}
-      />
-
-      <AxiSlider
-        label="Box spacing"
-        type="single"
-        min={0}
-        max={2}
-        step={0.1}
-        value={boxSpacing}
-        onChange={handleChangeBoxSpacing}
-      />
-
-      <AxiSlider
-        label="Random seed"
-        type="single"
-        min={0}
-        max={100}
-        step={1}
-        value={randomSeed}
-        onChange={handleChangeRandomSeed}
-      />
-
-      <AxiSlider
-        label="Randomize size"
-        type="single"
-        min={0}
-        max={1}
-        value={randomizeBoxSize}
-        onChange={handleChangeRandomizeSize}
-      />
-
-      <AxiSlider
-        label="Randomize rotation"
-        type="single"
-        min={0}
-        max={1}
-        value={randomizeBoxRotation}
-        onChange={handleChangeRandomizeRotation}
-      />
+      <BoundRectControls />
       <AxiInputText label="Test label" />
       <AxiSlider label="Slider" type="single" min={0} max={10} step={2.5} />
       <AxiSlider label="DoubleSlider" type="range" min={0} max={10} />

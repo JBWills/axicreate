@@ -12,6 +12,7 @@ export type CameraStateType =
     }
   | {
       type: "isometric"
+      focalLength?: number
       position: V3
       rotation: V3
     }
