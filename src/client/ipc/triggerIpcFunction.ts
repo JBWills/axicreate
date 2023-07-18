@@ -7,5 +7,6 @@ export function triggerIpcFunction<T extends keyof IpcFunctions>(
   key: T,
   ...args: Parameters<IpcFunction<T>>
 ): ReturnType<IpcFunction<T>> {
-  return ipcRenderer.invoke(key, ...args)
+  console.log("Triggering IPC function", key, args)
+  return ipcRenderer.invoke(key, ...args) as ReturnType<IpcFunction<T>>
 }

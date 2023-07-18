@@ -16,6 +16,7 @@ import {
 import { LineGeometry } from "three-stdlib"
 
 import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
+import { Filename } from "src/shared/types/IpcFunctions"
 
 import { Size } from "../../types/Size"
 import { V3 } from "../../types/V3"
@@ -87,7 +88,11 @@ export async function sceneToSvg({
   console.log("4: Creating the SVG")
   const svg = ln.toSVG(ln.simplify(paths, 5), canvasSize.w, canvasSize.h)
 
-  const result = await triggerIpcFunction("save-svg", ["test", "s.svg"], svg)
+  const result = await triggerIpcFunction(
+    "save-svg",
+    ["test", "s.svg"] satisfies [...string[], Filename],
+    svg
+  )
 
   if (result.success) {
     await triggerIpcFunction("open-file", result.path)

@@ -8,8 +8,8 @@ import { axiMemo } from "../../hooks/genericMemo"
 
 interface IconButtonProps {
   icon: keyof PrimeIconsOptions
-  tooltip?: string
   onClick: React.MouseEventHandler<HTMLButtonElement>
+  tooltip?: string
   style?: CSSProperties
 }
 

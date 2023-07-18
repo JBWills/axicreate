@@ -1,35 +1,13 @@
-import { useCallback, useMemo } from "react"
-
-import { useRecoilState } from "recoil"
-
+import AppControls from "./frameControls/AppControls"
 import BoundRectControls from "./frameControls/BoundRectControls"
-import AxiColorPicker from "./inputs/AxiColorPicker"
-import AxiDropdown from "./inputs/AxiDropdown"
-import AxiInputSwitch from "./inputs/AxiInputSwitch"
-import AxiInputText from "./inputs/AxiInputText"
-import AxiSelectButton from "./inputs/AxiSelectButton"
-import AxiSlider from "./inputs/AxiSlider"
-import AxiSlider2D from "./inputs/AxiSlider2D"
-import { BoundRectState } from "../../context/recoil/BoundRectState"
-import { CameraState } from "../../context/recoil/CameraState"
-import { PaperState } from "../../context/recoil/PaperState"
-import { ZoomLevelState } from "../../context/recoil/VirtualCanvasState"
-import { useAtomUpdater } from "../../hooks/useAtomUpdater"
+import CameraControls from "./frameControls/CameraControls"
+import PaperControls from "./frameControls/PaperControls"
 import { useStyles } from "../../hooks/useStyles"
-import { PaperName, paperNames } from "../../print/Paper"
-import { SelectOption } from "../../types/SelectOption"
-import { V2 } from "../../types/V2"
-import IconButton from "../components/IconButton"
 import { WaveSceneControls } from "../scenes/WaveScene"
 
 interface ControlPanelProps {}
 
 export default function ControlPanel({}: ControlPanelProps) {
-  const [{ name: paperName, orientation }, setPaperState] = useRecoilState(PaperState)
-  const [zoomLevel, setZoomLevelState] = useRecoilState(ZoomLevelState)
-  const [cameraState, setCameraState] = useRecoilState(CameraState)
-  const [boundsState, setBoundsState] = useRecoilState(BoundRectState)
-
   const styles = useStyles(
     () => ({
       controlPanelContainer: {
@@ -42,75 +20,13 @@ export default function ControlPanel({}: ControlPanelProps) {
     []
   )
 
-  const paperOptions: SelectOption<PaperName>[] = useMemo(
-    () => paperNames.map((name) => ({ value: name, displayName: name })),
-    []
-  )
-
-  const handleChangePaper = useAtomUpdater(setPaperState, "name")
-  const handleChangePaperOrientation = useAtomUpdater(setPaperState, "orientation")
-  const handleChangeFov = useAtomUpdater(setCameraState, "focalLength")
-  const handleChangeBoundsX = useCallback(() => {}, [])
-
   return (
     <div style={styles.controlPanelContainer}>
-      <AxiDropdown
-        label="Paper"
-        value={paperName}
-        options={paperOptions}
-        onChange={handleChangePaper}
-      />
-      <AxiSelectButton
-        label="Orientation"
-        value={orientation}
-        onChange={handleChangePaperOrientation}
-        options={["portrait", "landscape"]}
-      />
-      <AxiSlider
-        label="Zoom level"
-        type="single"
-        min={0.1}
-        max={2.0}
-        value={zoomLevel}
-        onChange={setZoomLevelState}
-      />
-      {cameraState.type === "perspective" && (
-        <AxiSlider
-          label="FOV"
-          type="single"
-          min={1}
-          max={360}
-          value={cameraState.focalLength}
-          onChange={handleChangeFov}
-        />
-      )}
-
-      <WaveSceneControls />
+      <AppControls />
+      <PaperControls />
+      <CameraControls />
       <BoundRectControls />
-      <AxiInputText label="Test label" />
-      <AxiSlider label="Slider" type="single" min={0} max={10} step={2.5} />
-      <AxiSlider label="DoubleSlider" type="range" min={0} max={10} />
-      <AxiColorPicker label="Color Picker" />
-      <AxiSelectButton
-        label="SelectButton"
-        options={["One", "Two", "Three", "Four", "Five", "Six"]}
-      />
-      <AxiInputSwitch label="Input Switch" />
-      <AxiDropdown
-        label="Dropdown"
-        options={[
-          { value: "option1Value", displayName: "Option 1" },
-          { value: "option2Value", displayName: "Option 2" },
-          { value: "option3Value", displayName: "Option 3" },
-        ]}
-      />
-      <IconButton onClick={() => console.log("Click!")} icon="PLUS_CIRCLE" tooltip="Icon button" />
-      <AxiSlider2D label="2d slider" />
-      <AxiSlider2D label="2d slider 2" min={new V2(1, 2)} max={new V2(3, 4)} />
-      <AxiSlider2D label="2d slider 3" min={new V2(-1, -1)} max={new V2(2, 2)} />
-      <AxiSlider2D label="2d slider 4" min={new V2(-10, -1)} max={new V2(10, 1)} />
-      <AxiSlider2D label="2d slider 5" min={new V2(-10, -1)} max={new V2(10, 1)} />
-      <AxiSlider2D label="2d slider 6" min={new V2(-10, -1)} max={new V2(10, 1)} />
+      <WaveSceneControls />
     </div>
   )
 }

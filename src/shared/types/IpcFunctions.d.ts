@@ -1,26 +1,29 @@
+import { SketchName } from "src/shared/types/sketchNames"
+
 export type Filename = `${string}.svg`
 
 export type SimpleSerializableValue = string | number | null
 
 export type IpcFunctions = {
-  "save-svg": {
-    args: [[...string[], Filename], svg: string]
-    response: { success: true; path: string } | { success: false }
-  }
-  "open-file": {
-    args: [file: string]
-    response: boolean
-  }
-  "save-settings": {
-    args: [settingsJson: Record<string, SimpleSerializableValue>]
-    response: boolean
-  }
-  "load-settings": {
-    args: [null]
-    response: Record<string, SimpleSerializableValue>
-  }
+  "save-svg": (
+    filePath: [...string[], Filename],
+    svg: string
+  ) => Promise<{ success: true; path: string } | { success: false }>
+
+  "open-file": (file: string) => Promise<boolean>
+
+  "save-settings": (
+    settingsJson: Record<string, SimpleSerializableValue>,
+    sketchName: SketchName,
+    sketchPreset: string | undefined
+  ) => Promise<boolean>
+
+  "load-settings": (
+    sketchName: SketchName,
+    sketchPreset: string | undefined
+  ) => Promise<Record<string, SimpleSerializableValue> | undefined>
+  "load-core-app-settings": (n: null) => Promise<Record<string, SimpleSerializableValue>>
+  "save-core-app-settings": (json: Record<string, SimpleSerializableValue>) => Promise<boolean>
 }
 
-export type IpcFunction<K extends keyof IpcFunctions> = (
-  ...args: IpcFunctions[K]["args"]
-) => Promise<IpcFunctions[K]["response"]>
+export type IpcFunction<K extends keyof IpcFunctions> = IpcFunctions[K]

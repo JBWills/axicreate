@@ -1,6 +1,6 @@
 import { atom } from "recoil"
 
-import { SerializableState } from "./SerializableState"
+import { SerializableState } from "../../../shared/types/SerializableState"
 
 export type DrawStateType = {
   randomSeed: number
@@ -32,8 +32,9 @@ export function deserializeDrawState(json: string | undefined): DrawStateType | 
   return JSON.parse(json)
 }
 
-export const serializableDrawState: SerializableState<DrawStateType> = {
+export const serializableDrawState: SerializableState<"Draw", DrawStateType, string> = {
   key: KEY,
+  type: "frame-state",
   defaultValue: DefaultDrawState,
   recoilState: DrawState,
   toJson: serializeDrawState,

@@ -1,6 +1,6 @@
 import { atom } from "recoil"
 
-import { SerializableState } from "./SerializableState"
+import { SerializableState } from "../../../shared/types/SerializableState"
 import { Point3, V3 } from "../../types/V3"
 
 export type CameraStateType =
@@ -65,8 +65,9 @@ export function deserializeCameraState(json: string | undefined): CameraStateTyp
   }
 }
 
-export const serializableCameraState: SerializableState<CameraStateType> = {
+export const serializableCameraState: SerializableState<"Camera", CameraStateType, string> = {
   key: KEY,
+  type: "frame-state",
   defaultValue: DefaultCameraState,
   recoilState: CameraState,
   toJson: serializeCameraState,

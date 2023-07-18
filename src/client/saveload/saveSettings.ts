@@ -1,51 +1,72 @@
+import { getRecoil } from "recoil-nexus"
+
+import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
 import { SimpleSerializableValue } from "src/shared/types/IpcFunctions"
-
-import { BoundRectStateType, serializableBoundRectState } from "../context/recoil/BoundRectState"
-import { CameraStateType, serializableCameraState } from "../context/recoil/CameraState"
-import { serializableDrawState } from "../context/recoil/DrawState"
-import { PaperStateType, serializablePaperState } from "../context/recoil/PaperState"
 import {
-  isSerializableStateRegistered,
+  SerializableStateKeys,
+  SerializableStateKeysType,
+} from "src/shared/types/SerializableState"
+
+import { CurrentSketchNameAndPresetState } from "../context/recoil/CurrentSketchState"
+import {
+  keyToConfig,
+  toSerializableData,
   loadStates,
-  registerSerializableState,
-  serializeState as getSerializedState,
+  serializeState,
 } from "../context/recoil/SerializableState"
-import { serializableZoomLevelState } from "../context/recoil/VirtualCanvasState"
-import { triggerIpcFunction } from "../ipc/triggerIpcFunction"
-
-// save camera state
-// save bound rect state
-// save paper state
-// save virtual canvas state
-
-type SettingsObj = {
-  cameraState: CameraStateType
-  paperState: PaperStateType
-  zoomState: number
-  boundRectState: BoundRectStateType
-}
 
 export function saveSettings(): Promise<boolean> {
-  return triggerIpcFunction("save-settings", getSerializedState())
+  const { name, preset } = getRecoil(CurrentSketchNameAndPresetState)
+
+  return triggerIpcFunction(
+    "save-settings",
+    serializeState({ type: "sketch-state", sketchName: name }),
+    name,
+    preset ?? undefined
+  )
 }
 
 export async function loadSettings() {
-  if (!isSerializableStateRegistered()) {
-    registerSerializableState(serializableCameraState)
-    registerSerializableState(serializableDrawState)
-    registerSerializableState(serializableBoundRectState)
-    registerSerializableState(serializablePaperState)
-    registerSerializableState(serializableZoomLevelState)
-  }
+  const { name, preset } = getRecoil(CurrentSketchNameAndPresetState)
 
-  const loadJsonResult: Record<string, SimpleSerializableValue> = await triggerIpcFunction(
-    "load-settings",
-    null
-  )
+  console.log("loading")
+  const loadJsonResult = await triggerIpcFunction("load-settings", name, preset ?? undefined)
 
+  console.log("Done loading", loadJsonResult)
   if (!loadJsonResult) {
     return
   }
 
   loadStates(loadJsonResult)
+}
+
+export async function loadMostRecentSketchAndPreset() {
+  const loadJsonResult = await triggerIpcFunction("load-core-app-settings", null)
+  if (!loadJsonResult) {
+    return
+  }
+
+  console.log("loading core", loadJsonResult)
+  loadStates(loadJsonResult)
+}
+
+export async function saveCoreAppSettings() {
+  const coreAppConfigs = SerializableStateKeys.map((key) => keyToConfig(key))
+    .filter((config) => config.type === "core-app-state")
+    .map((config) => config.key)
+
+  const jsonResult = await getJsonResultForKeys(coreAppConfigs)
+
+  return triggerIpcFunction("save-core-app-settings", jsonResult)
+}
+
+async function getJsonResultForKeys(keys: SerializableStateKeysType[]) {
+  const jsonResult: { [k in SerializableStateKeysType]?: SimpleSerializableValue } = {}
+
+  for (const key of keys) {
+    const config = keyToConfig(key)
+    jsonResult[config.key] = toSerializableData(config.key)
+  }
+
+  return jsonResult
 }

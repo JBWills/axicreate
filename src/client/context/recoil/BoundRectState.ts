@@ -1,7 +1,7 @@
 import { atom, selector } from "recoil"
 
 import { WidthHeightState } from "./PaperState"
-import { SerializableState } from "./SerializableState"
+import { SerializableState } from "../../../shared/types/SerializableState"
 
 export type Bounds = {
   x: number
@@ -72,8 +72,13 @@ export function deserializeBoundRectState(
   return JSON.parse(json)
 }
 
-export const serializableBoundRectState: SerializableState<BoundRectStateType> = {
+export const serializableBoundRectState: SerializableState<
+  "BoundRectState",
+  BoundRectStateType,
+  string
+> = {
   key: KEY,
+  type: "frame-state",
   defaultValue: DefaultBoundRectState,
   recoilState: BoundRectState,
   toJson: serializeBoundRectState,
