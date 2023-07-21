@@ -4,8 +4,10 @@ import { useThree } from "@react-three/fiber"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Scene } from "three"
 
+import { CurrentSketchState } from "src/client/context/recoil/CurrentSketchState"
+
 import AxiOrbitControls from "./controls/AxiOrbitControls"
-import WaveScene from "./scenes/WaveScene"
+import SketchNameToRenderer from "./sketches/SketchNameToRenderer"
 import { showToast } from "./toasts/showToast"
 import { GlobalCameraAndControlsState } from "../context/recoil/GlobalCameraAndControls"
 import { PaperColorState, WidthHeightState } from "../context/recoil/PaperState"
@@ -26,6 +28,7 @@ export default function SceneContainer({}: SceneContainerProps) {
   const zoomLevel = useRecoilValue(ZoomLevelState)
   const paperColor = useRecoilValue(PaperColorState)
   const setSavingState = useSetRecoilState(SavingState)
+  const currentSketch = useRecoilValue(CurrentSketchState)
   const scene = useRef<Scene>(null)
 
   const { gl: renderer } = useThree()
@@ -79,6 +82,7 @@ export default function SceneContainer({}: SceneContainerProps) {
     renderer.setSize(width * zoomLevel, height * zoomLevel)
   }, [height, renderer, width, zoomLevel])
 
+  const { SceneComponent } = SketchNameToRenderer[currentSketch.name]
   return (
     <Group
       isDefaultGroup
@@ -87,7 +91,7 @@ export default function SceneContainer({}: SceneContainerProps) {
       strokeWidth={2}>
       <scene ref={scene}>
         <Group>
-          <WaveScene />
+          <SceneComponent />
         </Group>
       </scene>
       <AxiOrbitControls />

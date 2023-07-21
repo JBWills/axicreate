@@ -1,9 +1,9 @@
 import { atom } from "recoil"
 
-import { SerializableState } from "../../../shared/types/SerializableState"
+import { SerializableState } from "./serialization/SerializableState"
 import { Point3, V3 } from "../../types/V3"
 
-export type CameraStateType =
+type CameraStateType =
   | {
       type: "perspective"
       focalLength: number
@@ -17,9 +17,9 @@ export type CameraStateType =
       rotation: V3
     }
 
-export const DefaultFov = 75
+const DefaultFov = 75
 
-export const DefaultCameraState: CameraStateType = {
+const DefaultCameraState: CameraStateType = {
   type: "perspective",
   focalLength: DefaultFov,
   position: new V3(0, 0, 0),
@@ -32,7 +32,7 @@ export const CameraState = atom<CameraStateType>({
   default: DefaultCameraState,
 })
 
-export type SerializableCameraStateType =
+type SerializableCameraStateType =
   | {
       type: "perspective"
       focalLength: number
@@ -45,7 +45,7 @@ export type SerializableCameraStateType =
       rotation: Point3
     }
 
-export function serializeCameraState(state: CameraStateType): string {
+function serializeCameraState(state: CameraStateType): string {
   const serialzableState: SerializableCameraStateType = {
     ...state,
     position: state.position.toPoint3(),
@@ -55,21 +55,22 @@ export function serializeCameraState(state: CameraStateType): string {
   return JSON.stringify(serialzableState)
 }
 
-export function deserializeCameraState(json: string | undefined): CameraStateType | undefined {
-  const serializableState = JSON.parse(json)
+function deserializeCameraState(json: string | undefined): CameraStateType {
+  const serializableState = json ? JSON.parse(json) : undefined
 
   return {
+    ...DefaultCameraState,
     ...serializableState,
     position: V3.from(serializableState.position),
     rotation: V3.from(serializableState.rotation),
   }
 }
 
-export const serializableCameraState: SerializableState<"Camera", CameraStateType, string> = {
-  key: KEY,
+export const serializableCameraState = {
+  key: "Camera",
   type: "frame-state",
   defaultValue: DefaultCameraState,
   recoilState: CameraState,
   toJson: serializeCameraState,
   fromJson: deserializeCameraState,
-}
+} satisfies SerializableState<CameraStateType, string>

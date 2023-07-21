@@ -1,6 +1,6 @@
 import { atom } from "recoil"
 
-import { SerializableState } from "../../../shared/types/SerializableState"
+import { SerializableState } from "./serialization/SerializableState"
 
 export type DrawStateType = {
   randomSeed: number
@@ -28,15 +28,15 @@ export function serializeDrawState(state: DrawStateType): string {
   return JSON.stringify(state)
 }
 
-export function deserializeDrawState(json: string | undefined): DrawStateType | undefined {
-  return JSON.parse(json)
+export function deserializeDrawState(json: string | undefined): DrawStateType {
+  return json ? { ...DefaultDrawState, ...JSON.parse(json) } : DefaultDrawState
 }
 
-export const serializableDrawState: SerializableState<"Draw", DrawStateType, string> = {
+export const serializableDrawState = {
   key: KEY,
   type: "frame-state",
   defaultValue: DefaultDrawState,
   recoilState: DrawState,
   toJson: serializeDrawState,
   fromJson: deserializeDrawState,
-}
+} satisfies SerializableState<DrawStateType, string>

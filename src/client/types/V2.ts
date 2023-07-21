@@ -6,7 +6,7 @@ export type RangeV2 = [V2, V2]
 
 export type Point = { x: number; y: number }
 
-type V2Able = { x: number; y: number } | number
+type V2Able = { x: number; y: number } | number | [number, number]
 
 export class V2 {
   private readonly v: { x: number; y: number }
@@ -91,13 +91,18 @@ export class V2 {
     return this.percentAlongRange(from).getValueAtPercentAlongRange(to)
   }
 
-  static from(arg1: number | { x: number; y: number } | V2): V2
+  static from(arg1: number | { x: number; y: number } | V2 | [number, number]): V2
 
   static from(arg1: number, arg2: number): V2
 
-  static from(arg1: number | { x: number; y: number } | V2, arg2?: number | undefined): V2 {
+  static from(
+    arg1: number | { x: number; y: number } | V2 | [number, number],
+    arg2?: number | undefined
+  ): V2 {
     if (typeof arg1 === "number") {
       return new V2(arg1, arg2 ?? arg1)
+    } else if (Array.isArray(arg1)) {
+      return new V2(arg1[0], arg1[1])
     }
     return new V2(arg1.x, arg1.y)
   }

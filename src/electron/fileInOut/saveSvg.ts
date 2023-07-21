@@ -13,7 +13,7 @@ export async function saveSvg(
   savePath: [...string[], Filename],
   svg: string
 ): Promise<{ success: true; path: string } | { success: false }> {
-  let saveFolder = ConfigStore.get("outputSaveFolder")
+  let saveFolder = ConfigStore.get("outputSaveFolder") ?? undefined
 
   if (!saveFolder || !fs.existsSync(saveFolder)) {
     saveFolder = await selectExportFolder()
@@ -32,6 +32,10 @@ export async function saveSvg(
   const filename = savePath[savePath.length - 1] as Filename
 
   const validFilePath = getValidFilePath(finalFolderPath, filename)
+  if (!validFilePath) {
+    return { success: false }
+  }
+
   await writeFileAsync(validFilePath, svg)
 
   return { success: true, path: validFilePath }
@@ -67,7 +71,7 @@ async function writeFileAsync(
   options?: fs.WriteFileOptions
 ) {
   return new Promise<void>((resolve) => {
-    fs.writeFile(file, data, options, (err) => {
+    fs.writeFile(file, data, options ?? {}, (err) => {
       if (err) {
         throw new Error(err.message)
       }

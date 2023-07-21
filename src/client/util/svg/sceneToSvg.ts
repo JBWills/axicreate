@@ -16,7 +16,6 @@ import {
 import { LineGeometry } from "three-stdlib"
 
 import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
-import { Filename } from "src/shared/types/IpcFunctions"
 
 import { Size } from "../../types/Size"
 import { V3 } from "../../types/V3"
@@ -90,7 +89,7 @@ export async function sceneToSvg({
 
   const result = await triggerIpcFunction(
     "save-svg",
-    ["test", "s.svg"] satisfies [...string[], Filename],
+    ["test", "s.svg"] satisfies ["test", "s.svg"],
     svg
   )
 
@@ -135,14 +134,17 @@ function addBox(mesh: Mesh, box: BoxGeometry, scene: ln.Scene) {
 }
 
 function addLine(mesh: Mesh, line: LineGeometry, scene: ln.Scene) {
-  console.log({ mesh, line })
-
   const path = arrayToVectors(
     (line.attributes.instanceStart as InterleavedBufferAttribute).array,
     mesh.matrixWorld
   )
 
-  const box = box3ToBox(line.boundingBox)
+  const box3 = line.boundingBox
+  if (!box3) {
+    return undefined
+  }
+
+  const box = box3ToBox(box3)
   scene.add(new ln.Polyline([path], box))
 }
 
@@ -150,10 +152,6 @@ function box3ToBox(box3: Box3): ln.Box {
   const { x: minX, y: minY, z: minZ } = box3.min
   const { x: maxX, y: maxY, z: maxZ } = box3.max
   return new ln.Box(new ln.Vector(minX, minY, minZ), new ln.Vector(maxX, maxY, maxZ))
-}
-
-function matrix4ToLnMatrix(matrix4: Matrix4) {
-  return new ln.Matrix(...matrix4.elements)
 }
 
 function mergeMatrices(...matrices: ln.Matrix[]): ln.Matrix {

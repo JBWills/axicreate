@@ -2,18 +2,16 @@ import { getRecoil } from "recoil-nexus"
 
 import { triggerIpcFunction } from "src/client/ipc/triggerIpcFunction"
 import { SimpleSerializableValue } from "src/shared/types/IpcFunctions"
-import {
-  SerializableStateKeys,
-  SerializableStateKeysType,
-} from "src/shared/types/SerializableState"
+import { objectValues } from "src/shared/util/objectKeys"
 
 import { CurrentSketchNameAndPresetState } from "../context/recoil/CurrentSketchState"
 import {
-  keyToConfig,
   toSerializableData,
   loadStates,
   serializeState,
-} from "../context/recoil/SerializableState"
+  SerializableConfigs,
+} from "../context/recoil/serialization/SerializableStateHelpers"
+import { SerializableStateKeys } from "../context/recoil/serialization/SerializableStateKeys"
 
 export function saveSettings(): Promise<boolean> {
   const { name, preset } = getRecoil(CurrentSketchNameAndPresetState)
@@ -51,7 +49,7 @@ export async function loadMostRecentSketchAndPreset() {
 }
 
 export async function saveCoreAppSettings() {
-  const coreAppConfigs = SerializableStateKeys.map((key) => keyToConfig(key))
+  const coreAppConfigs = objectValues(SerializableConfigs)
     .filter((config) => config.type === "core-app-state")
     .map((config) => config.key)
 
@@ -60,11 +58,11 @@ export async function saveCoreAppSettings() {
   return triggerIpcFunction("save-core-app-settings", jsonResult)
 }
 
-async function getJsonResultForKeys(keys: SerializableStateKeysType[]) {
-  const jsonResult: { [k in SerializableStateKeysType]?: SimpleSerializableValue } = {}
+async function getJsonResultForKeys(keys: SerializableStateKeys[]) {
+  const jsonResult: { [k in SerializableStateKeys]?: SimpleSerializableValue } = {}
 
   for (const key of keys) {
-    const config = keyToConfig(key)
+    const config = SerializableConfigs[key]
     jsonResult[config.key] = toSerializableData(config.key)
   }
 

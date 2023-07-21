@@ -2,6 +2,7 @@
 import React, { ReactNode, useContext, useRef } from "react"
 
 import { MeshProps } from "@react-three/fiber"
+import { Mesh, BufferGeometry, Material } from "three"
 
 import { GroupContext } from "src/client/context/GroupContext"
 
@@ -18,7 +19,7 @@ export type AxiMeshProps = Partial<Omit<MeshProps, "position" | "scale" | "rotat
 }
 
 function AxiMesh({ children, position, scale, rotation, skipEdges, ...rest }: AxiMeshProps) {
-  const ref = useRef()
+  const ref = useRef<Mesh<BufferGeometry, Material | Material[]>>(null)
 
   const { fillColor: color } = useContext(GroupContext)
 

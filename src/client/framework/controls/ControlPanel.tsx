@@ -1,13 +1,18 @@
+import { useRecoilValue } from "recoil"
+
+import { CurrentSketchState } from "src/client/context/recoil/CurrentSketchState"
+
 import AppControls from "./frameControls/AppControls"
 import BoundRectControls from "./frameControls/BoundRectControls"
 import CameraControls from "./frameControls/CameraControls"
 import PaperControls from "./frameControls/PaperControls"
 import { useStyles } from "../../hooks/useStyles"
-import { WaveSceneControls } from "../scenes/WaveScene"
+import SketchNameToRenderer from "../sketches/SketchNameToRenderer"
 
 interface ControlPanelProps {}
 
 export default function ControlPanel({}: ControlPanelProps) {
+  const currentSketch = useRecoilValue(CurrentSketchState)
   const styles = useStyles(
     () => ({
       controlPanelContainer: {
@@ -20,13 +25,15 @@ export default function ControlPanel({}: ControlPanelProps) {
     []
   )
 
+  const { ControlsComponent } = SketchNameToRenderer[currentSketch.name]
+
   return (
     <div style={styles.controlPanelContainer}>
       <AppControls />
       <PaperControls />
       <CameraControls />
       <BoundRectControls />
-      <WaveSceneControls />
+      <ControlsComponent />
     </div>
   )
 }

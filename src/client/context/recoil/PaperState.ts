@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil"
 
-import { SerializableState } from "../../../shared/types/SerializableState"
+import { SerializableState } from "./serialization/SerializableState"
 import { DefaultPaper, Orientation, PaperName, getPaper, getPaperSizePx } from "../../print/Paper"
 
 export type PaperStateType = {
@@ -38,7 +38,7 @@ export const PaperColorState = selector({
   },
 })
 
-export const serializablePaperState: SerializableState<"PaperState", PaperStateType, string> = {
+export const serializablePaperState = {
   key: "PaperState",
   type: "frame-state",
   defaultValue: DefaultPaperState,
@@ -46,4 +46,4 @@ export const serializablePaperState: SerializableState<"PaperState", PaperStateT
   toJson: (data: PaperStateType) => JSON.stringify(data),
   fromJson: (s: string | undefined, defaultValue: PaperStateType) =>
     s ? { ...defaultValue, ...JSON.parse(s) } : defaultValue,
-}
+} satisfies SerializableState<PaperStateType, string>

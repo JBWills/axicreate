@@ -22,7 +22,9 @@ export type IpcFunctions = {
     sketchName: SketchName,
     sketchPreset: string | undefined
   ) => Promise<Record<string, SimpleSerializableValue> | undefined>
-  "load-core-app-settings": (n: null) => Promise<Record<string, SimpleSerializableValue>>
+  "load-core-app-settings": (
+    n: null
+  ) => Promise<Record<string, SimpleSerializableValue> | undefined>
   "save-core-app-settings": (json: Record<string, SimpleSerializableValue>) => Promise<boolean>
 }
 

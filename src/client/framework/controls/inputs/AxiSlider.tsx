@@ -14,6 +14,7 @@ interface AxiSliderPropsBase {
   label: string
   min?: number
   max?: number
+  minMax?: [number, number]
 
   // Pixel gap between the input and the slider.
   gapPx?: 20 | 10 | 5
@@ -70,6 +71,7 @@ function AxiSlider({
   label,
   min,
   max,
+  minMax,
   onChange,
   type,
   value,
@@ -78,8 +80,8 @@ function AxiSlider({
   gapPx,
   maxFractionDigits,
 }: AxiSliderProps) {
-  const minNonNull = min ?? 0
-  const maxNonNull = max ?? minNonNull + 1
+  const minNonNull = minMax ? minMax[0] : min ?? 0
+  const maxNonNull = minMax ? minMax[1] : max ?? minNonNull + 1
 
   const defaultLocalValue: number | [number, number] =
     type === "range" ? [minNonNull, maxNonNull] : minNonNull

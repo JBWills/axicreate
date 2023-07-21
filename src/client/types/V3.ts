@@ -48,10 +48,6 @@ export class V3 {
   apply(fun: MathableFunc): (other: V3Able) => V3 {
     const { x, y, z } = this
     return (other) => {
-      if (!other) {
-        return new V3(fun(x, undefined), fun(y, undefined), fun(z, undefined))
-      }
-
       const otherV3 = V3.from(other)
       return new V3(fun(x, otherV3.x), fun(y, otherV3.y), fun(z, otherV3.z))
     }

@@ -21,7 +21,7 @@ function AppControls({}: AppControlsProps) {
   )
 
   const handleChangeSketch = useCallback(
-    async (name: string) => {
+    async (name: SketchName) => {
       setAppState((oldState) => ({ ...oldState, name }))
       await saveCoreAppSettings()
       await loadSettings()

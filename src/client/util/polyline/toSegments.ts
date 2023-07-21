@@ -19,7 +19,7 @@ export function* segments(polylineArg: AnyLine | AnyLine[]): Generator<Segment> 
   const polylines = toPolylines(polylineArg)
 
   for (const polyline of polylines) {
-    let lastVertex: Point3
+    let lastVertex: Point3 | undefined
 
     for (const vertex of polyline) {
       if (lastVertex !== undefined) {

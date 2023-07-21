@@ -1,8 +1,8 @@
 import { atom, selector } from "recoil"
 
-import { SketchName } from "src/shared/types/sketchNames"
+import { SketchName, isValidSketchName, SketchNames } from "src/shared/types/sketchNames"
 
-import { SerializableState } from "../../../shared/types/SerializableState"
+import { SerializableState } from "./serialization/SerializableState"
 
 export type CurrentSketchStateType = {
   name: SketchName
@@ -51,16 +51,31 @@ export const CurrentSketchNameAndPresetState = selector({
   },
 })
 
-export const serializableCurrentSketchState: SerializableState<
-  "CurrentSketchState",
-  CurrentSketchStateType,
-  string
-> = {
+export const serializableCurrentSketchState = {
   key: "CurrentSketchState",
   type: "core-app-state",
   defaultValue: DefaultCurrentSketchState,
   recoilState: CurrentSketchState,
   toJson: (data: CurrentSketchStateType) => JSON.stringify(data),
-  fromJson: (s: string | undefined, defaultValue: CurrentSketchStateType) =>
-    s ? { ...defaultValue, ...JSON.parse(s) } : defaultValue,
-}
+  fromJson: (s: string | undefined, defaultValue: CurrentSketchStateType) => {
+    if (!s) {
+      return defaultValue
+    }
+
+    const parsed: CurrentSketchStateType = JSON.parse(s)
+
+    const newCurrentSketch = isValidSketchName(parsed.name) ? parsed.name : defaultValue.name
+
+    const newPresets: CurrentSketchStateType["sketchNameToMostRecentPresets"] = {
+      ...defaultValue.sketchNameToMostRecentPresets,
+    }
+
+    for (const sketchName of SketchNames) {
+      if (sketchName in parsed.sketchNameToMostRecentPresets) {
+        newPresets[sketchName] = parsed.sketchNameToMostRecentPresets[sketchName]
+      }
+    }
+
+    return { name: newCurrentSketch, sketchNameToMostRecentPresets: newPresets }
+  },
+} satisfies SerializableState<CurrentSketchStateType, string>

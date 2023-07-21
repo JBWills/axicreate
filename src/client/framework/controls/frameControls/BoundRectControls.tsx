@@ -27,7 +27,7 @@ function BoundRectControls({}: BoundRectControlsProps) {
   return (
     <AxiSliderPair
       title="Bounds"
-      handleChange={handleChange}
+      onChange={handleChange}
       valueX={boundRectState.left * 2}
       valueY={boundRectState.top * 2}
     />
