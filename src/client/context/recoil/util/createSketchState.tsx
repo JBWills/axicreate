@@ -21,11 +21,16 @@ export function createSketchState<
   defaultValue,
   ControlsComponent,
   SceneComponent,
+  serializer,
 }: {
   sketchName: N
   defaultValue: T
   ControlsComponent: FC<SketchRenderData<T>>
   SceneComponent: FC<SketchRenderData<T>>
+  serializer?: {
+    toJson: (data: T) => string
+    fromJson: (json: string) => T | undefined
+  }
 }): SketchState<T, N> {
   const stateKey: `${N}State` = `${sketchName}State`
   const recoilState = atom({
@@ -39,8 +44,15 @@ export function createSketchState<
     sketchName,
     defaultValue,
     recoilState,
-    toJson: (data) => JSON.stringify(data),
-    fromJson: (json) => (json ? JSON.parse(json) : undefined),
+    ...(serializer
+      ? {
+          toJson: serializer.toJson,
+          fromJson: serializer.fromJson,
+        }
+      : {
+          toJson: (data) => JSON.stringify(data),
+          fromJson: (json) => (json ? JSON.parse(json) : undefined),
+        }),
   }
 
   const selectors = getSelectors(recoilState, defaultValue)

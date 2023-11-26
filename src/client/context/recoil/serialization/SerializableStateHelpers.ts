@@ -1,6 +1,7 @@
 import { RecoilState } from "recoil"
 import { getRecoil, setRecoil } from "recoil-nexus"
 
+import { CircleSketchState } from "src/client/framework/sketches/CircleSketch"
 import { WaveGridSketchState } from "src/client/framework/sketches/WaveGridSketch"
 import { WaveSketchState } from "src/client/framework/sketches/WaveSketch"
 import { SimpleSerializableValue } from "src/shared/types/IpcFunctions"
@@ -24,6 +25,7 @@ export const SerializableConfigs = {
   ZoomLevel: serializableZoomLevelState,
   WaveState: WaveSketchState.serializableState,
   WaveGridState: WaveGridSketchState.serializableState,
+  CircleState: CircleSketchState.serializableState,
 } satisfies { [k in SerializableStateKeys]: SerializableState<unknown, unknown> & { key: k } }
 
 export function toSerializableData<K extends SerializableStateKeys>(
